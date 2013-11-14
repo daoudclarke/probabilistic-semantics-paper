@@ -91,10 +91,11 @@ Discourse Representation Theory \cite{Blackburn:05}. In these
 approaches, a sentence is translated to a logical form, which is then
 used for reasoning via theorem proving or model building.
 
-Recently, effort has been focussed on resolving this conflict. In this
-paper, we will present a new formalism, probabilistic semantics. In
-standard model-theoretic semantics, one way to view the ``meaning'' of
-a logical sentence $s$ is as the set of all interpretations
+Recently, effort has been focussed on resolving this conflict
+\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. In this paper, we
+will present a new formalism, probabilistic semantics. In standard
+model-theoretic semantics, one way to view the ``meaning'' of a
+logical sentence $s$ is as the set of all interpretations
 $\mathcal{M}_s$ for which $s$ is true, also called models for
 $s$. Then $s$ entails $t$ if $\mathcal{M}_s \subseteq
 \mathcal{M}_t$. We propose an extension to this idea where we assume
@@ -159,13 +160,15 @@ sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
 $\hat{s}$ to every sentence $s\in T$. Let $\Omega$ be the set of all
 interpretations, and $\sigma$ be the sigma algebra consisting of the
 set of all models for all theories. Let $\mu$ be a probability measure
-on $\sigma$; this describes the probability of theories.
+on $\sigma$; then $\langle\Omega,\sigma,\mu\rangle$ is a probability
+space which describes the probability of theories. Let $M(T)$ denote
+the set of all models for the theory $T$; the probability of $T$ is
+$\mu(M(T))$.
 
 Given two sentences $s_1$ and $s_2$, we can compute the conditional
 probability of $s_1$ given $s_2$ as
 $$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
-where $M(T)$ denotes the set of all models for the theory $T$. We
-interpret this as the degree to which $s_2$ entails $s_1$.
+We interpret this as the degree to which $s_2$ entails $s_1$.
 
 % In this paper, we consider the situation where the logical language
 % $L$ is restricted to that of logic programs, i.e.~Horn clauses with
