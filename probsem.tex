@@ -91,48 +91,40 @@ Discourse Representation Theory \cite{Blackburn:05}. In these
 approaches, a sentence is translated to a logical form, which is then
 used for reasoning via theorem proving or model building.
 
-Recently, effort has been focussed on resolving this conflict.
-
-\section{Proposed Approach}
-
-In standard model-theoretic semantics, one way to view the ``meaning''
-of a logical sentence $s$ is as the set of all structures
+Recently, effort has been focussed on resolving this conflict. In this
+paper, we will present a new formalism, probabilistic semantics. In
+standard model-theoretic semantics, one way to view the ``meaning'' of
+a logical sentence $s$ is as the set of all interpretations
 $\mathcal{M}_s$ for which $s$ is true, also called models for
 $s$. Then $s$ entails $t$ if $\mathcal{M}_s \subseteq
 \mathcal{M}_t$. We propose an extension to this idea where we assume
 that models occur randomly. Informally, we may assume a probability
 distribution over the set of models; we can then estimate the
 probability of a sentence $s$ as the sum of the probabilities of all
-models $\mathcal{M}_s$. However, since $\mathcal{M}_s$ is normally an
-infinite set, there is a more general definition that allows, for
-example, each model to be equally likely (which is not possible if we
-require a probability distribution over an infinite set).
+models $\mathcal{M}_s$. We also show how these probability
+distributions can be learnt from data, and relate the learnt
+distributions to distributional semantics.
 
-Instead, we define $\Sigma$ as
-$$\Sigma = \{\mathcal{M}_s : s \in L\}$$
-where $L$ is the language of the logic. If $L$ contains a
-propositional fragment then $\Sigma$ will define a $\sigma$-algebra on
-the set of all structures $\mathcal{M}$. We then require $P$ to be a
-probability measure on $\Sigma$. We write $P(s)$ as shorthand for
-$P(\mathcal{M}_s)$, and interpret it as the probability that a sentence
-is true, or more accurately, a degree of belief that $s$ is true.
+Our approach is unique, in that it satisfies all the following:
+\begin{itemize}
+\item It is strongly grounded in probability theory; no ad-hoc methods
+  or heuristics are used to combine distributional semantics with
+  logical semantics.
+\item It provides an elegant extension of Montague semantics to the
+  probabilistic domain.
+\item It is holistic, in that the learning of a word's meaning and the
+  learning of its composition are not separated. We believe this has
+  the potential to lead to more flexible and accurate models of
+  compositional distributional semantics.
+\item It keeps with the tradition of logical approaches to semantics
+  which are concerned with what models are satisfied rather than
+  assuming a single model. This means that composition does not
+  necessarily lose meaning (for example by reducing the meaning of a
+  sentence to a single truth value).
+\end{itemize}
 
-We interpret the conditional probability $P(t|s)$ as the degree to
-which $s$ entails $t$. This has the value 1 if $\mathcal{M}_s
-\subseteq \mathcal{M}_t$ (the reverse implication holds if $P(X) >
-0$ for all $X \neq \varnothing$).
 
-In this paper, we consider the situation where the logical language
-$L$ is restricted to that of logic programs, i.e.~Horn clauses with
-universal quantification, and we use Herbrand models. In this case,
-the distribution can be defined in terms of minimal models, as
-demonstrated by Sato (\citeyear{Sato:95}), meaning that probabilities
-of logical sentences can be computed efficiently. He also shows that
-in this case distributions can be efficiently learnt from data using
-the Expectation Maximisation (EM) algorithm. We demonstrate how this
-can work for toy data consisting of natural language sentences.
-
-\subsection{Probabilistic Montague Semantics}
+\section{Probabilistic Montague Semantics}
 
 We assume, as in Montague semantics, that natural language expressions
 are parsed by a categorial grammar, and that with every word there is
@@ -164,15 +156,37 @@ sentence a value of true or false, denoted $\top, \bot$ respectively.
 A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
 sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
 \emph{model} for a theory $T$ is an interpretation which assigns
-$\hat{s}$ to every sentence in $s\in T$. Let $\Omega$ be the set of
-all interpretations, and $\sigma$ be the sigma algebra consisting of
-the set of all models for all theories. Let $\mu$ be a probability
-measure on $\sigma$; this describes the probability of theories.
+$\hat{s}$ to every sentence $s\in T$. Let $\Omega$ be the set of all
+interpretations, and $\sigma$ be the sigma algebra consisting of the
+set of all models for all theories. Let $\mu$ be a probability measure
+on $\sigma$; this describes the probability of theories.
 
 Given two sentences $s_1$ and $s_2$, we can compute the conditional
 probability of $s_1$ given $s_2$ as
 $$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
-where $M(T)$ denotes the set of all models for the theory $T$.
+where $M(T)$ denotes the set of all models for the theory $T$. We
+interpret this as the degree to which $s_2$ entails $s_1$.
+
+% In this paper, we consider the situation where the logical language
+% $L$ is restricted to that of logic programs, i.e.~Horn clauses with
+% universal quantification, and we use Herbrand models. In this case,
+% the distribution can be defined in terms of minimal models, as
+% demonstrated by Sato (\citeyear{Sato:95}), meaning that probabilities
+% of logical sentences can be computed efficiently. He also shows that
+% in this case distributions can be efficiently learnt from data using
+% the Expectation Maximisation (EM) algorithm. We demonstrate how this
+% can work for toy data consisting of natural language sentences.
+
+\section{Learning}
+
+One can envisage many possible ways of describing probability measures
+$\mu$. In this paper we will present a simple method in which
+interpretations are assumed to be generated by a random process. We
+will show that it is possible to learn the parameters of the random
+generation process from data. Our method falls within the framework of
+Sato (\citeyear{Sato:95}), meaning that we can reuse his algorithms
+for learning parameters from data, and computing probabilities of
+theories.
 
 \begin{figure}
 \begin{lstlisting}
