@@ -132,6 +132,48 @@ in this case distributions can be efficiently learnt from data using
 the Expectation Maximisation (EM) algorithm. We demonstrate how this
 can work for toy data consisting of natural language sentences.
 
+\subsection{Probabilistic Montague Semantics}
+
+We assume, as in Montague semantics, that natural language expressions
+are parsed by a categorial grammar, and that with every word there is
+associated a function with a type. The set $T$ of types is defined
+recursively, such that:
+\begin{itemize}
+\item $e,t\in T$
+\item if $\alpha, \beta\in T$, then $\alpha/\beta\in T$.
+\end{itemize}
+The type $\alpha/\beta$ denotes the type of a function from type
+$\alpha$ to type $\beta$.
+
+We define the set $B$ of \emph{basic expressions} to be a set of
+symbols denoting meanings of words. We assume that associated with
+each $b\in B$ there is a type $\tau_b$. The set $M$ of
+\emph{meaningful expressions}, and the extension of $\tau$ to $M$ are
+defined recursively such that
+\begin{itemize}
+\item $B\subseteq M$
+\item for every pair $\gamma,\delta\in M$ such that $\tau_\gamma =
+  \alpha/\beta$ and $\tau_\delta = \beta$, then $\gamma(\delta)\in
+  M$, and $\tau_{\gamma(\delta)} = \alpha$.
+\end{itemize}
+
+A \emph{sentence} is a meaningful expression of type $t$. An
+\emph{interpretation} is a function $\phi$ which assigns to every
+sentence a value of true or false, denoted $\top, \bot$ respectively.
+
+A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
+sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
+\emph{model} for a theory $T$ is an interpretation which assigns
+$\hat{s}$ to every sentence in $s\in T$. Let $\Omega$ be the set of
+all interpretations, and $\sigma$ be the sigma algebra consisting of
+the set of all models for all theories. Let $\mu$ be a probability
+measure on $\sigma$; this describes the probability of theories.
+
+Given two sentences $s_1$ and $s_2$, we can compute the conditional
+probability of $s_1$ given $s_2$ as
+$$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
+where $M(T)$ denotes the set of all models for the theory $T$.
+
 \begin{figure}
 \begin{lstlisting}
 % Hidden variable
