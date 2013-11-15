@@ -1,0 +1,45 @@
+% Bismillahi-r-Rahmani-r-Rahim
+%
+% Simple method for encoding model-theoretic semantics using Prism
+% Language consists of N V N
+% Set of models is set of subsets of N V N
+
+
+%% nouns([cats, dogs, mice, animals, cheese]).
+%% verbs([like, chase, eat]).
+
+% Hidden variable
+values(hidden, [h0, h1, h2]).
+
+% Types
+values(word(noun, Word, Hidden), [n0, n1, n2, n3, n4, n5]).
+values(word(verb, Word, Hidden), [v0, v1, v2]).
+values(word(det, Word, Hidden), [d0, d1, d2]).
+values(function(s, Value1, Value2, Hidden), [t0, t1]).
+values(function(np, Value1, Value2, Hidden), [np0, np1, np2]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1, vp2]).
+
+evaluate(w(Word, Type), Hidden, Result) :-
+	msw(word(Type, Word, Hidden), Result).
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	msw(function(Type, XResult, YResult, Hidden), Result).
+
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result).
+
+theory(T) :-
+	msw(hidden, Hidden),
+	theory(T, Hidden).
+
+:- learn([count(theory([truth(f(s, f(vp, w(chase, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1)]).
+
+% s(vp(verb(chase), np(det(the), noun(cat))), np(det(the), noun(dog)))
+
+
+%% % type(t, t, [t0, t1]).
+%% type(noun, m(e, t)).
+%% type(det, m(m(e, t), m(m(e, t), t))).
+%% type(verb, m(m(m(e, t), t), m(m(m(e, t), t), t))).

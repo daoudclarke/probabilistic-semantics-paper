@@ -194,33 +194,30 @@ theories.
 \begin{figure}
 \begin{lstlisting}
 % Hidden variable
-values(hidden, [h0, h1, h2, h3, h4]).
+values(hidden, [h0, h1, h2]).
 
-% Probabilities conditional on hidden variable
-values(subject(_,_), [true, false]).
-values(verb(_,_), [true, false]).
-values(object(_,_), [true, false]).
+% Types
+values(word(noun, Word, Hidden), [n0, n1, n2, n3, n4, n5]).
+values(word(verb, Word, Hidden), [v0, v1, v2]).
+values(word(det, Word, Hidden), [d0, d1, d2]).
+values(function(s, Value1, Value2, Hidden), [t0, t1]).
+values(function(np, Value1, Value2, Hidden), [np0, np1, np2]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1, vp2]).
 
-sentence_truth(S, V, O, T) :-
-	(S = true, V = true, O = true) -> T = true ; T = false.
+evaluate(w(Word, Type), Hidden, Result) :-
+	msw(word(Type, Word, Hidden), Result).
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	msw(function(Type, XResult, YResult, Hidden), Result).
 
-all_true([], _).
-all_true([[Subject, Verb, Object, Truth]|XT], Hidden) :-
-	msw(subject(Subject, Hidden), ST),
-	msw(verb(Verb, Hidden), VT),
-	msw(object(Object, Hidden), OT),
-	sentence_truth(ST, VT, OT, Truth),
-	all_true(XT, Hidden).
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result).
 
-is_true(X) :-
+theory(T) :-
 	msw(hidden, Hidden),
-	all_true(X, Hidden).
-
-:- learn([count(is_true([[cats, chase, dogs, true],[cats, chase, mice, true],[dogs, chase, cats, true],[dogs,chase,dogs,false]]), 1),
-	count(is_true([[cats, eat, cheese, true],[cats, eat, cats, false]]), 1),
-	count(is_true([[mice, eat, cheese, true],[cheese, eat, cheese, false]]), 1),
-	count(is_true([[mice, eat, cats, false],[mice, chase, cheese, false]]), 1),
-	count(is_true([[dogs, eat, cats, false],[dogs, chase, dogs, true]]), 1)]).
+	theory(T, Hidden).
 \end{lstlisting}
 \caption{A PRISM program to learn probability distributions over
   natural language models.}

@@ -1,0 +1,64 @@
+% Bismillahi-r-Rahmani-r-Rahim
+%
+% Simple method for encoding model-theoretic semantics using Prism
+% Language consists of N V N
+% Set of models is set of subsets of N V N
+
+
+%% nouns([cats, dogs, mice, animals, cheese]).
+%% verbs([like, chase, eat]).
+
+% Hidden variable
+values(hidden, [h0, h1, h2, h3, h4]).
+
+% Probabilities conditional on hidden variable
+values(subject(_,_), [true, false]).
+values(verb(_,_), [true, false]).
+values(object(_,_), [true, false]).
+
+sentence_truth(S, V, O, T) :-
+	(S = true, V = true, O = true) -> T = true ; T = false.
+
+all_true([], _).
+all_true([[Subject, Verb, Object, Truth]|XT], Hidden) :-
+	msw(subject(Subject, Hidden), ST),
+	msw(verb(Verb, Hidden), VT),
+	msw(object(Object, Hidden), OT),
+	sentence_truth(ST, VT, OT, Truth),
+	all_true(XT, Hidden).
+
+is_true(X) :-
+	msw(hidden, Hidden),
+	all_true(X, Hidden).
+
+:- learn([count(is_true([[cats, chase, dogs, true],[cats, chase, mice, true],[dogs, chase, cats, true],[dogs,chase,dogs,false]]), 1),
+	count(is_true([[cats, eat, cheese, true],[cats, eat, cats, false]]), 1),
+	count(is_true([[mice, eat, cheese, true],[cheese, eat, cheese, false]]), 1),
+	count(is_true([[mice, eat, cats, false],[mice, chase, cheese, false]]), 1),
+	count(is_true([[dogs, eat, cats, false],[dogs, chase, dogs, true]]), 1)]).
+
+%% possibilities([], [], [], _).
+%% possibilities([S|ST], [V|VT], [O|OT], [[S,V,O]|PT]) :-
+%% 	possibilities(ST, [V|VT], [O|OT], PT).
+%% possibilities([S|ST], [V|VT], [O|OT], [[S,V,O]|PT]) :-
+%% 	possibilities([S|ST], VT, [O|OT], PT).
+%% possibilities([S|ST], [V|VT], [O|OT], [[S,V,O]|PT]) :-
+%% 	possibilities([S|ST], [V|VT], OT, PT).
+
+%% poss(X) :-
+%% 	nouns(Subjects),
+%% 	verbs(Verbs),
+%% 	nouns(Objects),
+%% 	possibilities(Subjects, Verbs, Objects, X).	
+
+
+%% is_true([cats, chase, dogs]).
+%% is_true([cats, eat, cheese]).
+
+%% is_true([likes(alice, bob), likes(chris, alice)]).
+
+%% is_true([likes(chris,bob)]).
+
+
+
+
