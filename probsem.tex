@@ -85,15 +85,14 @@ induction~\cite{fountain-lapata:2012:NAACL-HLT}, detection of visual
 text~\cite{dodge-EtAl:2012:NAACL-HLT}, and parser
 lexicalisation~\cite{rei-briscoe:2013:NAACL-HLT}.
 
-Such representations of meaning seem to be in conflict with logical
-approaches to representing meaning, such as Montague semantics or
-Discourse Representation Theory \cite{Blackburn:05}. In these
-approaches, a sentence is translated to a logical form, which is then
-used for reasoning via theorem proving or model building.
+Such approaches to representing meaning differ markedly from logical, compositional accounts of meaning
+such as Montague semantics or
+Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of meaning at the level of words but have little to say about how those meanings combine, logical approaches provide an account of the way in which meanings can be composed to provide a semantics for larger phrases but have little to say about the meanings of individual words. 
+Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and logical approaches
+\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-Recently, effort has been focussed on resolving this conflict
-\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. In this paper, we
-will present a new formalism, probabilistic semantics. In standard
+In this paper, we
+will present a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying account. Probabilist semantics extends standard model-theoretic accounts of meaning by assuming a probability distribution over models.  In
 model-theoretic semantics, one way to view the ``meaning'' of a
 logical sentence $s$ is as the set of all interpretations
 $\mathcal{M}_s$ for which $s$ is true, also called models for
@@ -119,11 +118,12 @@ Our approach is unique, in that it satisfies all the following:
   compositional distributional semantics.
 \item It keeps with the tradition of logical approaches to semantics
   which are concerned with what models are satisfied rather than
-  assuming a single model. This means that composition does not
+  assuming a single model. [POSSIBLE WORLDS?] This means that composition does not
   necessarily lose meaning (for example by reducing the meaning of a
   sentence to a single truth value).
 \end{itemize}
 
+[I FEEL THAT THERE OUGHT TO BE SOME KIND OF BRIEF STATEMENT HERE ABOUT WHAT WE WILL SHOW IN THE PAPER, BUT NOT ENTIRELY CLEAR WHAT WE MIGHT SAY YET]
 
 \section{Probabilistic Montague Semantics}
 
@@ -157,9 +157,9 @@ sentence a value of true or false, denoted $\top, \bot$ respectively.
 A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
 sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
 \emph{model} for a theory $T$ is an interpretation which assigns
-$\hat{s}$ to every sentence $s\in T$. Let $\Omega$ be the set of all
+$\hat{s}$ to every sentence $s\in T$ and in this case we say that the model \emph{satisfies} $T$. Let $\Omega$ be the set of all
 interpretations, and $\sigma$ be the sigma algebra consisting of the
-set of all models for all theories. Let $\mu$ be a probability measure
+set of all sets of models that satisfy some theory. Let $\mu$ be a probability measure
 on $\sigma$; then $\langle\Omega,\sigma,\mu\rangle$ is a probability
 space which describes the probability of theories. Let $M(T)$ denote
 the set of all models for the theory $T$; the probability of $T$ is
