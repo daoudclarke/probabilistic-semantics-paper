@@ -91,10 +91,12 @@ Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional appro
 Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and logical approaches
 \cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-In this paper, we
-will present a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying account. Probabilist semantics extends standard model-theoretic accounts of meaning by assuming a probability distribution over models.  In
-model-theoretic semantics, one way to view the ``meaning'' of a
-logical sentence $s$ is as the set of all interpretations
+In this paper, we will present a new formalism, {\em probabilistic
+  semantics\/}, which seeks to provide such a unifying
+account. Probabilistic semantics extends standard model-theoretic
+accounts of meaning by assuming a probability distribution over
+models.  In model-theoretic semantics, one way to view the ``meaning''
+of a logical sentence $s$ is as the set of all interpretations
 $\mathcal{M}_s$ for which $s$ is true, also called models for
 $s$. Then $s$ entails $t$ if $\mathcal{M}_s \subseteq
 \mathcal{M}_t$. We propose an extension to this idea where we assume
@@ -215,7 +217,10 @@ set of possible values for type $\tau$, with $V(t) = \{\top, \bot\}$.
 Given a set of observed theories, the probability distributions $P$
 can be learnt. In the full paper, we will demonstrate this with
 examples, and give the code listing for our implementation within
-Sato's framework.
+Sato's framework. The learnt parameters for a particular basic
+expression can be viewed as its distributional semantics. In the full
+paper, we will look at how this representation relates to standard
+approaches to distributional semantics.
 
 \section{Application to Textual Entailment}
 
@@ -231,7 +236,41 @@ is intended to represent a core problem that is required to solve
 information retrieval, machine translation, question answering and
 summarisation.
 
-% Our 
+Previous attempts to apply logical representations of meaning to this
+task have applied heuristics to handle the lack of robustness in
+standard approaches. Bos and Markert (\citeyear{Bos:06}) used model
+builders to build a model for $T$ and a model for $T$ and $H$
+together, and used the size of these models as an indication of the
+degree of entailment, the reasoning being that if the model for $T$
+and $H$ together is larger than just the model for $T$, then $H$
+contains a lot of knowledge which is not in $T$. This idea can be
+related to our approach, by assuming probability distribution over
+models which depends only on the size of the model, and makes larger
+models less likely.
+
+Textual entailment datasets can also be used to learn the parameters
+described in the previous section. A dataset typically consists of a
+set of natural language sentence pairs, each annotated as to whether
+entailment holds or not. Given a pair $(T,H)$ for which entailment
+does hold, and meaningful expressions $s_T$ and $s_H$ for $T$ and $H$,
+then we can add the following theories as observations:
+$\{(s_T,\top),(s_H,\top)\}$, $\{(s_T,\bot),(s_H,\top)\}$,
+$\{(s_T,\bot),(s_H,\bot)\}$. For a pair for which entailment does not
+hold, we can add $\{(s_T,\top),(s_H,\bot)\}$ as an observation. This
+idea could potentially be used as a supervised approach to textual
+entailment, however we leave the evaluation of this idea to future
+work. In the full paper, we will investigate what features of natural
+language semantics can be learnt from toy data.
+
+
+\section{Conclusion}
+
+We have introduced probabilistic semantics for natural language, a
+framework for representing natural language meaning which extends
+Montague semantics by assuming a probability distribution over
+models. We have shown how, given some further assumptions, this
+distribution can be learnt from data, and discussed the application of
+this idea to the task of recognising textual entailment.
 
 % \begin{figure}
 % \begin{lstlisting}
