@@ -1,6 +1,7 @@
 %File: formatting-instruction.tex
 \documentclass[letterpaper]{article}
 \usepackage{aaai}
+\nocopyright
 \usepackage{times}
 \usepackage{helvet}
 \usepackage{courier}
@@ -65,7 +66,7 @@ Falmer, Brighton, UK\\
 
 \section{Introduction}
 
-Techniques which represent the meanings of words by the contexts in
+Techniques which represent the meanings of words in terms of the contexts in
 which they occur have become an indispensible tool in natural language
 processing. Such distributional representations of meaning typically
 represent words as vectors or probability distributions over
@@ -85,7 +86,7 @@ induction~\cite{fountain-lapata:2012:NAACL-HLT}, detection of visual
 text~\cite{dodge-EtAl:2012:NAACL-HLT}, and parser
 lexicalisation~\cite{rei-briscoe:2013:NAACL-HLT}.
 
-Such approaches to representing meaning differ markedly from logical, compositional accounts of meaning
+Such approaches to the representation of meaning differ markedly from logical, compositional treatments of meaning
 such as Montague semantics or
 Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of meaning at the level of words but have little to say about how those meanings combine, logical approaches provide an account of the way in which meanings can be composed to provide a semantics for larger phrases but have little to say about the meanings of individual words. 
 Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and logical approaches
@@ -120,12 +121,12 @@ Our approach is unique, in that it satisfies all the following:
   compositional distributional semantics.
 \item It keeps with the tradition of logical approaches to semantics
   which are concerned with what models are satisfied rather than
-  assuming a single model. [POSSIBLE WORLDS?] This means that composition does not
+  assuming a single model. This means that composition does not
   necessarily lose meaning (for example by reducing the meaning of a
   sentence to a single truth value).
 \end{itemize}
 
-[I FEEL THAT THERE OUGHT TO BE SOME KIND OF BRIEF STATEMENT HERE ABOUT WHAT WE WILL SHOW IN THE PAPER, BUT NOT ENTIRELY CLEAR WHAT WE MIGHT SAY YET]
+In the following we sketch a probabilistic extension of Montague semantics, discuss a way of learning the parameters of a random generation process over interpretations  and consider an application to the core task of textual entailment.
 
 \section{Probabilistic Montague Semantics}
 
@@ -192,11 +193,12 @@ generation process from data. Our method falls within the framework of
 Sato (\citeyear{Sato:95}), meaning that we can reuse his algorithms
 for learning and inference.
 
-To make the number of parameters small enough to make learning
+To keep the number of parameters small enough to make learning
 feasible, we restrict the number of possible values of each semantic
 type. We assume that these values are randomly generated, and their
 probabilities are conditionally independent given a hidden
-variable. Specifically, we assume the following process to generate
+variable. Let $H$ denote the set of possible hidden values and $V(\tau)$  the
+set of possible values for type $\tau$. In particular, $V(t) = \{\top, \bot\}$. We assume the following process to generate
 interpretations:
 \begin{itemize}
 \item Generate a hidden value $h\in H$
@@ -211,8 +213,7 @@ interpretations:
   h)$.
 \end{itemize}
 \end{itemize}
-where $H$ is the set of possible hidden values, and $V(\tau)$ is the
-set of possible values for type $\tau$, with $V(t) = \{\top, \bot\}$.
+
 
 Given a set of observed theories, the probability distributions $P$
 can be learnt. In the full paper, we will demonstrate this with
@@ -229,23 +230,22 @@ determine, given two sentences $T$ (the \emph{text}) and $H$ (the
 \emph{hypothesis}), whether $T$ entails or implies $H$. The notion of
 entailment is an informal one, and is based on human judgments rather
 than requiring strict logical entailment, making it well suited to our
-probabilistic approach.
-
-The task has broad relevance within natural language processing, and
-is intended to represent a core problem that is required to solve
+probabilistic approach. The task has broad relevance within natural language processing. 
+It represents a core problem, a solution to which is required in order to develop applications such as
 information retrieval, machine translation, question answering and
 summarisation.
 
 Previous attempts to apply logical representations of meaning to this
 task have applied heuristics to handle the lack of robustness in
 standard approaches. Bos and Markert (\citeyear{Bos:06}) used model
-builders to build a model for $T$ and a model for $T$ and $H$
-together, and used the size of these models as an indication of the
-degree of entailment, the reasoning being that if the model for $T$
-and $H$ together is larger than just the model for $T$, then $H$
-contains a lot of knowledge which is not in $T$. This idea can be
-related to our approach, by assuming probability distribution over
-models which depends only on the size of the model, and makes larger
+builders to construct a model for $T$ and a model for $T$ and $H$
+together and used the size of these models as an indication of the
+degree of entailment. The intuition here is that if the model for $T$
+and $H$ together is larger than that for just $T$, then $H$
+contains a lot of knowledge not in $T$ and there is a low degree of entailment. 
+This idea can be
+directly related to our approach if we assume a probability distribution over
+models which depends only on the size of the model,  making larger
 models less likely.
 
 Textual entailment datasets can also be used to learn the parameters
@@ -261,7 +261,6 @@ idea could potentially be used as a supervised approach to textual
 entailment, however we leave the evaluation of this idea to future
 work. In the full paper, we will investigate what features of natural
 language semantics can be learnt from toy data.
-
 
 \section{Conclusion}
 
