@@ -5,3 +5,4 @@
 *.pdf
 *.fdb_latexmk
 *~
+*.synctex.gz
