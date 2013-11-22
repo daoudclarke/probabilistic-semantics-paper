@@ -15,7 +15,6 @@ NEGATIVE = ["count(theory([truth(%s, t1), truth(%s, t0)]), 1)"]
 # LEXICAL_TEST = [('chased the cat the dog', 'chased the animal the dog')]
 
 LEXICAL = [('chased the cat the dog', 'chased the animal the dog', True),
-           ('chased the animal the dog', 'chased the cat the dog', False),
            ('likes the cat the dog', 'likes the animal the dog', True)]
 
 LEXICAL_TEST = [('likes the cat the dog', 'likes the animal the dog'),
@@ -24,17 +23,9 @@ LEXICAL_TEST = [('likes the cat the dog', 'likes the animal the dog'),
                 ('loves the animal the dog', 'loves the cat the dog')]
 
 QUANTIFIER = [('like some cats all dogs','like some animals all dogs', True),
-              ('like some animals all dogs','like some cats all dogs', False),
-              ('like no cats all dogs','like no animals all dogs', False),
               ('like no animals all dogs','like no cats all dogs', True),
-              ('like some women all dogs','like some females all dogs', True),
-              ('like some females all dogs','like some women all dogs', False),
-              ('like no women all dogs','like no females all dogs', False),
-              ('like no females all dogs','like no women all dogs', True),
-              ('like some men all dogs','like some people all dogs', True),
-              ('like some people all dogs','like some men all dogs', False)]
-              # ('love some men all apples','love some people all apples', True),
-              # ('love some people all apples','love some men all apples', False)]
+              ('like some men all dogs','like some people all dogs', True)]
+
 
 QUANTIFIER_TEST = [('like no people all dogs','like no men all dogs'),
                    ('like no men all dogs','like no people all dogs'),
@@ -70,7 +61,7 @@ def make_test(dataset):
 
 if __name__ == "__main__":
     print ":- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=10], montague)."
-    print make_data(QUANTIFIER)
-    print make_test(QUANTIFIER_TEST)
-    # print make_data(LEXICAL)
-    # print make_test(LEXICAL_TEST)
+    #print make_data(QUANTIFIER)
+    #print make_test(QUANTIFIER_TEST)
+    print make_data(LEXICAL)
+    print make_test(LEXICAL_TEST)
