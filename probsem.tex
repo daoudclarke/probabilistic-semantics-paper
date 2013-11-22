@@ -262,6 +262,42 @@ entailment, however we leave the evaluation of this idea to future
 work. In the full paper, we will investigate what features of natural
 language semantics can be learnt from toy data.
 
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent\\
+\hline
+\emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
+\emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
+\hline
+\emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
+\emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
+\hline
+\end{tabular}
+\caption{Learning lexical entailment from examples, showing training
+  data at the top, and test data below, with the degree of entailment
+  determined by our system.}
+\end{table}
+
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent\\
+\hline
+\emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
+\emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
+\emph{some men like all dogs} & \emph{some people like all dogs} & \\
+\hline
+\emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
+\emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
+\emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
+\hline
+\end{tabular}
+\caption{Learning how quantifiers reverse the entailment direction,
+  with training data at the top, and test data below, with the degree
+  of entailment determined by our system.}
+\end{table}
+
 \section{Conclusion}
 
 We have introduced probabilistic semantics for natural language, a
