@@ -1,0 +1,19 @@
+Bismillahi-r-Rahmani-r-Rahim
+
+Things to test out
+==================
+
+Can we learn about:
+ - negation?
+ - generalised quantifiers?
+ - lexical entailment?
+ - idiomatic/phrasal entailment?
+
+Ideas:
+ - Use entailment pairs
+
+Eg:
+ - cats like cheese -> animals like cheese
+ - animals like cheese !> cats like cheese
+ - cats like potatoes ?> animals like potatoes
+   
