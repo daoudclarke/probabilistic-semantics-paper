@@ -35,6 +35,21 @@ theory(T) :-
 	msw(hidden, Hidden),
 	theory(T, Hidden).
 
+test_print([], _).
+test_print([[T, TH, Details]|Tail], Stream) :-
+	prob(theory([truth(T, t1)]), TProb),
+	prob(theory([truth(TH, t1)]), THProb),
+	write(Stream, Details), write(Stream, '\t'), 
+	write(Stream, TProb), write(Stream, '\t'),
+	write(Stream, THProb), write(Stream, '\n'),
+	test(Tail).
+
+test(T) :-
+	open(output, write, Stream),
+	test_print(T, Stream),
+	close(Stream).
+
+
 % :- learn([count(theory([truth(f(s, f(vp, w(chase, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1)]).
 
 % s(vp(verb(chase), np(det(the), noun(cat))), np(det(the), noun(dog)))

@@ -115,17 +115,16 @@ def make_data(dataset):
     return ":- learn([%s])." % ', '.join(result)
 
 def make_test(dataset):
-    result = ''
+    tests = []
     for text, hypothesis, entails in dataset:
         text_sentence = make_sentence(text)
         hypothesis_sentence = make_sentence(hypothesis)
-        result += ":- writeln('%s -> %s (%s)').\n" % (text, hypothesis, str(entails))
-        result += ':- prob(theory([truth(%s, t1)]), X), writeln(X).\n' % text_sentence
-        result += ':- prob(theory([truth(%s, t1), truth(%s, t1)]), X), writeln(X).\n' % (text_sentence, hypothesis_sentence)
-    return result
+        tests.append( (text_sentence, hypothesis_sentence,
+                       "'%s\t%s\t%s'" % (text, hypothesis, str(entails))) )
+    return ":- test([%s])." % ', '.join('[%s, %s, %s]' % x for x in tests)
 
 if __name__ == "__main__":
-    print ":- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=20], montague)."
+    print ":- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=1], montague)."
     #print make_data(QUANTIFIER)
     #print make_test(QUANTIFIER_TEST)
     #print make_data(LEXICAL)
