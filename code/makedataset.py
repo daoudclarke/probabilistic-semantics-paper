@@ -124,7 +124,7 @@ def make_test(dataset):
     return ":- test([%s])." % ', '.join('[%s, %s, %s]' % x for x in tests)
 
 if __name__ == "__main__":
-    print ":- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=1], montague)."
+    print ":- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=20], montague)."
     #print make_data(QUANTIFIER)
     #print make_test(QUANTIFIER_TEST)
     #print make_data(LEXICAL)

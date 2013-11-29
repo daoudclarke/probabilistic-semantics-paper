@@ -45,7 +45,7 @@ test_print([[T, TH, Details]|Tail], Stream) :-
 	test(Tail).
 
 test(T) :-
-	open(output, write, Stream),
+	open('output.csv', write, Stream),
 	test_print(T, Stream),
 	close(Stream).
 
