@@ -1,0 +1,15 @@
+busboy employee
+cowboy employee
+housewife woman
+laborer employee
+lady woman
+maiden woman
+mistress woman
+mover employee
+puncher employee
+salesman employee
+waiter employee
+whore woman
+widow woman
+wife woman
+workman employee
