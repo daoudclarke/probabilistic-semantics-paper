@@ -9,7 +9,7 @@ def analyse(f):
     incorrect = 0
     for line in f:
         text, hypothesis, entailment, t_prob, th_prob = line.strip().split('\t')
-        entailment = bool(entailment)
+        entailment = (entailment == 'True')
         t_prob, th_prob = float(t_prob), float(th_prob)
         judgment = th_prob/t_prob > 0.75
         if judgment == entailment:
