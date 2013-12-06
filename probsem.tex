@@ -317,18 +317,33 @@ implemented in PRISM.
 
 \begin{figure}
 \begin{lstlisting}
-:- prob(theory([truth(
-	f(s, f(vp, w(likes, verb),
-	           f(np, w(the, det),
+:- prob(theory([
+  truth(f(s, f(vp, w(likes, verb),
+                   f(np, w(the, det),
                          w(cat, noun))),
-	     f(np, w(the, det),
+             f(np, w(the, det),
                    w(dog, noun))),
-             t1)]), X).
+        t1)]), X).
 \end{lstlisting}
 \caption{PRISM query to evaluate the probability that the sentence
   \emph{the cat likes the dog} is true.}
 \label{figure:query}
 \end{figure}
+
+\section{Examples}
+
+Table \ref{table:lexical} demonstrates that our system can learn
+simple lexical entailment rules, in this case that \emph{cat} entails
+\emph{animal}.
+
+Table \ref{table:quantifiers} demonstrates that our system can learn
+something more significant: it can learn that the entailment direction
+is reversed with certain quantifiers. Quantifiers like \emph{some} are
+\textbf{monotonically increasing}, so that \emph{some cats} entails
+\emph{some animals}. Quantifiers like \emph{no} and \emph{all} are
+\textbf{monotonically decreasing}, so that \emph{no animals} entails
+\emph{no cats}. Our system is able to determine this from very little
+training data.
 
 \begin{table*}
 \centering
