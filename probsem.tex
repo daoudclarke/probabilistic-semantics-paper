@@ -262,7 +262,8 @@ entailment, however we leave the evaluation of this idea to future
 work. In the full paper, we will investigate what features of natural
 language semantics can be learnt from toy data.
 
-\begin{table}
+\begin{table*}
+\centering
 \begin{tabular}{|l|l|l|}
 \hline
 Text & Hypothesis & Ent\\
@@ -277,9 +278,10 @@ Text & Hypothesis & Ent\\
 \caption{Learning lexical entailment from examples, showing training
   data at the top, and test data below, with the degree of entailment
   determined by our system.}
-\end{table}
+\end{table*}
 
-\begin{table}
+\begin{table*}
+\centering
 \begin{tabular}{|l|l|l|}
 \hline
 Text & Hypothesis & Ent\\
@@ -296,7 +298,7 @@ Text & Hypothesis & Ent\\
 \caption{Learning how quantifiers reverse the entailment direction,
   with training data at the top, and test data below, with the degree
   of entailment determined by our system.}
-\end{table}
+\end{table*}
 
 \section{Conclusion}
 
@@ -307,37 +309,39 @@ models. We have shown how, given some further assumptions, this
 distribution can be learnt from data, and discussed the application of
 this idea to the task of recognising textual entailment.
 
-% \begin{figure}
-% \begin{lstlisting}
-% % Hidden variable
-% values(hidden, [h0, h1, h2]).
+\begin{figure*}
+\centering
+\begin{lstlisting}
+% Hidden variable
+values(hidden, [h0, h1]).
 
-% % Types
-% values(word(noun, Word, Hidden), [n0, n1, n2, n3, n4, n5]).
-% values(word(verb, Word, Hidden), [v0, v1, v2]).
-% values(word(det, Word, Hidden), [d0, d1, d2]).
-% values(function(s, Value1, Value2, Hidden), [t0, t1]).
-% values(function(np, Value1, Value2, Hidden), [np0, np1, np2]).
-% values(function(vp, Value1, Value2, Hidden), [vp0, vp1, vp2]).
+% Types
+values(word(noun, Word, Hidden), [n0, n1]).
+values(word(verb, Word, Hidden), [v0, v1]).
+values(word(det, Word, Hidden), [d0, d1]).
+values(function(s, Value1, Value2, Hidden), [t0, t1]).
+values(function(np, Value1, Value2, Hidden), [np0, np1]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1]).
 
-% evaluate(w(Word, Type), Hidden, Result) :-
-% 	msw(word(Type, Word, Hidden), Result).
-% evaluate(f(Type, X, Y), Hidden, Result) :-
-% 	evaluate(X, Hidden, XResult),
-% 	evaluate(Y, Hidden, YResult),
-% 	msw(function(Type, XResult, YResult, Hidden), Result).
+evaluate(w(Word, Type), Hidden, Result) :-
+	msw(word(Type, Word, Hidden), Result).
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	msw(function(Type, XResult, YResult, Hidden), Result).
 
-% theory([], _).
-% theory([truth(Sentence, Result)|Tail], Hidden) :-
-% 	evaluate(Sentence, Hidden, Result).
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result),
+	theory(Tail, Hidden).
 
-% theory(T) :-
-% 	msw(hidden, Hidden),
-% 	theory(T, Hidden).
-% \end{lstlisting}
-% \caption{A PRISM program to learn probability distributions over
-%   natural language models.}
-% \end{figure}
+theory(T) :-
+	msw(hidden, Hidden),
+	theory(T, Hidden).
+\end{lstlisting}
+\caption{A PRISM program describing probability distributions over
+  natural language models used for our examples.}
+\end{figure*}
 
 
 \bibliographystyle{aaai}
