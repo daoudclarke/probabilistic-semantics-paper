@@ -1,0 +1,7 @@
+:- prob(theory([truth(
+	f(s, f(vp, w(likes, verb),
+	           f(np, w(the, det),
+                         w(cat, noun))),
+	     f(np, w(the, det),
+                   w(dog, noun))),
+             t1)]), X).

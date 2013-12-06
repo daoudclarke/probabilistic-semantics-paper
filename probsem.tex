@@ -259,55 +259,12 @@ $\{(s_T,\bot),(s_H,\bot)\}$. For a pair for which entailment does not
 hold, we can add $\{(s_T,\top),(s_H,\bot)\}$ as an observation. This
 idea could potentially be used as a supervised approach to textual
 entailment, however we leave the evaluation of this idea to future
-work. In the full paper, we will investigate what features of natural
-language semantics can be learnt from toy data.
+work. Instead, we will give some examples to demonstrate that our
+model is capable of learning some important features of natural
+language semantics.
 
-\begin{table*}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent\\
-\hline
-\emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
-\emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
-\hline
-\emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
-\emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
-\hline
-\end{tabular}
-\caption{Learning lexical entailment from examples, showing training
-  data at the top, and test data below, with the degree of entailment
-  determined by our system.}
-\end{table*}
+\section{Implementation}
 
-\begin{table*}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent\\
-\hline
-\emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
-\emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
-\emph{some men like all dogs} & \emph{some people like all dogs} & \\
-\hline
-\emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
-\emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
-\emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
-\hline
-\end{tabular}
-\caption{Learning how quantifiers reverse the entailment direction,
-  with training data at the top, and test data below, with the degree
-  of entailment determined by our system.}
-\end{table*}
-
-\section{Conclusion}
-
-We have introduced probabilistic semantics for natural language, a
-framework for representing natural language meaning which extends
-Montague semantics by assuming a probability distribution over
-models. We have shown how, given some further assumptions, this
-distribution can be learnt from data, and discussed the application of
-this idea to the task of recognising textual entailment.
 
 \begin{figure*}
 \centering
@@ -341,7 +298,86 @@ theory(T) :-
 \end{lstlisting}
 \caption{A PRISM program describing probability distributions over
   natural language models used for our examples.}
+\label{figure:program}
 \end{figure*}
+
+Figure \ref{figure:program} gives the listing of the program that we
+used within the PRISM framework \cite{Sato:97}. It describes how
+sentences are randomly assigned truth values, using switches
+identified by the special predicate \texttt{msw}. The predicate
+\texttt{values} describes the allowed values of each switch, and the
+variables on which they are conditioned. To simplify the code, complex
+types are referred to by their corresponding natural language
+categories, so type $t$ is represented by \texttt{s} (a sentence) and
+type $(e/t)/t$ by \texttt{np} (a noun phrase). To evaluate the
+probability of a theory, the predicate \texttt{prob} is used; an
+example query is shown in figure \ref{figure:query}. To learn the
+parameters, we used the standard expectation maximisation algorithm
+implemented in PRISM.
+
+\begin{figure}
+\begin{lstlisting}
+:- prob(theory([truth(
+	f(s, f(vp, w(likes, verb),
+	           f(np, w(the, det),
+                         w(cat, noun))),
+	     f(np, w(the, det),
+                   w(dog, noun))),
+             t1)]), X).
+\end{lstlisting}
+\caption{PRISM query to evaluate the probability that the sentence
+  \emph{the cat likes the dog} is true.}
+\label{figure:query}
+\end{figure}
+
+\begin{table*}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent\\
+\hline
+\emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
+\emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
+\hline
+\emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
+\emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
+\hline
+\end{tabular}
+\caption{Learning lexical entailment from examples, showing training
+  data at the top, and test data below, with the degree of entailment
+  determined by our system.}
+\label{table:lexical}
+\end{table*}
+
+\begin{table*}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent\\
+\hline
+\emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
+\emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
+\emph{some men like all dogs} & \emph{some people like all dogs} & \\
+\hline
+\emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
+\emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
+\emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
+\hline
+\end{tabular}
+\caption{Learning how quantifiers reverse the entailment direction,
+  with training data at the top, and test data below, with the degree
+  of entailment determined by our system.}
+\label{table:quantifiers}
+\end{table*}
+
+\section{Conclusion}
+
+We have introduced probabilistic semantics for natural language, a
+framework for representing natural language meaning which extends
+Montague semantics by assuming a probability distribution over
+models. We have shown how, given some further assumptions, this
+distribution can be learnt from data, and discussed the application of
+this idea to the task of recognising textual entailment.
 
 
 \bibliographystyle{aaai}
