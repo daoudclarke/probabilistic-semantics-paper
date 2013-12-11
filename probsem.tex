@@ -93,47 +93,45 @@ induction~\cite{fountain-lapata:2012:NAACL-HLT}, detection of visual
 text~\cite{dodge-EtAl:2012:NAACL-HLT}, and parser
 lexicalisation~\cite{rei-briscoe:2013:NAACL-HLT}.
 
-Such approaches to the representation of meaning differ markedly from logical, compositional treatments of meaning
+Current distributional approaches to the representation of meaning differ in many respects from logical, compositional treatments of meaning
 such as Montague semantics or
-Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of meaning at the level of words but have little to say about how those meanings combine, logical approaches provide an account of the way in which meanings can be composed to provide a semantics for larger phrases but have little to say about the meanings of individual words. 
-Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and logical approaches
-\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
-
-In this paper, we will present a new formalism, {\em probabilistic
-  semantics\/}, which seeks to provide such a unifying
+Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of meaning at the level of words but have little to say about how those meanings combine, logical approaches provide an account of the way in which meanings can be composed to provide a semantics for larger phrases but have little to say about the meanings of individual words.  Recently however, a number of researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and logical approaches
+\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}.  In this paper, we present a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying
 account. Probabilistic semantics extends standard model-theoretic
 accounts of meaning by assuming a probability distribution over
-models.  In model-theoretic semantics, one way to view the ``meaning''
+models.  
+
+In model-theoretic semantics, one way to view the meaning
 of a logical sentence $s$ is as the set of all interpretations
-$\mathcal{M}_s$ for which $s$ is true, also called models for
-$s$. Then $s$ entails $t$ if $\mathcal{M}_s \subseteq
+$\mathcal{M}_s$ for which $s$ is true. Interpretations in $\mathcal{M}_s$ are also called {\em models for\/}
+$s$. Then $s$ entails $t$ if any model for $s$ is a model for $t$: $\mathcal{M}_s \subseteq
 \mathcal{M}_t$. We propose an extension to this idea where we assume
 that models occur randomly. Informally, we may assume a probability
-distribution over the set of models; we can then estimate the
+distribution over the set of models. Given such a probability distribution we can then estimate the
 probability of a sentence $s$ as the sum of the probabilities of all
-models $\mathcal{M}_s$. We also show how these probability
-distributions can be learnt from data, and relate the learnt
-distributions to distributional semantics.
+models for $s$, $\mathcal{M}_s$. In the following, we also show how these probability
+distributions can be learnt from data and relate the learnt
+distributions to other distributional models of semantics.
 
 Our approach is unique, in that it satisfies all the following:
 \begin{itemize}
-\item It is strongly grounded in probability theory; no ad-hoc methods
+\item It is strongly grounded in probability theory: no ad-hoc methods
   or heuristics are used to combine distributional semantics with
   logical semantics.
-\item It provides an elegant extension of Montague semantics to the
-  probabilistic domain.
-\item It is holistic, in that the learning of a word's meaning and the
+\item It provides the basis of an elegant extension of Montague semantics to the
+  probabilistic domain: in particular it combines the strengths of a compositional, model-theoretic account of semantics, complete with a well-defined notion of entailment, with a distributional account of the meaning of expressions.
+\item It maintains the tradition of logical approaches to semantics
+  which are concerned with what models are satisfied rather than
+  assuming a single model: this means that composition does not
+  necessarily lead to a loss of meaning (for example by reducing the meaning of a
+  sentence to a single truth value).
+  \item It is holistic, in that the learning of a word's meaning and the
   learning of its composition are not separated. We believe this has
   the potential to lead to more flexible and accurate models of
   compositional distributional semantics.
-\item It keeps with the tradition of logical approaches to semantics
-  which are concerned with what models are satisfied rather than
-  assuming a single model. This means that composition does not
-  necessarily lose meaning (for example by reducing the meaning of a
-  sentence to a single truth value).
 \end{itemize}
 
-In the following we sketch a probabilistic extension of Montague semantics, discuss a way of learning the parameters of a random generation process over interpretations  and consider an application to the core task of textual entailment.
+In the following sketch a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and present an implementation of our approach within the framework of distribution semantics \cite{ref}. We show that it is possible to learn ....
 
 \section{Probabilistic Montague Semantics}
 
