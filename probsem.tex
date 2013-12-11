@@ -135,15 +135,17 @@ In the following sketch a probabilistic extension of Montague semantics and pres
 
 \section{Probabilistic Montague Semantics}
 
+[SAY SOMETHING BRIEF AND INTRODUCTORY HERE ABOUT MONTAGUE GRAMMAR/SEMANTICS]
+
 We assume, as in Montague semantics, that natural language expressions
-are parsed by a categorial grammar, and that with every word there is
-associated a function with a type. The set $\mathcal{T}$ of types is defined
+are parsed by a categorial grammar. Further, we assume that with every word there is
+associated a function with a type. Let $\mathcal{T}$ be the set of types is defined
 recursively, such that:
-\begin{itemize}
-\item $e,t\in \mathcal{T}$
-\item if $\alpha, \beta\in \mathcal{T}$, then $\alpha/\beta\in \mathcal{T}$.
-\end{itemize}
-The type $\alpha/\beta$ denotes the type of a function from type
+\begin{description}
+\item [Basic types:] $e,t\in \mathcal{T}$
+\item[Complex types:]  if $\alpha, \beta\in \mathcal{T}$, then $\alpha/\beta\in \mathcal{T}$.
+\end{description}
+Nothing else is in $\mathcal{T}$. Note that the type $\alpha/\beta$ denotes the type of a function from type
 $\alpha$ to type $\beta$.
 
 We define the set $B$ of \emph{basic expressions} to be a set of
