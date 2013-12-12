@@ -10,6 +10,7 @@
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{csvsimple}
 %\usepackage{natbib}
 
 %\renewcommand{\cite}{\citep}
@@ -399,6 +400,27 @@ Text & Hypothesis & Ent\\
   of entailment determined by our system.}
 \label{table:quantifiers}
 \end{table*}
+
+\begin{table}
+\centering
+\csvautotabular{lexical.csv}
+\caption{Learnt probabilities for the nouns in the example
+  in Table \ref{table:quantifiers}}
+\label{table:lexical}
+\end{table}
+
+\section{Recovering Lexical Semantics}
+
+Our formalism does not make use of any explicit representation of
+lexical semantics, however distributional representations of word
+meanings can be recovered from the learnt models. The representation
+of a word is a matrix, rather than a vector, since there is a
+probability distribution over the possible values for a particular
+type for each hidden value. Table \ref{table:lexical} shows the learnt
+values for the nouns in the example in Table
+\ref{table:quantifiers}. Allowing the distribution to vary with the
+hidden variable is what enables learning of the behaviour of
+quantifiers, which would not be possible without this flexibility.
 
 \section{Related Work}
 
