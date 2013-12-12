@@ -61,10 +61,10 @@ Falmer, Brighton, UK\\
 % \begin{quote}
 Distributional representations of meaning typically
 represent words as vectors or probability distributions over
-contexts. Such approaches to the representation of meaning differ markedly from compositional treatments of meaning
-such as Montague semantics.Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches. This paper presents a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying account. Probabilistic semantics extends standard model-theoretic
+contexts. Such approaches to the representation of meaning differ markedly from compositional, model-theoretic treatments of meaning
+such as Montague semantics. Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches. This paper presents a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying account. Probabilistic semantics extends standard model-theoretic
 accounts of meaning by assuming a probability distribution over
-models. We sketch a probabilistic extension of Montague semantics and consider an application of our approach to the core task of textual entailment......
+models. We sketch a probabilistic extension of Montague-style semantics and consider an application of our approach to the core task of textual entailment......
 
 
 % \end{quote}
@@ -109,11 +109,10 @@ $s$. Then $s$ entails $t$ if any model for $s$ is a model for $t$: $\mathcal{M}_
 that models occur randomly. Informally, we may assume a probability
 distribution over the set of models. Given such a probability distribution we can then estimate the
 probability of a sentence $s$ as the sum of the probabilities of all
-models for $s$, $\mathcal{M}_s$. In the following, we also show how these probability
-distributions can be learnt from data and relate the learnt
-distributions to other distributional models of semantics.
+models for $s$, $\mathcal{M}_s$. 
 
-Our approach is unique, in that it satisfies all the following:
+
+Our approach is unique, in that it satisfies each of the following:
 \begin{itemize}
 \item It is strongly grounded in probability theory: no ad-hoc methods
   or heuristics are used to combine distributional semantics with
@@ -125,17 +124,19 @@ Our approach is unique, in that it satisfies all the following:
   assuming a single model: this means that composition does not
   necessarily lead to a loss of meaning (for example by reducing the meaning of a
   sentence to a single truth value).
-  \item It is holistic, in that the learning of a word's meaning and the
-  learning of its composition are not separated. We believe this has
+ \item It supports an implementation in which probability
+distributions over models can be learnt from data: the account is holistic, in that the learning word meaning and composition are not separated, with
   the potential to lead to more flexible and accurate models of
   compositional distributional semantics.
 \end{itemize}
 
-In the following sketch a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and present an implementation of our approach within the framework of distribution semantics \cite{ref}. We show that it is possible to learn ....
+In the following we sketch a probabilistic extension of Montague semantics, present a way of defining a probability distribution over models in terms of a random generation process over interpretations and consider an application to the core task of textual entailment.  We describe an implementation of our approach within the framework of distribution semantics \cite{ref} and present  We also  relate the learnt
+distributions to other distributional models of semantics.
 
-\section{Probabilistic Montague Semantics}
+\section{Towards a Probabilistic Montague Semantics}
 
-[SAY SOMETHING BRIEF AND INTRODUCTORY HERE ABOUT MONTAGUE GRAMMAR/SEMANTICS]
+In a series of papers \cite{ug,elf,ptq} Montague spelled out a formal treatment of the semantics of natural language that was model-theoretic and compositional. 
+Montague considered that a fundamental aim of any adequate theory of semantics was ``to characterise the notions of a true sentence (under a given interpretation) and of entailment'' \cite{ug}. 
 
 We assume, as in Montague semantics, that natural language expressions
 are parsed by a categorial grammar. Further, we assume that with every word there is
@@ -216,15 +217,17 @@ interpretations:
 \end{itemize}
 \end{itemize}
 
-In the following, we
-show that it is possible to learn the parameters of this random
+It is possible to learn the parameters of this random
 generation process from data.  Our method falls within the framework of
 Sato (\citeyear{Sato:95}), meaning that we can reuse his algorithms
-for learning and inference.
-Given a set of observed theories, the probability distributions $P$
-can be learnt. In the following we demonstrate this with
+for learning and inference. Given a set of observed theories, the probability distributions $P$
+can be learnt. 
+
+In the following we demonstrate this with
 examples, and give the code listing for our implementation within the framework of Sato's distribution of semantics. The learnt parameters for a particular basic
-expression can be viewed as its distributional semantics. In section ??? we consider how this representation relates to standard
+expression can be viewed as its distributional semantics. 
+
+In section ??? we consider how this representation relates to standard
 approaches to distributional semantics.
 
 
