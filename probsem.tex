@@ -10,6 +10,15 @@
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{csvsimple}
+\usepackage{titleref}
+%\usepackage{hyperref}
+%\usepackage{natbib}
+
+\renewcommand{\theTitleReference}[2]{\emph{#2}}
+
+%\renewcommand{\cite}{\citep}
+\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
 
 \lstset{
          basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -130,17 +139,28 @@ distributions over models can be learnt from data: the account is holistic, in t
   compositional distributional semantics.
 \end{itemize}
 
+<<<<<<< HEAD
 In the following we sketch a probabilistic extension of Montague semantics, present a way of defining a probability distribution over models in terms of a random generation process over interpretations and consider an application to the core task of textual entailment.  We describe an implementation of our approach within the framework of distribution semantics \cite{ref} and present  We also  relate the learnt
 distributions to other distributional models of semantics.
+=======
+In the following sketch a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and present an implementation of our approach within the framework of distribution semantics \cite{ref}. We show that it is possible to learn ....
+% I'm not sure about referring to "distribution semantics" as it may
+% be confused with distributional semantics - perhaps just refer to it
+% as Sato's framework? Or else note the distinction.
+>>>>>>> b13b2d3ba0578a19009feec26dfedfc5e5c66352
 
 \section{Towards a Probabilistic Montague Semantics}
 
+<<<<<<< HEAD
 In a series of papers \cite{ug,elf,ptq} Montague spelled out a formal treatment of the semantics of natural language that was model-theoretic and compositional. 
 Montague considered that a fundamental aim of any adequate theory of semantics was ``to characterise the notions of a true sentence (under a given interpretation) and of entailment'' \cite{ug}. 
+=======
+SAY SOMETHING BRIEF AND INTRODUCTORY HERE ABOUT MONTAGUE GRAMMAR/SEMANTICS
+>>>>>>> b13b2d3ba0578a19009feec26dfedfc5e5c66352
 
 We assume, as in Montague semantics, that natural language expressions
 are parsed by a categorial grammar. Further, we assume that with every word there is
-associated a function with a type. Let $\mathcal{T}$ be the set of types is defined
+associated a function with a type. Let $\mathcal{T}$ be the set of types defined
 recursively, such that:
 \begin{description}
 \item [Basic types:] $e,t\in \mathcal{T}$
@@ -217,6 +237,7 @@ interpretations:
 \end{itemize}
 \end{itemize}
 
+<<<<<<< HEAD
 It is possible to learn the parameters of this random
 generation process from data.  Our method falls within the framework of
 Sato (\citeyear{Sato:95}), meaning that we can reuse his algorithms
@@ -229,6 +250,19 @@ expression can be viewed as its distributional semantics.
 
 In section ??? we consider how this representation relates to standard
 approaches to distributional semantics.
+=======
+In the following, we show that it is possible to learn the parameters
+of this random generation process from data.  Our method falls within
+the framework of \citet{Sato:95}, meaning that we can reuse his
+algorithms for learning and inference.  Given a set of observed
+theories, the probability distributions $P$ can be learnt. In the
+following we demonstrate this with examples, and give the code listing
+for our implementation within the framework of Sato's distribution of
+semantics. The learnt parameters for a particular basic expression can
+be viewed as its distributional semantics. In
+Section~\titleref{sec:recovering} we consider how this representation
+relates to standard approaches to distributional semantics.
+>>>>>>> b13b2d3ba0578a19009feec26dfedfc5e5c66352
 
 
 
@@ -250,16 +284,15 @@ summarisation.
 
 Previous attempts to apply logical representations of meaning to this
 task have applied heuristics to handle the lack of robustness in
-standard approaches. Bos and Markert (\citeyear{Bos:06}) used model
-builders to construct a model for $T$ and a model for $T$ and $H$
-together and used the size of these models as an indication of the
-degree of entailment. The intuition here is that if the model for $T$
-and $H$ together is larger than that for just $T$, then $H$
-contains a lot of knowledge not in $T$ and there is a low degree of entailment. 
-This idea can be
-directly related to our approach if we assume a probability distribution over
-models which depends only on the size of the model,  making larger
-models less likely.
+standard approaches. \citet{Bos:06} used model builders to construct a
+model for $T$ and a model for $T$ and $H$ together and used the size
+of these models as an indication of the degree of entailment. The
+intuition here is that if the model for $T$ and $H$ together is larger
+than that for just $T$, then $H$ contains a lot of knowledge not in
+$T$ and there is a low degree of entailment.  This idea can be
+directly related to our approach if we assume a probability
+distribution over models which depends only on the size of the model,
+making larger models less likely.
 
 Textual entailment datasets can also be used to learn the parameters
 described in the previous section. A dataset typically consists of a
@@ -330,11 +363,11 @@ implemented in PRISM.
 \begin{figure}
 \begin{lstlisting}
 :- prob(theory([
-  truth(f(s, f(vp, w(likes, verb),
+  truth(f(s, f(np, w(the, det),
+                   w(cat, noun)),
+             f(vp, w(likes, verb),
                    f(np, w(the, det),
-                         w(cat, noun))),
-             f(np, w(the, det),
-                   w(dog, noun))),
+                         w(dog, noun)))),
         t1)]), X).
 \end{lstlisting}
 \caption{PRISM query to evaluate the probability that the sentence
@@ -396,6 +429,79 @@ Text & Hypothesis & Ent\\
   of entailment determined by our system.}
 \label{table:quantifiers}
 \end{table*}
+
+\begin{table}
+\centering
+\csvautotabular{lexical.csv}
+\caption{Learnt probabilities for the nouns in the example
+  in Table \ref{table:quantifiers}}
+\label{table:lexical}
+\end{table}
+
+\section{Recovering Lexical Semantics}
+\label{sec:recovering}
+
+Our formalism does not make use of any explicit representation of
+lexical semantics, however distributional representations of word
+meanings can be recovered from the learnt models. The representation
+of a word is a matrix, rather than a vector, since there is a
+probability distribution over the possible values for a particular
+type for each hidden value. Table \ref{table:lexical} shows the learnt
+values for the nouns in the example in Table
+\ref{table:quantifiers}. Allowing the distribution to vary with the
+hidden variable is what enables learning of the behaviour of
+quantifiers, which would not be possible without this flexibility.
+
+If we want to compare words in a manner similar to vector based
+representations of meaning, we can consider the matrix entries as a
+flat vector and use any of the standard similarity measures, for
+example cosine, to compare word representations.
+
+\section{Related Work}
+
+%\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
+
+\citet{Coecke:10} proposed a framework based on category-theoretic
+similarities between vector spaces and pregroup grammars. Their
+approach is arguably the most closely related to ours since it is also
+founded in Montague semantics: words are treated as linear functions
+between vector spaces. Each word is represented as an element of a
+tensor product space, and a pregroup grammar is used to determine how
+these are composed using the inner product. It was recently
+demonstrated that this approach can be extended to allow the
+simulation of predicate calculus using
+tensors. \cite{Grefenstette:13}.
+
+There are two main differences between their approach and ours: First,
+in the language of Montague semantics, they assume a single
+model. This means that composition necessarily loses information about
+the composed words, and this is evident in the use of the inner
+product for composition. Sentences are all described in a space of
+fixed dimensionality, no matter how long or complex they are. In our
+approach, a sentence describes a probability distribution over models,
+which is an infinite set, allowing for the representation of arbitrary
+complexity.
+
+The second difference is that their approach is vector-based whereas
+ours is probabilistic in nature. Thus their approach is thus more
+closely related to approaches to lexical distributional semantics
+which are vector based, such as latent semantic analysis
+\cite{Deerwester:90} and random indexing \cite{Sahlgren:02}, whereas
+ours is closer to probabilistic approaches such as latent Dirichlet
+allocation \cite{Blei:03}.
+
+\citet{Garrette:11} describe an approach to combining logical
+semantics with distributional semantics using Markov Logic Networks
+\cite{Richardson:06}. Sentences are parsed into logical form using
+Boxer \cite{Bos:04}, and probabilistic rules are added using the
+distributional model of \citet{Erk:10}.
+
+\citet{Lewis:13} take a standard logical approach to semantics except
+that the relational constants used are derived from distributional
+clustering. They use latent dirichlet allocation to describe a
+probability distribution over semantic categories for nouns, which are
+then combined with induced relation clusters to generate a probability
+distribution over logical forms for a given sentence.
 
 \section{Conclusion}
 

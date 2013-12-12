@@ -4,7 +4,7 @@
 
 from random import Random
 
-SENTENCE = "f(s, f(vp, w(%s, verb), f(np, w(%s, det), w(%s, noun))), f(np, w(%s, det), w(%s, noun)))"
+SENTENCE = "f(s, f(np, w(%s, det), w(%s, noun)), f(vp, w(%s, verb), f(np, w(%s, det), w(%s, noun))))"
 
 POSITIVE = ["count(theory([truth(%s, t1), truth(%s, t1)]), 1)",
             "count(theory([truth(%s, t0), truth(%s, t1)]), 1)",
@@ -16,22 +16,23 @@ NEGATIVE = ["count(theory([truth(%s, t1), truth(%s, t0)]), 1)"]
 
 # LEXICAL_TEST = [('chased the cat the dog', 'chased the animal the dog')]
 
-LEXICAL = [('chased the cat the dog', 'chased the animal the dog', True),
-           ('likes the cat the dog', 'likes the animal the dog', True)]
+LEXICAL = [('the cat chased the dog', 'the animal chased the dog', True),
+           ('the cat likes the dog', 'the animal likes the dog', True)]
 
-LEXICAL_TEST = [('likes the cat the dog', 'likes the animal the dog'),
-                ('chased the animal the dog', 'chased the cat the dog'),
-                ('loves the cat the dog', 'loves the animal the dog'),
-                ('loves the animal the dog', 'loves the cat the dog')]
+LEXICAL_TEST = [('the cat likes the dog', 'the animal likes the dog', True),
+                ('the animal chased the dog', 'the cat chased the dog', False),
+                ('the cat loves the dog', 'the animal loves the dog', True),
+                ('the animal loves the dog', 'the cat loves the dog', False)]
 
-QUANTIFIER = [('like some cats all dogs','like some animals all dogs', True),
-              ('like no animals all dogs','like no cats all dogs', True),
-              ('like some men all dogs','like some people all dogs', True)]
+QUANTIFIER = [('some cats like all dogs','some animals like all dogs', True),
+              ('no animals like all dogs','no cats like all dogs', True),
+              #('some dogs like all dogs', 'some animals like all dogs', True),
+              #('no animals like all dogs', 'no dogs like all dogs', True),
+              ('some men like all dogs','some people like all dogs', True)]
 
-
-QUANTIFIER_TEST = [('like no people all dogs','like no men all dogs'),
-                   ('like no men all dogs','like no people all dogs'),
-                   ('like most people all dogs','like most men all dogs')]
+QUANTIFIER_TEST = [('no people like all dogs','no men like all dogs', True),
+                   ('no men like all dogs','no people like all dogs', False),
+                   ('most people like all dogs','most men like all dogs', False)]
 
 # QUANTIFIER_TEST = [('love no people all apples','love no men all apples'),
 #                    ('love no men all apples','love no people all apples'),
@@ -124,20 +125,20 @@ def make_test(dataset):
     return ":- test([%s])." % ', '.join('[%s, %s, %s]' % x for x in tests)
 
 if __name__ == "__main__":
-    print ":- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=20], montague)."
-    #print make_data(QUANTIFIER)
-    #print make_test(QUANTIFIER_TEST)
+    print ":- prism([epsilon=1.0e-11, restart=20], montague)."
+    print make_data(QUANTIFIER)
+    print make_test(QUANTIFIER_TEST)
     #print make_data(LEXICAL)
     #print make_test(LEXICAL_TEST)
 
-    dataset = make_small_dataset()
-    random = Random(2)
-    random.shuffle(dataset)
+    # dataset = make_small_dataset()
+    # random = Random(2)
+    # random.shuffle(dataset)
 
-    train_length = int(len(dataset)*0.66)
-    train = dataset[:train_length]
-    test = dataset[train_length:]
+    # train_length = int(len(dataset)*0.66)
+    # train = dataset[:train_length]
+    # test = dataset[train_length:]
 
-    print make_data(train)
-    print make_test(test)
+    # print make_data(train)
+    # print make_test(test)
     

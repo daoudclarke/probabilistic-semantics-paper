@@ -1,0 +1,11 @@
+Noun,Hidden,n0,n1
+animals,h0,0.00,1.00
+animals,h1,0.67,0.33
+cats,h0,1.00,0.00
+cats,h1,0.47,0.53
+dogs,h0,0.70,0.30
+dogs,h1,0.55,0.45
+men,h0,1.00,0.00
+men,h1,0.60,0.40
+people,h0,0.00,1.00
+people,h1,0.53,0.47
