@@ -12,7 +12,7 @@
 values(hidden, [h0, h1]).
 
 % Types
-values(word(noun, Word, Hidden), [n0, n1, n2, n3]).
+values(word(noun, Word, Hidden), [n0, n1]).
 values(word(verb, Word, Hidden), [v0, v1]).
 values(word(det, Word, Hidden), [d0, d1]).
 values(function(s, Value1, Value2, Hidden), [t0, t1]).
@@ -36,9 +36,9 @@ theory(T) :-
 	theory(T, Hidden).
 
 test_print([], _).
-test_print([[T, TH, Details]|Tail], Stream) :-
+test_print([[T, H, Details]|Tail], Stream) :-
 	prob(theory([truth(T, t1)]), TProb),
-	prob(theory([truth(TH, t1)]), THProb),
+	prob(theory([truth(T, t1), truth(H, t1)]), THProb),
 	write(Stream, Details), write(Stream, '\t'), 
 	write(Stream, TProb), write(Stream, '\t'),
 	write(Stream, THProb), write(Stream, '\n'),
