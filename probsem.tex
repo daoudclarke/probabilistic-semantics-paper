@@ -330,11 +330,11 @@ implemented in PRISM.
 \begin{figure}
 \begin{lstlisting}
 :- prob(theory([
-  truth(f(s, f(vp, w(likes, verb),
+  truth(f(s, f(np, w(the, det),
+                   w(cat, noun)),
+             f(vp, w(likes, verb),
                    f(np, w(the, det),
-                         w(cat, noun))),
-             f(np, w(the, det),
-                   w(dog, noun))),
+                         w(dog, noun)))),
         t1)]), X).
 \end{lstlisting}
 \caption{PRISM query to evaluate the probability that the sentence
@@ -404,9 +404,12 @@ Text & Hypothesis & Ent\\
 \citet{Coecke:10} proposed a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
 approach is arguably the most closely related to ours since it is also
-founded in Montague semantics: words treated as functions between
-vector spaces. It was recently demonstrated that this approach can be
-extended to allow the simulation of predicate calculus using
+founded in Montague semantics: words are treated as linear functions
+between vector spaces. Each word is represented as an element of a
+tensor product space, and a pregroup grammar is used to determine how
+these are composed using the inner product. It was recently
+demonstrated that this approach can be extended to allow the
+simulation of predicate calculus using
 tensors. \cite{Grefenstette:13}.
 
 There are two main differences between their approach and ours: First,
@@ -427,7 +430,11 @@ which are vector based, such as latent semantic analysis
 ours is closer to probabilistic approaches such as latent Dirichlet
 allocation \cite{Blei:03}.
 
-
+\citet{Garrette:11} describe an approach to combining logical
+semantics with distributional semantics using Markov Logic Networks
+\cite{Richardson:06}. Sentences are parsed into logical form using
+Boxer \cite{Bos:04}, and probabilistic rules are added using the
+distributional model of 
 
 
 
