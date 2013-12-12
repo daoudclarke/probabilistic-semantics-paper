@@ -11,7 +11,11 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{csvsimple}
+\usepackage{titleref}
+%\usepackage{hyperref}
 %\usepackage{natbib}
+
+\renewcommand{\theTitleReference}[2]{\emph{#2}}
 
 %\renewcommand{\cite}{\citep}
 \newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
@@ -143,7 +147,7 @@ In the following sketch a probabilistic extension of Montague semantics and pres
 
 \section{Probabilistic Montague Semantics}
 
-[SAY SOMETHING BRIEF AND INTRODUCTORY HERE ABOUT MONTAGUE GRAMMAR/SEMANTICS]
+SAY SOMETHING BRIEF AND INTRODUCTORY HERE ABOUT MONTAGUE GRAMMAR/SEMANTICS
 
 We assume, as in Montague semantics, that natural language expressions
 are parsed by a categorial grammar. Further, we assume that with every word there is
@@ -224,16 +228,17 @@ interpretations:
 \end{itemize}
 \end{itemize}
 
-In the following, we
-show that it is possible to learn the parameters of this random
-generation process from data.  Our method falls within the framework of
-\citet{Sato:95}, meaning that we can reuse his algorithms
-for learning and inference.
-Given a set of observed theories, the probability distributions $P$
-can be learnt. In the following we demonstrate this with
-examples, and give the code listing for our implementation within the framework of Sato's distribution of semantics. The learnt parameters for a particular basic
-expression can be viewed as its distributional semantics. In section ??? we consider how this representation relates to standard
-approaches to distributional semantics.
+In the following, we show that it is possible to learn the parameters
+of this random generation process from data.  Our method falls within
+the framework of \citet{Sato:95}, meaning that we can reuse his
+algorithms for learning and inference.  Given a set of observed
+theories, the probability distributions $P$ can be learnt. In the
+following we demonstrate this with examples, and give the code listing
+for our implementation within the framework of Sato's distribution of
+semantics. The learnt parameters for a particular basic expression can
+be viewed as its distributional semantics. In
+Section~\titleref{sec:recovering} we consider how this representation
+relates to standard approaches to distributional semantics.
 
 
 
@@ -410,6 +415,7 @@ Text & Hypothesis & Ent\\
 \end{table}
 
 \section{Recovering Lexical Semantics}
+\label{sec:recovering}
 
 Our formalism does not make use of any explicit representation of
 lexical semantics, however distributional representations of word
