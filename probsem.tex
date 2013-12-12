@@ -143,7 +143,7 @@ In the following sketch a probabilistic extension of Montague semantics and pres
 
 We assume, as in Montague semantics, that natural language expressions
 are parsed by a categorial grammar. Further, we assume that with every word there is
-associated a function with a type. Let $\mathcal{T}$ be the set of types is defined
+associated a function with a type. Let $\mathcal{T}$ be the set of types defined
 recursively, such that:
 \begin{description}
 \item [Basic types:] $e,t\in \mathcal{T}$
@@ -405,10 +405,30 @@ Text & Hypothesis & Ent\\
 similarities between vector spaces and pregroup grammars. Their
 approach is arguably the most closely related to ours since it is also
 founded in Montague semantics: words treated as functions between
-vector spaces. There are two main differences between their approach
-and ours: First, they assume that the functions between vector
-spaces are linear, which is not suited to representing conjunction,
-disjunction and generalised quantifiers \cite{}
+vector spaces. It was recently demonstrated that this approach can be
+extended to allow the simulation of predicate calculus using
+tensors. \cite{Grefenstette:13}.
+
+There are two main differences between their approach and ours: First,
+in the language of Montague semantics, they assume a single
+model. This means that composition necessarily loses information about
+the composed words, and this is evident in the use of the inner
+product for composition. Sentences are all described in a space of
+fixed dimensionality, no matter how long or complex they are. In our
+approach, a sentence describes a probability distribution over models,
+which is an infinite set, allowing for the representation of arbitrary
+complexity.
+
+The second difference is that their approach is vector-based whereas
+ours is probabilistic in nature. Thus their approach is thus more
+closely related to approaches to lexical distributional semantics
+which are vector based, such as latent semantic analysis
+\cite{Deerwester:90} and random indexing \cite{Sahlgren:02}, whereas
+ours is closer to probabilistic approaches such as latent Dirichlet
+allocation \cite{Blei:03}.
+
+
+
 
 
 \section{Conclusion}
