@@ -136,6 +136,9 @@ Our approach is unique, in that it satisfies all the following:
 \end{itemize}
 
 In the following sketch a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and present an implementation of our approach within the framework of distribution semantics \cite{ref}. We show that it is possible to learn ....
+% I'm not sure about referring to "distribution semantics" as it may
+% be confused with distributional semantics - perhaps just refer to it
+% as Sato's framework? Or else note the distinction.
 
 \section{Probabilistic Montague Semantics}
 
@@ -434,9 +437,14 @@ allocation \cite{Blei:03}.
 semantics with distributional semantics using Markov Logic Networks
 \cite{Richardson:06}. Sentences are parsed into logical form using
 Boxer \cite{Bos:04}, and probabilistic rules are added using the
-distributional model of 
+distributional model of \citet{Erk:10}.
 
-
+\citet{Lewis:13} take a standard logical approach to semantics except
+that the relational constants used are derived from distributional
+clustering. They use latent dirichlet allocation to describe a
+probability distribution over semantic categories for nouns, which are
+then combined with induced relation clusters to generate a probability
+distribution over logical forms for a given sentence.
 
 \section{Conclusion}
 
