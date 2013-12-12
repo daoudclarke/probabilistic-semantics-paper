@@ -26,8 +26,8 @@ LEXICAL_TEST = [('the cat likes the dog', 'the animal likes the dog', True),
 
 QUANTIFIER = [('some cats like all dogs','some animals like all dogs', True),
               ('no animals like all dogs','no cats like all dogs', True),
-              ('some dogs like all dogs', 'some animals like all dogs', True),
-              ('no animals like all dogs', 'no dogs like all dogs', True),
+              #('some dogs like all dogs', 'some animals like all dogs', True),
+              #('no animals like all dogs', 'no dogs like all dogs', True),
               ('some men like all dogs','some people like all dogs', True)]
 
 QUANTIFIER_TEST = [('no people like all dogs','no men like all dogs', True),
