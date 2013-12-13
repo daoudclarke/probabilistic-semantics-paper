@@ -139,24 +139,13 @@ distributions over models can be learnt from data: the account is holistic, in t
   compositional distributional semantics.
 \end{itemize}
 
-<<<<<<< HEAD
 In the following we sketch a probabilistic extension of Montague semantics, present a way of defining a probability distribution over models in terms of a random generation process over interpretations and consider an application to the core task of textual entailment.  We describe an implementation of our approach within the framework of distribution semantics \cite{ref} and present  We also  relate the learnt
 distributions to other distributional models of semantics.
-=======
-In the following sketch a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and present an implementation of our approach within the framework of distribution semantics \cite{ref}. We show that it is possible to learn ....
-% I'm not sure about referring to "distribution semantics" as it may
-% be confused with distributional semantics - perhaps just refer to it
-% as Sato's framework? Or else note the distinction.
->>>>>>> b13b2d3ba0578a19009feec26dfedfc5e5c66352
 
 \section{Towards a Probabilistic Montague Semantics}
 
-<<<<<<< HEAD
 In a series of papers \cite{ug,elf,ptq} Montague spelled out a formal treatment of the semantics of natural language that was model-theoretic and compositional. 
 Montague considered that a fundamental aim of any adequate theory of semantics was ``to characterise the notions of a true sentence (under a given interpretation) and of entailment'' \cite{ug}. 
-=======
-SAY SOMETHING BRIEF AND INTRODUCTORY HERE ABOUT MONTAGUE GRAMMAR/SEMANTICS
->>>>>>> b13b2d3ba0578a19009feec26dfedfc5e5c66352
 
 We assume, as in Montague semantics, that natural language expressions
 are parsed by a categorial grammar. Further, we assume that with every word there is
@@ -237,10 +226,9 @@ interpretations:
 \end{itemize}
 \end{itemize}
 
-<<<<<<< HEAD
 It is possible to learn the parameters of this random
 generation process from data.  Our method falls within the framework of
-Sato (\citeyear{Sato:95}), meaning that we can reuse his algorithms
+ \citet{Sato:95}, meaning that we can reuse his algorithms
 for learning and inference. Given a set of observed theories, the probability distributions $P$
 can be learnt. 
 
@@ -248,23 +236,8 @@ In the following we demonstrate this with
 examples, and give the code listing for our implementation within the framework of Sato's distribution of semantics. The learnt parameters for a particular basic
 expression can be viewed as its distributional semantics. 
 
-In section ??? we consider how this representation relates to standard
+In Section~\titleref{sec:recovering} we consider how this representation relates to standard
 approaches to distributional semantics.
-=======
-In the following, we show that it is possible to learn the parameters
-of this random generation process from data.  Our method falls within
-the framework of \citet{Sato:95}, meaning that we can reuse his
-algorithms for learning and inference.  Given a set of observed
-theories, the probability distributions $P$ can be learnt. In the
-following we demonstrate this with examples, and give the code listing
-for our implementation within the framework of Sato's distribution of
-semantics. The learnt parameters for a particular basic expression can
-be viewed as its distributional semantics. In
-Section~\titleref{sec:recovering} we consider how this representation
-relates to standard approaches to distributional semantics.
->>>>>>> b13b2d3ba0578a19009feec26dfedfc5e5c66352
-
-
 
 To keep the number of parameters small enough to make learning
 feasible, we restrict the number of possible values of each semantic
