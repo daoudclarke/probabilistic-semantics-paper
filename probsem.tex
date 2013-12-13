@@ -140,7 +140,7 @@ distributions over models can be learnt from data: the account is holistic, in t
 \end{itemize}
 
 
-In the following we sketch an approach to constructing a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and describe an implementation of our approach within the symbolic-statistical logic programming framework proposed by Sato \cite{Sato:95}. We show that it is possible to estimate the parameters of a distribution over interpretations from natural language data and relate the learnt distributions to other distributional models of meaning,.
+In the following we sketch an approach to constructing a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and describe an implementation of our approach within the symbolic-statistical logic programming framework proposed by Sato \cite{Sato:95}. We show that it is possible to estimate the parameters of a distribution over interpretations from natural language data and relate the learnt distributions to other distributional models of meaning.
 
 
 % I'm not sure about referring to "distribution semantics" as it may
@@ -197,7 +197,7 @@ $\mu(M(T))$.
 Given two sentences $s_1$ and $s_2$, we can compute the conditional
 probability of $s_1$ given $s_2$ as
 $$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
-We interpret this conditional probability as the {\em degree to which $s_2$ entails $s_1$\/}. Note that $s_2$ logical entails $s_1$ if and only if the degree to which  $s_2$ entails $s_1$ is $1.0$.
+We interpret this conditional probability as the {\em degree to which $s_2$ entails $s_1$\/}. Note that if $s_2$ logical entails $s_1$ then the degree to which  $s_2$ entails $s_1$ is $1.0$.
 
 % In this paper, we consider the situation where the logical language
 % $L$ is restricted to that of logic programs, i.e.~Horn clauses with
@@ -500,7 +500,7 @@ models. We have shown how, given some further assumptions, this
 distribution can be learnt from data, and discussed the application of
 this idea to the task of recognising textual entailment. 
 
-There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textural entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. Finally, the implementation presented here deals with a very small fragment of natural language comprised of simple declarative sentences. There are many more complex natural language phenomena that have been dealt with successfully within Montague semantic. This suggests that it should be possible to apply probabilistic semantics to learn about a wide range of phenomena such as quantifier scope ambiguity, intensional contexts, time and tense and indexicals, amongst others. 
+There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. Finally, the implementation presented here deals with a very small fragment of natural language comprised of simple declarative sentences. There are many more complex natural language phenomena that have been dealt with successfully within Montague semantic. This suggests that it should be possible to apply probabilistic semantics to learn about a wide range of phenomena such as quantifier scope ambiguity, intensional contexts, time and tense and indexicals, amongst others. 
 
 
 \bibliographystyle{aaai}
