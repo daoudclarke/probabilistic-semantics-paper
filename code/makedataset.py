@@ -115,30 +115,33 @@ def make_data(dataset):
             result.append(s % (text_sentence, hypothesis_sentence))
     return ":- learn([%s])." % ', '.join(result)
 
-def make_test(dataset):
+def make_test(filename, dataset):
     tests = []
     for text, hypothesis, entails in dataset:
         text_sentence = make_sentence(text)
         hypothesis_sentence = make_sentence(hypothesis)
         tests.append( (text_sentence, hypothesis_sentence,
                        "'%s\t%s\t%s'" % (text, hypothesis, str(entails))) )
-    return ":- test([%s])." % ', '.join('[%s, %s, %s]' % x for x in tests)
+    return ":- test(%s, [%s])." % ("'%s'" % filename,
+                                   ', '.join('[%s, %s, %s]' % x for x in tests))
 
 if __name__ == "__main__":
     print ":- prism([epsilon=1.0e-11, restart=20], montague)."
-    print make_data(QUANTIFIER)
-    print make_test(QUANTIFIER_TEST)
+    # print make_data(QUANTIFIER)
+    # print make_test('train.csv', QUANTIFIER)
+    # print make_test('test.csv', QUANTIFIER_TEST)
     #print make_data(LEXICAL)
     #print make_test(LEXICAL_TEST)
 
-    # dataset = make_small_dataset()
-    # random = Random(2)
-    # random.shuffle(dataset)
+    dataset = make_small_dataset()
+    random = Random(2)
+    random.shuffle(dataset)
 
-    # train_length = int(len(dataset)*0.66)
-    # train = dataset[:train_length]
-    # test = dataset[train_length:]
+    train_length = int(len(dataset)*0.66)
+    train = dataset[:train_length]
+    test = dataset[train_length:]
 
-    # print make_data(train)
-    # print make_test(test)
+    print make_data(train)
+    print make_test('train.csv', train)
+    print make_test('test.csv', test)
     

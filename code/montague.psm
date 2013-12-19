@@ -42,10 +42,10 @@ test_print([[T, H, Details]|Tail], Stream) :-
 	write(Stream, Details), write(Stream, '\t'), 
 	write(Stream, TProb), write(Stream, '\t'),
 	write(Stream, THProb), write(Stream, '\n'),
-	test(Tail).
+	test_print(Tail, Stream).
 
-test(T) :-
-	open('output.csv', write, Stream),
+test(FileName, T) :-
+	open(FileName, write, Stream),
 	test_print(T, Stream),
 	close(Stream).
 
