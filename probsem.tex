@@ -1,10 +1,9 @@
 %File: formatting-instruction.tex
 \documentclass[letterpaper]{article}
-\usepackage{aaai}
-\nocopyright
+\usepackage{eacl2014}
 \usepackage{times}
-\usepackage{helvet}
-\usepackage{courier}
+\usepackage{url}
+\usepackage{latexsym}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -18,7 +17,8 @@
 \renewcommand{\theTitleReference}[2]{\emph{#2}}
 
 %\renewcommand{\cite}{\citep}
-\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
+%\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
+\newcommand{\citet}[1]{\newcite{#1}}
 
 \lstset{
          basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -48,13 +48,7 @@
          language=prolog
  }
 
-\frenchspacing
-\setlength{\pdfpagewidth}{8.5in}
-\setlength{\pdfpageheight}{11in}
-\pdfinfo{
-/Title (Probabilistic Semantics for Natural Language)
-/Author (Daoud Clarke, Bill Keller)}
-\setcounter{secnumdepth}{0}  
+
  \begin{document}
 % The file aaai.sty is the style file for AAAI Press 
 % proceedings, working notes, and technical reports.
@@ -243,7 +237,7 @@ theories, the probability distributions $P$ can be learnt. In the
 following we demonstrate this with examples, and give the code listing
 for our implementation. It is also observed that the learnt parameters for a particular basic expression can
 be viewed as its distributional representation. In
-Section~\titleref{sec:recovering} we consider how this representation
+Section~\ref{sec:recovering} we consider how this representation
 relates to standard approaches to distributional semantics.
 
 
@@ -503,6 +497,6 @@ this idea to the task of recognising textual entailment.
 There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. Finally, the implementation presented here deals with a very small fragment of natural language comprised of simple declarative sentences. There are many more complex natural language phenomena that have been dealt with successfully within Montague semantic. This suggests that it should be possible to apply probabilistic semantics to learn about a wide range of phenomena such as quantifier scope ambiguity, intensional contexts, time and tense and indexicals, amongst others. 
 
 
-\bibliographystyle{aaai}
+\bibliographystyle{acl}
 \bibliography{JW2012}
 \end{document}
