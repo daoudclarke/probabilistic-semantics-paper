@@ -11,7 +11,10 @@ def data(f):
         text, hypothesis, entailment, t_prob, th_prob = line.strip().split('\t')
         entailment = (entailment == 'True')
         t_prob, th_prob = float(t_prob), float(th_prob)
-        degree = th_prob/t_prob
+        if t_prob == 0.0:
+            degree = 0.5
+        else:
+            degree = th_prob/t_prob
         yield entailment, degree
 
 def get_threshold(data):

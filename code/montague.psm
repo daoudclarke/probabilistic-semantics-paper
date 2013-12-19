@@ -9,7 +9,7 @@
 %% verbs([like, chase, eat]).
 
 % Hidden variable
-values(hidden, [h0, h1]).
+values(hidden, [h0, h1, h2]).
 
 % Types
 values(word(noun, Word, Hidden), [n0, n1]).
