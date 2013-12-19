@@ -55,7 +55,7 @@ NONINCREASING = ['few', 'most']
 def make_small_dataset():
     pairs = (zip(WOMEN, ['women']*len(WOMEN)) +
              zip(EMPLOYEES, ['employees']*len(EMPLOYEES)))
-    pattern = "like %s %s the sun"
+    pattern = "%s %s like the sun"
     random = Random(1)
     dataset = []
     for text_noun, hypothesis_noun in pairs:
