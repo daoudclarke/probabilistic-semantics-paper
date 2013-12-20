@@ -126,7 +126,11 @@ def make_test(filename, dataset):
                                    ', '.join('[%s, %s, %s]' % x for x in tests))
 
 if __name__ == "__main__":
-    print ":- prism([epsilon=1.0e-11, restart=20], montague)."
+    # print ":- set_prism_flag(daem,on)."
+    # print ":- set_prism_flag(itemp_init,0.3)."
+    # print ":- set_prism_flag(itemp_rate,1.2)."
+
+    print ":- prism([epsilon=1.0e-5, restart=20], montague)."
     # print make_data(QUANTIFIER)
     # print make_test('train.csv', QUANTIFIER)
     # print make_test('test.csv', QUANTIFIER_TEST)
@@ -144,4 +148,4 @@ if __name__ == "__main__":
     print make_data(train)
     print make_test('train.csv', train)
     print make_test('test.csv', test)
-    
+    print ":- halt."
