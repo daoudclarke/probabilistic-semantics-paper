@@ -51,3 +51,8 @@ if __name__ == "__main__":
         test = list(data(test_file))
     result = analyse(test, threshold)
     print "Accuracy: ", result
+
+    with open('test_ml.csv') as ml_file:
+        ml = list(data(ml_file))
+    ml_result = analyse(ml, 0.5)
+    print "ML Accuracy: ", ml_result
