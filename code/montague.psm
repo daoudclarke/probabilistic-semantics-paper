@@ -24,21 +24,28 @@ values(function(s, Value1, Value2, Hidden), [t0, t1]).
 values(function(np, Value1, Value2, Hidden), [np0, np1, np2, np3]).
 values(function(vp, Value1, Value2, Hidden), [vp0, vp1, vp2, vp3]).
 
-evaluate(w(Word, Type), Hidden, Result) :-
-	msw(word(Type, Word, Hidden), Result).
-evaluate(f(Type, X, Y), Hidden, Result) :-
-	evaluate(X, Hidden, XResult),
-	evaluate(Y, Hidden, YResult),
-	msw(function(Type, XResult, YResult, Hidden), Result).
+cached_switch(Switch, Result, Cache, NewCache) :-
+	member([Switch, Value], Cache) ->
+	(Result = Value, Cache = NewCache) ;
+	    (msw(Switch, Result),
+	    NewCache = [[Switch, Result]|Cache]).
 
-theory([], _).
-theory([truth(Sentence, Result)|Tail], Hidden) :-
-	evaluate(Sentence, Hidden, Result),
-	theory(Tail, Hidden).
+evaluate(w(Word, Type), Hidden, Result, Cache, NewCache) :-
+	cached_switch(word(Type, Word, Hidden), Result, Cache, NewCache).
+
+evaluate(f(Type, X, Y), Hidden, Result, Cache, NewCache) :-
+	evaluate(X, Hidden, XResult, Cache, Cache1),
+	evaluate(Y, Hidden, YResult, Cache1, Cache2),
+	cached_switch(function(Type, XResult, YResult, Hidden), Result, Cache2, NewCache).
+
+theory([], _, _).
+theory([truth(Sentence, Result)|Tail], Hidden, Cache) :-
+	evaluate(Sentence, Hidden, Result, Cache, NewCache),
+	theory(Tail, Hidden, NewCache).
 
 theory(T) :-
 	msw(hidden, Hidden),
-	theory(T, Hidden).
+	theory(T, Hidden, []).
 
 test_print([], _).
 test_print([[T, H, Details]|Tail], Stream) :-
