@@ -17,36 +17,38 @@
 values(hidden, [h0, h1]).
 
 % Types
-values(word(noun, Word, Hidden), [n0, n1, n2, n3]).
+values(word(noun, Word, Hidden), [n0, n1]).
 values(word(verb, Word, Hidden), [v0, v1]).
-values(word(det, Word, Hidden), [d0, d1, d2, d3]).
+values(word(det, Word, Hidden), [d0, d1]).
 values(function(s, Value1, Value2, Hidden), [t0, t1]).
-values(function(np, Value1, Value2, Hidden), [np0, np1, np2, np3]).
-values(function(vp, Value1, Value2, Hidden), [vp0, vp1, vp2, vp3]).
+values(function(np, Value1, Value2, Hidden), [np0, np1]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1]).
 
-cached_switch(Switch, Result, Cache) :-
-	hashtable_get(Cache, Switch, Value) ->
+:- dynamic cached_value/2.
+
+cached_switch(Switch, Result) :-
+	cached_value(Switch, Value) ->
 	Result = Value ;
 	    (msw(Switch, Result),
-	    hashtable_register(Cache, Switch, Result)).
+	    assert(cached_value(Switch, Result))).
 
-evaluate(w(Word, Type), Hidden, Result, Cache) :-
-	cached_switch(word(Type, Word, Hidden), Result, Cache).
+evaluate(w(Word, Type), Hidden, Result) :-
+	cached_switch(word(Type, Word, Hidden), Result).
 
-evaluate(f(Type, X, Y), Hidden, Result, Cache) :-
-	evaluate(X, Hidden, XResult, Cache),
-	evaluate(Y, Hidden, YResult, Cache),
-	cached_switch(function(Type, XResult, YResult, Hidden), Result, Cache).
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	cached_switch(function(Type, XResult, YResult, Hidden), Result).
 
-theory([], _, _).
-theory([truth(Sentence, Result)|Tail], Hidden, Cache) :-
-	evaluate(Sentence, Hidden, Result, Cache),
-	theory(Tail, Hidden, Cache).
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result),
+	theory(Tail, Hidden).
 
 theory(T) :-
 	msw(hidden, Hidden),
-	new_hashtable(Cache),
-	theory(T, Hidden, Cache).
+	retractall(cached_value(_, _)),
+	theory(T, Hidden).
 
 test_print([], _).
 test_print([[T, H, Details]|Tail], Stream) :-
