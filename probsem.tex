@@ -173,21 +173,56 @@ defined recursively such that
   \alpha/\beta$ and $\tau_\delta = \alpha$, then $\gamma(\delta)\in
   M$, and $\tau_{\gamma(\delta)} = \beta$.
 \end{itemize}
+A \emph{sentence} is a meaningful expression of type $t$.
 
-A \emph{sentence} is a meaningful expression of type $t$. An
-\emph{interpretation} is a function $\phi$ which assigns to every
-sentence a value of true or false, denoted $\top, \bot$ respectively.
+% An
+% \emph{interpretation} is a function $\phi$ which assigns to every
+% sentence a value of true or false, denoted $\top, \bot$ respectively.
 
-A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
-sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
-\emph{model} for a theory $T$ is an interpretation which assigns
-$\hat{s}$ to every sentence $s\in T$. In this case we say that the model \emph{satisfies} $T$. Let $\Omega$ be the set of all
-interpretations, and $\sigma$ be the sigma algebra consisting of the
-set of all sets of models that satisfy some theory. Let $\mu$ be a probability measure
-on $\sigma$; then $\langle\Omega,\sigma,\mu\rangle$ is a probability
-space which describes the probability of theories. Let $M(T)$ denote
-the set of all models for the theory $T$; the probability of $T$ is
-$\mu(M(T))$.
+The set $D_\alpha$ of \emph{possible denotations} of type $\alpha$ is
+defined recursively:
+\begin{eqnarray*}
+D_e &=& E\\
+D_t &=& \{\bot,\top\}\\
+D_{\langle \alpha,\beta\rangle} &=& {D_\beta}^{D_\alpha}
+\end{eqnarray*}
+where $E$ is a set of \emph{entities}. Thus the denotation of a
+complex type is a function between the denotations for the types from
+which it is composed. An \emph{interpretation} is a pair $\langle E,
+F\rangle$ such that $E$ is a non-empty set and $F$ is a function with
+domain $B$ such that $F(b) \in D_{\tau_b}$ for all $b\in B$.
+
+A meaningful expression $\gamma$ has the value $\phi(\gamma)$ in the
+interpretation $\langle E, F\rangle$ defined recursively
+\begin{itemize}
+\item $\phi(b) = F(b)$ for $b\in B$
+\item 
+\end{itemize}
+
+% A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
+% sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
+% \emph{model} for a theory $T$ is an interpretation $\langle E,
+% F\rangle$ such that
+% .
+%  which assigns
+% $\hat{s}$ to every sentence $s\in T$. In this case we say that the model \emph{satisfies} $T$. Let $\Omega$ be the set of all
+% interpretations, and $\sigma$ be the sigma algebra consisting of the
+% set of all sets of models that satisfy some theory. Let $\mu$ be a probability measure
+% on $\sigma$; then $\langle\Omega,\sigma,\mu\rangle$ is a probability
+% space which describes the probability of theories. Let $M(T)$ denote
+% the set of all models for the theory $T$; the probability of $T$ is
+% $\mu(M(T))$.
+
+% A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
+% sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
+% \emph{model} for a theory $T$ is an interpretation which assigns
+% $\hat{s}$ to every sentence $s\in T$. In this case we say that the model \emph{satisfies} $T$. Let $\Omega$ be the set of all
+% interpretations, and $\sigma$ be the sigma algebra consisting of the
+% set of all sets of models that satisfy some theory. Let $\mu$ be a probability measure
+% on $\sigma$; then $\langle\Omega,\sigma,\mu\rangle$ is a probability
+% space which describes the probability of theories. Let $M(T)$ denote
+% the set of all models for the theory $T$; the probability of $T$ is
+% $\mu(M(T))$.
 
 Given two sentences $s_1$ and $s_2$, we can compute the conditional
 probability of $s_1$ given $s_2$ as
