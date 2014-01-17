@@ -7,3 +7,5 @@
 *~
 *.synctex.gz
 *.out
+*.pyc
+*/__pycache__
