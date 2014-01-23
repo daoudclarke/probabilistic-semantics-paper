@@ -244,7 +244,100 @@ We interpret this conditional probability as the {\em degree to which $s_2$ enta
 
 %\section{Learning}
 
+\section{Examples}
+
+One can envisage many possible ways of describing probability measures
+$\mu$. Our main goal is to be able to learn such measures from corpus
+data, and we describe one possible approach to doing this in Section
+\ref{section:distributions}. However, in this section, to demonstrate
+the potential for our approach, we give examples in which measures are
+given explicitly.
+ 
+\subsection{Fine-grained Meanings}
+
+One distinguishing feature of distributional semantics is its ability
+to describe fine-grained aspects of meaning: the continuous nature of
+the space allows arbitrary degrees of similarity. We use the example
+from \cite{Clark:08}, computing the similarity of the two sentences
+\emph{John likes Mary} and \emph{John loves Mary}.
+
+We assume the following types for basic expressions:
+\begin{eqnarray*}
+\mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
+\mathit{likes}, \mathit{loves} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}
+\end{eqnarray*}
+Proper nouns are interpreted as sets of sets of entities (functions
+from functions from entities to truth values to truth values), while
+verbs are functions from pairs of sets of sets of entities to truth
+values.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l||c|c|c|c|}
+\hline
+\emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
+\hline
+john & likes & john & 1 & 1 & 1 & 1\\
+john & likes & mary & 1 & 0 & 1 & 1\\
+mary & likes & john & 1 & 1 & 1 & 1\\
+mary & likes & mary & 1 & 0 & 1 & 1\\
+john & loves & john & 1 & 1 & 1 & 1\\
+john & loves & mary & 1 & 0 & 1 & 1\\
+mary & loves & john & 1 & 1 & 1 & 1\\
+mary & loves & mary & 1 & 0 & 1 & 1\\
+\hline
+\end{tabular}
+\caption{Four possible models describing relationships between John
+  and Mary.}
+\end{center}
+\label{table:models}
+\end{table}
+
+For simplicity of exposition, and make the number of interpretations
+we have to consider smaller, we will give some properties which will
+be fixed for all interpretations under consideration,
+i.e.~interpretations which do not satisfy the given property will be
+given probability zero. For example, we assume that the set $E$ of
+entities is fixed, $E = \{\mathbf{john}, \mathbf{mary}\}$, and that
+the interpretation of nouns is fixed:
+$$\mathit{john}(x) = \begin{cases}
+\top & \text{if } x(\mathbf{john}) = \top\\
+\bot & \text{otherwise}
+\end{cases}$$ i.e.~$\mathit{john}$ is the set of all sets containing
+the entity $\mathbf{john}$, and similarly for $\mathit{mary}$. We
+further assume that $\mathit{likes}$ and $\mathit{loves}$ behave
+logically so that if ``John likes $x$'' is true and ``Mary likes $x$''
+is true then ``John and Mary like $x$'' is also true (note that this
+isn't true for all verbs; consider ``John and Mary played
+chess''). Similarly we assume that if ``$x$ likes John'' and ``$x$
+likes Mary'' are true then ``$x$ likes John and Mary'' is true.
+
+Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
+described in Table \ref{table:models}. At this point our example
+diverges from standard model-theoretic semantics. We assume a
+probability distribution over the set of models: we assume that each
+of these four models has probability 0.25, and all other models have
+probability zero.
+
+We assume that the categorial grammar assigns the meaningful
+expression $\mathit{likes}(\mathit{mary})(\mathit{john})$ to the
+sentence ``John likes Mary''.
+
+%  In this example, we
+% assume that meanings are described by a measure space for each part of
+% speech. Measure spaces for larger constituents are then constructed as
+% product measures \cite{Taylor:06} of their constituent measure
+% spaces. This idea is an extension of the observation of
+% \citet{Keenan:85} that there is a Boolean algebra associated with each
+% constituent.
+
+% A measure space can be constructed for a particular part of speech
+% directly from the distributional semantic representations of the
+% associated words, or from an ontology with frequency information
+% \cite{Clarke:07}.
+
 \section{Probability Distributions over Interpretations}
+\label{section:distributions}
 
 One can envisage many possible ways of describing probability measures
 $\mu$. In this paper we present a simple method in which
