@@ -63,16 +63,21 @@
 \maketitle
 \begin{abstract}
 % \begin{quote}
-Distributional accounts of meaning
-represent words as vectors or probability distributions over
-contexts. Such approaches differ from compositional, model-theoretic treatments of meaning
-such as Montague semantics. Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches. This paper presents a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying account. Probabilistic semantics extends standard model-theoretic
-accounts by assuming a probability distribution over
-models. We sketch a probabilistic extension for a Montague-style
-semantics and demonstrate its properties on simple examples. We also
-propose an approach for learning semantics directly from data, and
-discuss how the technique could be applied to the task of recognising
-textual entailment.
+  Distributional accounts of meaning represent words as vectors or
+  probability distributions over contexts. Such approaches differ from
+  compositional, model-theoretic treatments of meaning such as
+  Montague semantics. Recently, researchers have begun to address the
+  problem of developing a unified account of natural language
+  semantics that combines the strengths of both the distributional and
+  compositional approaches. This paper presents ongoing work to
+  develop a new formalism, {\em probabilistic semantics\/}, which
+  seeks to provide such a unifying account. Probabilistic semantics
+  extends standard model-theoretic accounts by assuming a probability
+  distribution over models. We sketch a probabilistic extension for a
+  Montague-style semantics and demonstrate its properties on simple
+  examples. We also propose an approach for learning semantics
+  directly from data, and discuss how the technique could be applied
+  to the task of recognising textual entailment.
 % \end{quote}
 \end{abstract}
 
@@ -111,7 +116,7 @@ distribution over the set of models. Given such a probability distribution we ca
 probability of a sentence $s$ as the sum of the probabilities of all
 models $\mathcal{M}_s$, for $s$. The notion of a probability
 distribution over models has been proposed as a probabilistic
-semantics by \cite{Sato:95}, however to our knowledge it has not been
+semantics by \citet{Sato:95}, however to our knowledge it has not been
 extended to higher order logic, nor applied to natural language
 semantics.
 
@@ -235,7 +240,7 @@ all models for the theory $T$; the probability of $T$ is $\mu(M(T))$.
 Given two sentences $s_1$ and $s_2$, we can compute the conditional
 probability of $s_1$ given $s_2$ as
 $$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
-We interpret this conditional probability as the {\em degree to which $s_2$ entails $s_1$\/}. Note that if $s_2$ logically entails $s_1$ then the degree to which  $s_2$ entails $s_1$ is $1.0$.
+We interpret this conditional probability as the {\em degree to which $s_2$ entails $s_1$\/}. Note that if $s_2$ logically entails $s_1$ then the degree to which  $s_2$ entails $s_1$ is $1$.
 
 % In this paper, we consider the situation where the logical language
 % $L$ is restricted to that of logic programs, i.e.~Horn clauses with
@@ -298,24 +303,26 @@ mary & loves & mary & 1 & 0 & 1 & 1\\
 \label{table:models}
 \end{table}
 
-For simplicity of exposition, and make the number of interpretations
-we have to consider smaller, we will give some properties which will
-be fixed for all interpretations under consideration,
-i.e.~interpretations which do not satisfy the given property will be
-given probability zero. For example, we assume that the set $E$ of
-entities is fixed, $E = \{\mathbf{john}, \mathbf{mary}\}$, and that
-the interpretation of nouns is fixed:
+For simplicity of exposition, and to make the number of
+interpretations we have to consider smaller, we will give some
+properties which will be fixed for all interpretations under
+consideration, i.e.~interpretations which do not satisfy the given
+property will be given probability zero. For example, we assume that
+the set $E$ of entities is fixed, $E = \{\mathbf{john},
+\mathbf{mary}\}$, and that the interpretation of nouns is fixed:
 $$\mathit{john}(x) = \begin{cases}
 \top & \text{if } x(\mathbf{john}) = \top\\
 \bot & \text{otherwise}
 \end{cases}$$ i.e.~$\mathit{john}$ is the set of all sets containing
-the entity $\mathbf{john}$, and similarly for $\mathit{mary}$. We
-further assume that $\mathit{likes}$ and $\mathit{loves}$ behave
-logically so that if ``John likes $x$'' is true and ``Mary likes $x$''
-is true then ``John and Mary like $x$'' is also true (note that this
-isn't true for all verbs; consider ``John and Mary played
-chess''). Similarly we assume that if ``$x$ likes John'' and ``$x$
-likes Mary'' are true then ``$x$ likes John and Mary'' is true.
+the entity $\mathbf{john}$, and similarly for $\mathit{mary}$, if we
+interpret functions with range $\{\top,\bot\}$ as indicator
+functions. We further assume that $\mathit{likes}$ and
+$\mathit{loves}$ behave logically so that if ``John likes $x$'' is
+true and ``Mary likes $x$'' is true then ``John and Mary like $x$'' is
+also true (note that this isn't true for all verbs; consider ``John
+and Mary played chess''). Similarly we assume that if ``$x$ likes
+John'' and ``$x$ likes Mary'' are true then ``$x$ likes John and
+Mary'' is true.
 
 Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
 described in Table \ref{table:models}. At this point our example
@@ -343,10 +350,10 @@ there is a high degree of entailment.
 \subsection{Conjunction and Disjunction}
 
 Our formalism inherits the nice properties of model-theoretic
-semantics with respect to conjunction and disjunction. If we describe
-the conjunction of nouns with the basic expression $\mathit{and}$ of
-type $(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is function taking two sets
-of sets of entities, and returns another set of sets of
+semantics with respect to conjunction and disjunction. We describe the
+conjunction of nouns with the basic expression $\mathit{and}$ of type
+$(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is a function taking two sets of
+sets of entities, and returning another set of sets of
 entities. Specifically we assume that it returns the intersection of
 the two sets. Similarly $\mathit{or}$ is a function of the same type,
 returning the union of the two sets.
@@ -413,11 +420,12 @@ some set $H$. This gives us the following process to generate $F$:
 \end{itemize}
 
 Since we have described a restricted space of models, it should be
-feasible to learn the most likely model given data using a technique
-such as Maximum Likelihood Estimation, following a similar approach to
-\citet{Sato:95}. This restricted space should nevertheless be able to
-approximate the full space of models as $n_\tau$ and the number of
-hidden values is increased.
+feasible to learn the parameters in this process (the probability
+distributions $P$) directly from data, using a technique such as Maximum
+Likelihood Estimation, following a similar approach to
+\citet{Sato:95}. Despite being a restricted space of models, our hope
+is that it will be able to approximate the full space of models as
+$n_\tau$ and the number of hidden values are increased.
 
 % \item For each sentence $s$:
 % \begin{itemize}
@@ -530,11 +538,34 @@ distribution over logical forms for a given sentence.
 We have introduced probabilistic semantics for natural language, a
 framework for representing natural language meaning which extends
 Montague semantics by assuming a probability distribution over
-models. We have shown how, given some further assumptions, this
-distribution can be learnt from data, and discussed the application of
-this idea to the task of recognising textual entailment. 
+models. We have explored some properties of the framework, showing
+that it can represent fine-grained aspects of meaning, and that nice
+features of standard model-theoretic semantics, such as the simple
+representation of conjunction and disjunction are retained in our
+formalism.
 
-There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. Finally, the implementation presented here deals with a very small fragment of natural language comprised of simple declarative sentences. There are many complex natural language phenomena that have been dealt with successfully within the framework of Montague semantics. This suggests that it should be possible to apply probabilistic semantics to learn about a wide range of phenomena such as quantifier scope ambiguity, intensional contexts, time and tense and indexicals, amongst others. 
+We also presented a restricted version of the semantics which should
+make it possible to learn meaning representations directly from data,
+and discussed the application of this idea to the task of recognising
+textual entailment. We plan to investigate practical implementations
+of both these ideas in future work.
+
+We also plan to investigate the relationship between our model and
+standard distributional semantic representations of meaning. This,
+together with a development of the theory, may lead to interesting
+new ways to describe probabilistic semantics that combines logical
+aspects of meaning with those which are better represented
+distributionally.
+
+Finally, the examples presented here deal with a very small fragment
+of natural language. There are many complex natural language phenomena
+that have been dealt with successfully within the framework of
+Montague semantics. This suggests that it should be possible to apply
+probabilistic semantics to learn about a wide range of phenomena such
+as quantifier scope ambiguity, intensional contexts, time and tense
+and indexicals, amongst others.
+
+% There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. 
 
 
 \bibliographystyle{acl}
