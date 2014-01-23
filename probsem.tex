@@ -68,9 +68,11 @@ represent words as vectors or probability distributions over
 contexts. Such approaches differ from compositional, model-theoretic treatments of meaning
 such as Montague semantics. Recently, researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches. This paper presents a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying account. Probabilistic semantics extends standard model-theoretic
 accounts by assuming a probability distribution over
-models. We sketch a probabilistic extension for a Montague-style semantics and consider an application  to the core natural language processing task of textual entailment. An implementation is presented and it is shown that the parameters of a probability distribution over interpretations may be estimated from language data.
-
-
+models. We sketch a probabilistic extension for a Montague-style
+semantics and demonstrate its properties on simple examples. We also
+propose an approach for learning semantics directly from data, and
+discuss how the technique could be applied to the task of recognising
+textual entailment.
 % \end{quote}
 \end{abstract}
 
@@ -82,20 +84,14 @@ which they occur have become an indispensible tool in natural language
 processing. Such distributional representations of meaning typically
 represent words as vectors or probability distributions over
 contexts. They have been applied to a wide variety of tasks,
-including sentiment classification~\cite{Bollegala2011}, word sense
-disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL}, PP
-attachment~\cite{Calvo05distributionalthesaurus}, automatic confusion
-set generation~\cite{xue-hwa:2012:PAPERS}, textual
+including word sense
+disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL},
+prepositional phrase
+attachment~\cite{Calvo05distributionalthesaurus}, textual
 entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference
 resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic
-compositionality~\cite{bergsma-EtAl:2010:EMNLP}, acquisition of
-semantic lexicons~\cite{mcintosh:2010:EMNLP}, conversation
-entailment~\cite{zhang-chai:2010:EMNLP}, semantic role
-classification~\cite{zapirain-EtAl:2010:NAACLHLT}, lexical
-substitution~\cite{szarvas-biemann-gurevych:2013:NAACL-HLT}, taxonomy
-induction~\cite{fountain-lapata:2012:NAACL-HLT}, detection of visual
-text~\cite{dodge-EtAl:2012:NAACL-HLT}, and parser
-lexicalisation~\cite{rei-briscoe:2013:NAACL-HLT}.
+compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy
+induction~\cite{fountain-lapata:2012:NAACL-HLT}.
 
 Current distributional approaches to the representation of meaning differ in many respects from compositional, model-theoretic treatments
 such as Montague semantics or
@@ -113,7 +109,11 @@ $s$. Then $s$ {\em logically entails\/} $t$ if and only if any model for $s$ is 
 that models occur randomly. Informally, we may assume a probability
 distribution over the set of models. Given such a probability distribution we can then estimate the
 probability of a sentence $s$ as the sum of the probabilities of all
-models $\mathcal{M}_s$, for $s$. 
+models $\mathcal{M}_s$, for $s$. The notion of a probability
+distribution over models has been proposed as a probabilistic
+semantics by \cite{Sato:95}, however to our knowledge it has not been
+extended to higher order logic, nor applied to natural language
+semantics.
 
 
 Our approach satisfies each of the following desirable properties:
@@ -128,15 +128,20 @@ Our approach satisfies each of the following desirable properties:
   assuming a single model: this means that composition does not
   necessarily lead to a loss of meaning (for example by reducing the meaning of a
   sentence to a single truth value).
- \item It admits an implementation in which probability
-distributions over models can be learnt from data: the account is holistic, in that the learning word meaning and composition are not separated, with
-  the potential benefit of more flexible and accurate models of
-  compositional distributional semantics.
+\item It admits an implementation in which probability distributions
+  over models can potentially be learnt from data: the account is
+  holistic, in that the learning of word meaning and composition are not
+  separated, with the potential benefit of more flexible and accurate
+  models of compositional distributional semantics.
 \end{itemize}
 
 
-In the following we sketch an approach to constructing a probabilistic extension of Montague semantics and present a way of defining a probability distribution over models in terms of  a random generation process over interpretations.  We consider an application to the core task of textual entailment and describe an implementation of our approach within the symbolic-statistical logic programming framework proposed by Sato \cite{Sato:95}. We show that it is possible to estimate the parameters of a distribution over interpretations from natural language data and relate the learnt distributions to other distributional models of meaning.
-
+In the following we sketch an approach to constructing a probabilistic
+extension of Montague semantics and demonstrate its properties on
+simple examples. We present a way of defining a probability
+distribution over models in terms of  a random generation process over
+interpretations.  We discuss how the technique could be applied to the
+core task of textual entailment.
 
 % I'm not sure about referring to "distribution semantics" as it may
 % be confused with distributional semantics - perhaps just refer to it
