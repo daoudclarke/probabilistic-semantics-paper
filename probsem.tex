@@ -278,9 +278,9 @@ values.
 \emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
 \hline
 john & likes & john & 1 & 1 & 1 & 1\\
-john & likes & mary & 1 & 0 & 1 & 1\\
-mary & likes & john & 1 & 1 & 1 & 1\\
-mary & likes & mary & 1 & 0 & 1 & 1\\
+john & likes & mary & 0 & 1 & 1 & 1\\
+mary & likes & john & 1 & 0 & 0 & 1\\
+mary & likes & mary & 0 & 0 & 1 & 1\\
 john & loves & john & 1 & 1 & 1 & 1\\
 john & loves & mary & 1 & 0 & 1 & 1\\
 mary & loves & john & 1 & 1 & 1 & 1\\
@@ -315,13 +315,49 @@ likes Mary'' are true then ``$x$ likes John and Mary'' is true.
 Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
 described in Table \ref{table:models}. At this point our example
 diverges from standard model-theoretic semantics. We assume a
-probability distribution over the set of models: we assume that each
-of these four models has probability 0.25, and all other models have
-probability zero.
+probability distribution over the set of models: we assume that these
+models have probabilities 0.1, 0.2, 0.3 and 0.4 respectively, and all
+other models have probability zero.
 
 We assume that the categorial grammar assigns the meaningful
 expression $\mathit{likes}(\mathit{mary})(\mathit{john})$ to the
-sentence ``John likes Mary''.
+sentence ``John likes Mary''. The probability of this sentence is
+\begin{eqnarray*}
+\mu(M(\{\mathit{likes}(\mathit{mary})(\mathit{john})\})) &=&
+\mu(\{m_2, m_3, m_4\})\\
+&=&0.9
+\end{eqnarray*}
+Similarly, the models which are true for the sentence ``John loves
+Mary'' are $\{m_1, m_3, m_4\}$, having probability 0.8. The models
+which satisfy both of these sentences are $\{m_3, m_4\}$ with
+probability 0.7, so the
+degree to which ``John loves Mary'' entails ``John likes Mary'' is
+$0.7/0.8$. Note that in this case there is no logical entailment, but
+there is a high degree of entailment.
+
+\subsection{Conjunction and Disjunction}
+
+Our formalism inherits the nice properties of model-theoretic
+semantics with respect to conjunction and disjunction. If we describe
+the conjunction of nouns with the basic expression $\mathit{and}$ of
+type $(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is function taking two sets
+of sets of entities, and returns another set of sets of
+entities. Specifically we assume that it returns the intersection of
+the two sets; $\mathit{or}$ is a function of the same type, returning
+the union of the two sets.
+
+Then $\mathit{and}(john)(mary)$ is the set of sets containing both
+$\mathbf{john}$ and $\mathbf{mary}$. Assume the categorial grammar
+gives the meaningful expression
+$\mathit{likes}(\mathit{and}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
+to the sentence ``Mary likes John and Mary''. The set of models
+satisfying this sentence is $\{m_4\}$, so this sentence has
+probability 0.4. The set of models satisfying
+$\mathit{likes}(\mathit{or}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
+for ``Mary likes John or Mary'' is $\{m_1, m_3, m_4\}$, so this
+sentence has probability 0.8. Note that the logical entailments we
+would expect from logical semantics are preserved: the degree to which
+``Mary likes John and Mary'' entails ``Mary likes John'' is 1.
 
 %  In this example, we
 % assume that meanings are described by a measure space for each part of
