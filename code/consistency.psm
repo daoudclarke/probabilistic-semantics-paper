@@ -1,0 +1,6 @@
+:- prism([epsilon=1.0e-11, restart=20], montague).
+:-  T = truth(f(s, f(np, w(some, det), w(cats, noun)), f(vp, w(like, verb), f(np, w(all, det), w(dogs, noun)))), t1),
+	prob(theory([T]), P1),
+	writeln(P1),
+	prob(theory([T, T]), P2),
+	writeln(P2).

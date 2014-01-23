@@ -130,22 +130,23 @@ if __name__ == "__main__":
     # print ":- set_prism_flag(itemp_init,0.3)."
     # print ":- set_prism_flag(itemp_rate,1.2)."
 
-    print ":- prism([epsilon=1.0e-5, restart=20], montague)."
-    # print make_data(QUANTIFIER)
-    # print make_test('train.csv', QUANTIFIER)
-    # print make_test('test.csv', QUANTIFIER_TEST)
+    print ":- prism([epsilon=1.0e-5, restart=40], montague)."
+
+    print make_data(QUANTIFIER)
+    print make_test('train.csv', QUANTIFIER)
+    print make_test('test.csv', QUANTIFIER_TEST)
     #print make_data(LEXICAL)
     #print make_test(LEXICAL_TEST)
 
-    dataset = make_small_dataset()
-    random = Random(2)
-    random.shuffle(dataset)
+    # dataset = make_small_dataset()
+    # random = Random(2)
+    # random.shuffle(dataset)
 
-    train_length = int(len(dataset)*0.66)
-    train = dataset[:train_length]
-    test = dataset[train_length:]
+    # train_length = int(len(dataset)*0.66)
+    # train = dataset[:train_length]
+    # test = dataset[train_length:]
 
-    print make_data(train)
-    print make_test('train.csv', train)
-    print make_test('test.csv', test)
-    print ":- halt."
+    # print make_data(train)
+    # print make_test('train.csv', train)
+    # print make_test('test.csv', test)
+    # print ":- halt."
