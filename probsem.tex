@@ -403,9 +403,16 @@ some set $H$. This gives us the following process to generate $F$:
 \item For each pair of types $\alpha/\beta, \beta$:
 \begin{itemize}
 \item Generate a value $\phi(d_{\alpha/\beta,i}(d_{\alpha,j}))$
-  according to $P(d_{\beta,i}|d_{\alpha/\beta,i}, d_{\alpha,j})$
+  according to $P(d_{\beta,i}|d_{\alpha/\beta,i}, d_{\alpha,j},h)$
 \end{itemize}
 \end{itemize}
+
+Since we have described a restricted space of models, it should be
+feasible to learn the most likely model given data using a technique
+such as Maximum Likelihood Estimation, following a similar approach to
+\citet{Sato:95}. This restricted space should nevertheless be able to
+approximate the full space of models as $n_\tau$ and the number of
+hidden values is increased.
 
 % \item For each sentence $s$:
 % \begin{itemize}
@@ -417,16 +424,16 @@ some set $H$. This gives us the following process to generate $F$:
 %   $P(v|v_\delta, v_\gamma, h)$.
 % \end{itemize}
 
-In the following, we show that it is possible to learn the parameters
-of this random generation process from data.  Our method falls within
-the framework of \citet{Sato:95}. Consequently, we are able to reuse his
-algorithms for learning and inference.  Given a set of observed
-theories, the probability distributions $P$ can be learnt. In the
-following we demonstrate this with examples, and give the code listing
-for our implementation. It is also observed that the learnt parameters for a particular basic expression can
-be viewed as its distributional representation. In
-Section~\ref{sec:recovering} we consider how this representation
-relates to standard approaches to distributional semantics.
+% In the following, we show that it is possible to learn the parameters
+% of this random generation process from data.  Our method falls within
+% the framework of \citet{Sato:95}. Consequently, we are able to reuse his
+% algorithms for learning and inference.  Given a set of observed
+% theories, the probability distributions $P$ can be learnt. In the
+% following we demonstrate this with examples, and give the code listing
+% for our implementation. It is also observed that the learnt parameters for a particular basic expression can
+% be viewed as its distributional representation. In
+% Section~\ref{sec:recovering} we consider how this representation
+% relates to standard approaches to distributional semantics.
 
 
 \section{Application to Textual Entailment}
@@ -465,167 +472,7 @@ In the case that entailment does not hold, on the other hand, then the dataset w
 This
 idea could be used as a supervised approach to the general task of recognising textual
 entailment.  However, we leave the evaluation of this idea to future
-work. Instead, we present here two simple examples that nonetheless demonstrate that our
-approach is capable of learning some important features of natural
-language semantics.
-
-\begin{figure*}
-\centering
-\begin{lstlisting}
-% Hidden variable
-values(hidden, [h0, h1]).
-
-% Types
-values(word(noun, Word, Hidden), [n0, n1]).
-values(word(verb, Word, Hidden), [v0, v1]).
-values(word(det, Word, Hidden), [d0, d1]).
-values(function(s, Value1, Value2, Hidden), [t0, t1]).
-values(function(np, Value1, Value2, Hidden), [np0, np1]).
-values(function(vp, Value1, Value2, Hidden), [vp0, vp1]).
-
-evaluate(w(Word, Type), Hidden, Result) :-
-	msw(word(Type, Word, Hidden), Result).
-evaluate(f(Type, X, Y), Hidden, Result) :-
-	evaluate(X, Hidden, XResult),
-	evaluate(Y, Hidden, YResult),
-	msw(function(Type, XResult, YResult, Hidden), Result).
-
-theory([], _).
-theory([truth(Sentence, Result)|Tail], Hidden) :-
-	evaluate(Sentence, Hidden, Result),
-	theory(Tail, Hidden).
-
-theory(T) :-
-	msw(hidden, Hidden),
-	theory(T, Hidden).
-\end{lstlisting}
-\caption{A PRISM program describing probability distributions over
-  natural language models used for our examples.}
-\label{figure:program}
-\end{figure*}
-
-
-\section{Implementation}
-
-
-An implementation for our approach is shown in Figure 
-\ref{figure:program}. The code listed in the figure is written in PRISM \cite{Sato:97}, a probabilistic extension of the Prolog logic-progamming language. Note that to simplify the code, complex types of the underlying Montague grammar are referred to by their corresponding natural language
-categories. Thus, type $t$ is represented by \texttt{s} (a sentence), type $(e/t)$ by \texttt{vp} (a verb phrase) and type $(e/t)/t$ by \texttt{np} (a noun phrase). 
-
-The PRISM language augments Prolog with probabilistic predicates and declarations. In particular, it incorporates random switches. The predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes during execution. 
-
-The PRISM program shown in Figure \ref{figure:program} describes how sentences are randomly assigned truth values using random switches. For example, the declaration 
-\begin{center}
-\texttt{values(word(noun,Word,Hidden),[n0,n1])} 
-\end{center}
-introduces a switch for nouns having two possible outcomes, \texttt{n0} and \texttt{n1}.
-The outcomes are conditioned on the particular choice of noun (\texttt{Word}) and on the choice of hidden variable (\texttt{Hidden}). Similarly, the \texttt{values} predicate is used to declare switches associated with complex types. For example the values associated with a sentence (\texttt{s}) switch are conditioned on the choices of its component parts and a hidden variable.
-
-The probability of a theory is derived by evaluating the truth conditions of the sentences that make it up. Note that probability distributions are defined over models, not theories, so that  to evaluate the
-probability of a theory it is necessary to sum over the probabilities of all of its satisfying models. To achieve this,  the predicate \texttt{prob} is used. An
-example query returning the probability of the sentence {\em the cat likes the dog\/} is shown in figure \ref{figure:query}. 
-
-
-
-
-\begin{figure}
-\begin{lstlisting}
-:- prob(theory([
-  truth(f(s, f(np, w(the, det),
-                   w(cat, noun)),
-             f(vp, w(likes, verb),
-                   f(np, w(the, det),
-                         w(dog, noun)))),
-        t1)]), X).
-\end{lstlisting}
-\caption{PRISM query to evaluate the probability that the sentence
-  \emph{the cat likes the dog} is true.}
-\label{figure:query}
-\end{figure}
-
-\section{Examples}
-
-
-The PRISM framework is equipped with a proof-theoretic approach to learning so that it is possible to estimate parameters from observed data. A number of different learning algorithms are implemented within the framework. To estimate the
-parameters in the following examples we used the standard expectation maximisation algorithm.
-
-Table \ref{table:lexical} demonstrates that our system can learn
-simple lexical entailment rules. In this case it is learnt that \emph{cat} entails
-\emph{animal} on the basis of a small number of examples. Table \ref{table:quantifiers} demonstrates that our system can learn
-something more significant: it can learn that the entailment direction
-is reversed with certain quantifiers. Quantifiers such as \emph{some} are
-\textbf{monotonically increasing}, so that \emph{some cats} entails
-\emph{some animals}. Quantifiers like \emph{no} and \emph{all} are
-\textbf{monotonically decreasing}, so that \emph{no animals} entails
-\emph{no cats}. Our system is able to determine this from very little
-training data.
-
-\begin{table*}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent\\
-\hline
-\emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
-\emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
-\hline
-\emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
-\emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
-\hline
-\end{tabular}
-\caption{Learning lexical entailment from examples, showing training
-  data at the top, and test data below, with the degree of entailment
-  determined by our system.}
-\label{table:lexical}
-\end{table*}
-
-\begin{table*}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent\\
-\hline
-\emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
-\emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
-\emph{some men like all dogs} & \emph{some people like all dogs} & \\
-\hline
-\emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
-\emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
-\emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
-\hline
-\end{tabular}
-\caption{Learning how quantifiers reverse the entailment direction,
-  with training data at the top, and test data below, with the degree
-  of entailment determined by our system.}
-\label{table:quantifiers}
-\end{table*}
-
-\begin{table}
-\centering
-\csvautotabular{lexical.csv}
-\caption{Learnt probabilities for the nouns in the example
-  in Table \ref{table:quantifiers}}
-\label{table:lexical}
-\end{table}
-
-\section{Recovering Lexical Semantics}
-\label{sec:recovering}
-
-As may be apparent, our formalism does not make use of any explicit representation of
-lexical semantics. However, distributional representations of word
-meanings can be recovered from the learnt models. The representation
-of a word in this case is a matrix, rather than a vector, because there is a different 
-probability distribution over the possible values for a particular
-type corresponding to each hidden value. For example, Table \ref{table:lexical} shows the learnt
-values for the nouns in the example in Table
-\ref{table:quantifiers}. Allowing the distribution to vary with the
-hidden variable is precisely what enables learning of the behaviour of
-quantifiers. Without this flexibility learning would not be possible.
-
-If we want to compare words in a manner similar to vector based
-representations of meaning, we can consider the matrix entries as a
-flat vector. In this case we can use any of the standard similarity measures (e.g. 
-cosine) to compare word representations.
+work.
 
 \section{Related Work}
 
