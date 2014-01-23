@@ -20,8 +20,8 @@ class Learner(object):
         self.hidden_dims = 2
         self.theta = {}
 
-    def initialise(self, data):
-        for sentence in data:
+    def initialise(self, theory):
+        for sentence in theory:
             truth, f, value = sentence
             if truth != 'truth':
                 raise ValueError('Expected truth assertion')
@@ -39,3 +39,16 @@ class Learner(object):
             self.initialise_sub(f[3])
         else:
             raise ValueError('Should be "w" or "f"')
+
+    def prob(self, theory):
+        for h in range(self.hidden_dims):
+            cached = {}
+            for sentence in theory:
+                truth, f, value = sentence
+                if truth != 'truth':
+                    raise ValueError('Expected truth assertion')
+                self.prob_sub(f, h, cached)
+        
+
+    def prob_sub(self, f, h):
+        
