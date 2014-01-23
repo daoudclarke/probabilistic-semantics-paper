@@ -1,0 +1,77 @@
+% Bismillahi-r-Rahmani-r-Rahim
+%
+% Simple method for encoding model-theoretic semantics using Prism
+% Language consists of N V N
+% Set of models is set of subsets of N V N
+
+
+%% :- set_prism_flag(daem,on).
+%% :- set_prism_flag(itemp_init,0.1).
+%% :- set_prism_flag(itemp_rate,1.1).
+
+
+%% nouns([cats, dogs, mice, animals, cheese]).
+%% verbs([like, chase, eat]).
+
+% Hidden variable
+values(hidden, [h0, h1]).
+
+% Types
+values(word(noun, Word, Hidden), [n0, n1]).
+values(word(verb, Word, Hidden), [v0, v1]).
+values(word(det, Word, Hidden), [d0, d1]).
+values(function(s, Value1, Value2, Hidden), [t0, t1]).
+values(function(np, Value1, Value2, Hidden), [np0, np1]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1]).
+
+:- dynamic cached_value/2.
+
+cached_switch(Switch, Result) :-
+	cached_value(Switch, Value), !.
+
+cache_switch(Switch, Result) :- 
+	msw(Switch, Result),
+	assert(cached_value(Switch, Result)).
+
+evaluate(w(Word, Type), Hidden, Result) :-
+	cached_switch(word(Type, Word, Hidden), Result).
+
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	cached_switch(function(Type, XResult, YResult, Hidden), Result).
+
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result),
+	theory(Tail, Hidden).
+
+theory(T) :-
+	msw(hidden, Hidden),
+	retractall(cached_value(_, _)),
+	theory(T, Hidden).
+
+test_print([], _).
+test_print([[T, H, Details]|Tail], Stream) :-
+	prob(theory([truth(T, t1)]), TProb),
+	prob(theory([truth(T, t1), truth(H, t1)]), THProb),
+	write(Stream, Details), write(Stream, '\t'), 
+	write(Stream, TProb), write(Stream, '\t'),
+	write(Stream, THProb), write(Stream, '\n'),
+	test_print(Tail, Stream).
+
+test(FileName, T) :-
+	open(FileName, write, Stream),
+	test_print(T, Stream),
+	close(Stream).
+
+
+% :- learn([count(theory([truth(f(s, f(vp, w(chase, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1)]).
+
+% s(vp(verb(chase), np(det(the), noun(cat))), np(det(the), noun(dog)))
+
+
+%% % type(t, t, [t0, t1]).
+%% type(noun, m(e, t)).
+%% type(det, m(m(e, t), m(m(e, t), t))).
+%% type(verb, m(m(m(e, t), t), m(m(m(e, t), t), t))).

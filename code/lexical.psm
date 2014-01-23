@@ -1,4 +1,4 @@
-:- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=10], montague).
+:- prism([learn_mode=ml, default_sw_d=0.0, epsilon=1.0e-10, restart=10], montague2).
 :- learn([count(theory([truth(f(s, f(vp, w(chased, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1), truth(f(s, f(vp, w(chased, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1), count(theory([truth(f(s, f(vp, w(chased, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t0), truth(f(s, f(vp, w(chased, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1), count(theory([truth(f(s, f(vp, w(chased, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t0), truth(f(s, f(vp, w(chased, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t0)]), 1), count(theory([truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1), truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1), count(theory([truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t0), truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), 1), count(theory([truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t0), truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t0)]), 1)]).
 :- writeln('likes the cat the dog -> likes the animal the dog').
 :- prob(theory([truth(f(s, f(vp, w(likes, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1)]), X), writeln(X).
@@ -12,4 +12,8 @@
 :- writeln('loves the animal the dog -> loves the cat the dog').
 :- prob(theory([truth(f(s, f(vp, w(loves, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), X), writeln(X).
 :- prob(theory([truth(f(s, f(vp, w(loves, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1), truth(f(s, f(vp, w(loves, verb), f(np, w(the, det), w(cat, noun))), f(np, w(the, det), w(dog, noun))), t1)]), X), writeln(X).
+:- writeln('loves the animal the dog -> loves the animal the dog').
+:- prob(theory([truth(f(s, f(vp, w(loves, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), X), writeln(X).
+:- prob(theory([truth(f(s, f(vp, w(loves, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1), truth(f(s, f(vp, w(loves, verb), f(np, w(the, det), w(animal, noun))), f(np, w(the, det), w(dog, noun))), t1)]), X), writeln(X).
+
 
