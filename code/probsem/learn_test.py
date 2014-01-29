@@ -55,13 +55,31 @@ def test_consistency(sentence, learner):
     assert prob1 <= 1.0
     assert prob1 == prob2
 
-@pytest.mark.xfail
 def test_substitute_values(sentence, learner):
-    data = [truth(sentence, True), truth(sentence, True)]
+    data = (truth(sentence, True),)
     
     learner = Learner()
-    for s in learner.substitute_values(data1):
-        print s
+    results = list(learner.substitute_values(data, {}))
+    print "First ten expressions:"
+    for x, subs in results[:10]:
+        print x, subs
+        assert len(subs) > 0
+    
+def test_substitute_values_with_duplicates(sentence, learner):
+    data1 = (truth(sentence, True),)
+    data2 = (truth(sentence, True), truth(sentence, True))
+    
+    learner = Learner()
+    results1 = list(learner.substitute_values(data1, {}))
+    results2 = list(learner.substitute_values(data2, {}))
+    assert len(results1) == len(results2)
+
+def test_substitute_values_contradiction(sentence, learner):
+    data = (truth(sentence, True), truth(sentence, False))
+    
+    learner = Learner()
+    results = list(learner.substitute_values(data, {}))
+    assert len(results) == 0
     
 def test_substitute_expression_word(learner):
     expression = ('w', 'det', 'some')

@@ -65,11 +65,20 @@ class Learner(object):
                 prob *= sentence_prob
             return prob
         
-    def substitute_values(self, theory):
+    def substitute_values(self, theory, subs):
         """
         Returns an iterable of all possible value assignments for a theory
         """
-        
+        if len(theory) == 0:
+            yield (), subs
+            return
+        truth, sentence, value = theory[0]
+        for expression, new_subs in self.substitute_expression_values(sentence, subs):
+            if expression[-1] != value:
+                continue
+            for remainder, remainder_subs in self.substitute_values(theory[1:], new_subs):
+                yield (expression,) + remainder, remainder_subs
+
     def substitute_expression_values(self, expression, subs):
         if expression[0] == 'w':
             key = (expression[1], expression[2])
