@@ -34,14 +34,12 @@ def test_initialise(sentence):
 
     learner = Learner()
     learner.initialise(data)
-    print "Words: ", learner.words
-    print "Functions: ", learner.functions
+    print "Theta: ", learner.theta
 
-    assert len(learner.words[('det', 'some')]) > 0
-    assert len(learner.functions[('s', 'np', 'vp')]) > 0
+    assert len(learner.theta[('w', 'det', 'some')]) > 0
+    assert len(learner.theta[('f', 's', 'np', 'vp')]) > 0
 
 
-@pytest.mark.xfail
 def test_consistency(sentence, learner):
     data1 = [truth(sentence, True)]
     data2 = [truth(sentence, True), truth(sentence, True)]
