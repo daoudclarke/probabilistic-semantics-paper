@@ -86,4 +86,10 @@ def test_substitute_expression_recursion(learner):
         assert e[2][-1] in [0,1]
         assert e[3][-1] in [0,1]
 
+def test_substitute_expression_repeated_values(learner):
+    expression = ('f', 'np', ('w', 'det', 'some'), ('w', 'det', 'some'))
+    values = list(learner.substitute_expression_values(expression, {}))
+    assert len(values) == 4
+
+    
     
