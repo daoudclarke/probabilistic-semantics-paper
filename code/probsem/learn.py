@@ -73,34 +73,24 @@ class Learner(object):
     def substitute_expression_values(self, expression, subs):
         if expression[0] == 'w':
             key = (expression[1], expression[2])
-            expression_copy = deepcopy(expression)
-            expression_copy.append(None)
             if key in subs:
-                expression_copy[-1] = subs[key]
-                yield expression_copy, subs
+                yield expression + (subs[key],), subs
             else:
                 for i in range(self.dims[expression[1]]):
                     subs_copy = deepcopy(subs)
                     subs_copy[key] = i
-                    expression_copy[-1] = i
-                    yield expression_copy, subs_copy
+                    yield expression + (i,), subs_copy
         else:
             for new_expression1, new_subs1 in self.substitute_expression_values(expression[2], subs):
                 for new_expression2, new_subs2 in self.substitute_expression_values(expression[3], new_subs1):
                     key = (expression[1], new_expression1[-1], new_expression2[-1])
-                    expression_copy = deepcopy(expression)
-                    expression_copy.append(None)
-                    expression_copy[2] = new_expression1
-                    expression_copy[3] = new_expression2
                     if key in new_subs2:
-                        expression_copy[-1] = new_subs2[key]
-                        yield expression_copy, new_subs2
+                        yield expression[:2] + (new_expression1, new_expression2, new_subs2[key]), new_subs2
                     else:
                         for i in range(self.dims[expression[1]]):
                             subs_copy = deepcopy(new_subs2)
                             subs_copy[key] = i
-                            expression_copy[-1] = i
-                            yield expression_copy, subs_copy
+                            yield expression[:2] + (new_expression1, new_expression2, i), subs_copy
                         
                 
 

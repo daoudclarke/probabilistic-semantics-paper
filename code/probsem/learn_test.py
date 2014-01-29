@@ -11,9 +11,9 @@ def sentence():
     np = 'np'
     vp = 'vp'
     def f(p, l1, l2):
-        return ['f', p, l1, l2]
+        return ('f', p, l1, l2)
     def w(w, p):
-        return ['w', w, p]
+        return ('w', w, p)
     return f(s, f(np, w(det, 'some'), w(noun, 'cats')),
              f(vp, w(verb, 'like'), f(np, w(det, 'all'), w(noun, 'dogs'))))
 
@@ -64,7 +64,7 @@ def test_substitute_values(sentence, learner):
         print s
     
 def test_substitute_expression_word(learner):
-    expression = ['w', 'det', 'some']
+    expression = ('w', 'det', 'some')
     values = list(learner.substitute_expression_values(expression, {}))
 
     assert len(values) == 2
@@ -75,13 +75,13 @@ def test_substitute_expression_word(learner):
         assert e[-1] in [0,1]
         
 def test_substitute_expression_recursion(learner):
-    expression = ['f', 'np', ['w', 'det', 'some'], ['w', 'noun', 'cats']]
+    expression = ('f', 'np', ('w', 'det', 'some'), ('w', 'noun', 'cats'))
     values = list(learner.substitute_expression_values(expression, {}))
     assert len(values) == 8
     for e, subs in values:
         print e, subs
         assert len(subs) == 3
-        assert e[:2] == ['f', 'np']
+        assert e[:2] == ('f', 'np')
         assert e[-1] in [0,1]
         assert e[2][-1] in [0,1]
         assert e[3][-1] in [0,1]
