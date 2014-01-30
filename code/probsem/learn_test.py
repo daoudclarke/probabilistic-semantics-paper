@@ -1,6 +1,7 @@
 from probsem.learn import Learner, words, functions
 import pytest
-
+import logging
+import sys
 
 @pytest.fixture
 def sentence():
@@ -52,6 +53,14 @@ def test_consistency(sentence, learner):
     assert prob1 >= 0.0
     assert prob1 <= 1.0
     assert prob1 == prob2
+
+def test_contradiction(sentence, learner):
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    logging.debug("Starting test")
+    data = [truth(sentence, True), truth(sentence, False)]
+    print data
+    prob = learner.prob(data)
+    assert prob == 0.0
 
 def test_substitute_values(sentence, learner):
     data = (truth(sentence, True),)

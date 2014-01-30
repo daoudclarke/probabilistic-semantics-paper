@@ -3,9 +3,13 @@
 # Learn distributions for probabilistic semantics using expectation maximisation
 
 import numpy
-from numpy.random import rand
+from numpy import random
 from itertools import product
 from copy import deepcopy
+
+random.seed(1)
+
+import logging
 
 det = 'det'
 noun = 'noun'
@@ -30,35 +34,41 @@ class Learner(object):
             if truth != 'truth':
                 raise ValueError('Expected truth assertion')
             self.initialise_sub(f)
-        self.p_h = rand(self.hidden_dims)
+        self.p_h = random.rand(self.hidden_dims)
+        self.normalise()
+
+    def normalise(self):
+        self.p_h /= numpy.sum(self.p_h)
 
     def initialise_sub(self, f):
         if f[0] == 'w':
             assert f[1] in words
-            self.theta[f] = rand(self.dims[f[1]], self.hidden_dims)
+            self.theta[f] = random.rand(self.dims[f[1]], self.hidden_dims)
         elif f[0] == 'f':
             assert f[1] in functions
             f2, f3 = f[2][1], f[3][1]
-            self.theta[(f[0], f[1], f2, f3)] = rand(self.dims[f[1]], self.dims[f2], self.dims[f3], self.hidden_dims)
+            self.theta[(f[0], f[1], f2, f3)] = random.rand(self.dims[f[1]], self.dims[f2], self.dims[f3], self.hidden_dims)
             self.initialise_sub(f[2])
             self.initialise_sub(f[3])
         else:
             raise ValueError('Should be "w" or "f"')
 
     def prob(self, theory):
-        print self.theta
+        print "Theta", self.theta
         total_prob = 0.0
         for h in range(self.hidden_dims):
-            prob = 1.0
+            h_prob = 0.0
             for theory_values, subs in self.substitute_values(theory, {}):
+                values_prob = 1.0
                 for key, value in subs.iteritems():
                     if key[0] == 'w':
                         p = self.theta[key][h, value]
-                        prob *= p
+                        values_prob *= p
                     else:
                         p = self.theta[key[:4]][h, key[4], key[5], value]
-                        prob *= p
-            total_prob += self.p_h[h]*prob
+                        values_prob *= p
+                h_prob += values_prob
+            total_prob += self.p_h[h]*h_prob
         return total_prob
             
         
