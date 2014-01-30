@@ -108,6 +108,13 @@ def test_substitute_expression_repeated_values(learner):
     values = list(learner.substitute_expression_values(expression, {}))
     assert len(values) == 4
 
-#def test_gradient(learner, sentence):
+#@pytest.mark.xfail
+def test_gradient(learner, sentence):
+    data = (truth(sentence, True),)
+    step = 0.01
+
+    prob_before = learner.prob(data)
+    gradient = learner.ascend(data, step)
+    prob_after = learner.prob(data)
     
-    
+    assert prob_after > prob_before

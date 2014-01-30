@@ -6,6 +6,7 @@ import numpy
 from numpy import random
 from itertools import product
 from copy import deepcopy
+import operator
 
 random.seed(1)
 
@@ -59,19 +60,43 @@ class Learner(object):
         for h in range(self.hidden_dims):
             h_prob = 0.0
             for theory_values, subs in self.substitute_values(theory, {}):
-                values_prob = 1.0
-                for key, value in subs.iteritems():
-                    if key[0] == 'w':
-                        p = self.theta[key][h, value]
-                        values_prob *= p
-                    else:
-                        p = self.theta[key[:4]][h, key[4], key[5], value]
-                        values_prob *= p
+                values_prob = reduce(operator.mul,
+                                     self.subs_probs(subs, h),
+                                     1.0)
                 h_prob += values_prob
             total_prob += self.p_h[h]*h_prob
         return total_prob
+
+    def ascend(self, theory, step):
+        print "Theta", self.theta
+        h_probs = []
+        for h in range(self.hidden_dims):
+            h_prob = 0.0
+            for theory_values, subs in self.substitute_values(theory, {}):
+                probs = list(self.subs_probs(subs, h))
+                values_prob = reduce(operator.mul, probs, 1.0)
+                for p, (key, value) in zip(probs, subs.items()):
+                    delta = step*self.p_h[h]*values_prob/p
+                    if key[0] == 'w':
+                        self.theta[key][h, value] += delta
+                    else:
+                        self.theta[key[:4]][h, key[4], key[5], value] += delta
+                    
+                h_prob += values_prob
+            h_probs.append(h_prob)
+        for i, h_prob in enumerate(h_probs):
+            delta = step*h_prob
+            self.p_h[i] += delta
+        self.normalise()
+
             
-        
+    def subs_probs(self, subs, h):
+        for key, value in subs.iteritems():
+            if key[0] == 'w':
+                yield self.theta[key][h, value]
+            else:
+                yield self.theta[key[:4]][h, key[4], key[5], value]
+
     def substitute_values(self, theory, subs):
         """
         Returns an iterable of all possible value assignments for a theory
