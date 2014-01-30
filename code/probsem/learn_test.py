@@ -2,6 +2,7 @@ from probsem.learn import Learner, words, functions
 import pytest
 import logging
 import sys
+import numpy
 
 @pytest.fixture
 def sentence():
@@ -36,6 +37,10 @@ def test_initialise(sentence, learner):
 
     assert len(learner.theta[('w', 'det', 'some')]) > 0
     assert len(learner.theta[('f', 's', 'np', 'vp')]) > 0
+
+    # Check normalisation
+    a = learner.theta[('w', 'det', 'some')]
+    assert abs(numpy.sum(a[1,:]) - 1.0) <= 1e-5
 
 
 def test_consistency(sentence, learner):

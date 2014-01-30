@@ -40,7 +40,11 @@ class Learner(object):
 
     def normalise(self):
         self.p_h /= numpy.sum(self.p_h)
+        for key, v in self.theta.iteritems():
+            for i in range(v.shape[0]):
+                v[i,:] /= numpy.sum(v[i,:])
 
+            
     def initialise_sub(self, f):
         if f[0] == 'w':
             assert f[1] in words
