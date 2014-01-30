@@ -29,12 +29,9 @@ def learner():
 def truth(l, v):
     return ['truth', l, v]
 
-def test_initialise(sentence):
+def test_initialise(sentence, learner):
     data = [truth(sentence, True)]
     print data
-
-    learner = Learner()
-    learner.initialise(data)
     print "Theta: ", learner.theta
 
     assert len(learner.theta[('w', 'det', 'some')]) > 0
@@ -55,8 +52,6 @@ def test_consistency(sentence, learner):
     assert prob1 == prob2
 
 def test_contradiction(sentence, learner):
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    logging.debug("Starting test")
     data = [truth(sentence, True), truth(sentence, False)]
     print data
     prob = learner.prob(data)
@@ -64,8 +59,7 @@ def test_contradiction(sentence, learner):
 
 def test_substitute_values(sentence, learner):
     data = (truth(sentence, True),)
-    
-    learner = Learner()
+
     results = list(learner.substitute_values(data, {}))
     print "First ten expressions:"
     for x, subs in results[:10]:
@@ -76,7 +70,6 @@ def test_substitute_values_with_duplicates(sentence, learner):
     data1 = (truth(sentence, True),)
     data2 = (truth(sentence, True), truth(sentence, True))
     
-    learner = Learner()
     results1 = list(learner.substitute_values(data1, {}))
     results2 = list(learner.substitute_values(data2, {}))
     assert len(results1) == len(results2)
@@ -84,7 +77,6 @@ def test_substitute_values_with_duplicates(sentence, learner):
 def test_substitute_values_contradiction(sentence, learner):
     data = (truth(sentence, True), truth(sentence, False))
     
-    learner = Learner()
     results = list(learner.substitute_values(data, {}))
     assert len(results) == 0
     
@@ -116,5 +108,6 @@ def test_substitute_expression_repeated_values(learner):
     values = list(learner.substitute_expression_values(expression, {}))
     assert len(values) == 4
 
+#def test_gradient(learner, sentence):
     
     
