@@ -3,6 +3,8 @@ import pytest
 import logging
 import sys
 import numpy
+import cPickle as pickle
+
 
 @pytest.fixture
 def sentence():
@@ -53,8 +55,7 @@ def train():
 @pytest.fixture
 def test():
     test_sentences = [('no people like all dogs','no men like all dogs', True),
-                      ('no men like all dogs','no people like all dogs', False),
-                      ('most people like all dogs','most men like all dogs', False)]
+                      ('no men like all dogs','no people like all dogs', False)]
     return [(make_sentence(t), make_sentence(h), v) for t, h, v in test_sentences]
     
 
@@ -64,6 +65,7 @@ def test():
 # def test_learn(train, test):
 #     learner = Learner()
 #     learner.learn(train)
+#     print learner.theta
 
 #     for text, hypothesis, expected in test:
 #         p_t = learner.prob([truth(text, True)])
@@ -75,11 +77,14 @@ def test_before_learn(train, test):
     learner = Learner()
     learner.initialise(train)
 
-    text, hypothesis, expected = test[0]
-    p_t = learner.prob([truth(text, True)])
-    p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
-    entailment = p_th/p_t
-    assert (entailment > 0.9) != expected
+    allTrue = True
+    for text, hypothesis, expected in test:
+        p_t = learner.prob([truth(text, True)])
+        p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
+        entailment = p_th/p_t
+        assert entailment <= 1.0 and entailment >= 0.0
+        allTrue = allTrue and ((entailment > 0.9) == expected)
+    assert not allTrue
 
 def test_initialise(sentence, learner):
     data = [truth(sentence, True)]
@@ -91,7 +96,7 @@ def test_initialise(sentence, learner):
 
     # Check normalisation
     a = learner.theta[('w', 'det', 'some')]
-    assert abs(numpy.sum(a[1,:]) - 1.0) <= 1e-5
+    assert abs(numpy.sum(a[:,1]) - 1.0) <= 1e-5
 
 
 def test_consistency(sentence, learner):
@@ -107,6 +112,19 @@ def test_consistency(sentence, learner):
     assert prob1 <= 1.0
     assert prob1 == prob2
 
+def test_entailment_not_greater_than_one(test):
+    learner = Learner()
+    pickle_file = open('data/theta.pickle')
+    learner.p_h, learner.theta = pickle.load(pickle_file)
+    learner.normalise()
+    print learner.theta
+    text, hypothesis, expected = test[1]
+    p_t = learner.prob([truth(text, True)])
+    p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
+    assert p_t >= 0 and p_t <= 1
+    assert p_th >= 0 and p_th <= 1
+    assert p_th <= p_t
+
 def test_bounds(sentence):
     data = [truth(sentence, True)]
     learner = Learner()
@@ -116,7 +134,6 @@ def test_bounds(sentence):
     learner.dims['np'] = 5
     learner.initialise([data])
     prob = learner.prob(data)
-
 
 def test_contradiction(sentence, learner):
     data = [truth(sentence, True), truth(sentence, False)]

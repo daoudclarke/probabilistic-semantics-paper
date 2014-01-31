@@ -53,9 +53,13 @@ class Learner(object):
 
     def normalise(self):
         self.p_h /= numpy.sum(self.p_h)
-        for key, v in self.theta.iteritems():
-            for i in range(v.shape[0]):
-                v[i,:] /= numpy.sum(v[i,:])
+        for h in range(self.hidden_dims):
+            for key, v in self.theta.iteritems():
+                if key[0] == 'w':
+                    v[:, h] /= numpy.sum(v[:,h])
+                else:
+                    for i, j in product(*[range(x) for x in v.shape[1:3]]):
+                        v[:, i, j, h] /= numpy.sum(v[:, i, j, h])
 
         for key, v in self.theta.iteritems():
             assert numpy.all((v >= 0.0) & (v <= 1.0))
@@ -93,8 +97,11 @@ class Learner(object):
                 values_prob = reduce(operator.mul,
                                      self.subs_probs(subs, h),
                                      1.0)
+                print subs, values_prob
                 h_prob += values_prob
+            assert h_prob <= 1.0
             total_prob += self.p_h[h]*h_prob
+        assert total_prob >= 0.0 and total_prob <= 1.0
         return total_prob
 
     def ascend(self, theory):
