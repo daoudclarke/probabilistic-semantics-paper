@@ -31,10 +31,12 @@ class Learner(object):
         self.hidden_dims = 2
         self.theta = {}
         self.p_h = numpy.array([0.5]*self.hidden_dims)
-        self.step = 2
+        self.initial_step = 0.5
+        self.step = self.initial_step
 
     def learn(self, theories):
         self.initialise(theories)
+        self.step = self.initial_step
         r = Random(1)
         shuffled = deepcopy(theories)
         r.shuffle(shuffled)
@@ -47,8 +49,8 @@ class Learner(object):
             log_probs = [log(self.prob(t)) for t in theories]
             log_prob = reduce(operator.add, log_probs, 0.0)
             assert log_prob > old_log_prob
-            if log_prob/old_log_prob > 0.99:
-                break
+            #if log_prob/old_log_prob > 0.999:
+            #    break
             old_log_prob = log_prob
 
     def normalise(self):
@@ -97,7 +99,6 @@ class Learner(object):
                 values_prob = reduce(operator.mul,
                                      self.subs_probs(subs, h),
                                      1.0)
-                print subs, values_prob
                 h_prob += values_prob
             assert h_prob <= 1.0
             total_prob += self.p_h[h]*h_prob
@@ -105,20 +106,21 @@ class Learner(object):
         return total_prob
 
     def ascend(self, theory):
-        #print "Theta", self.theta
+        print "Theta", self.theta
+        print "h:", self.p_h
         h_probs = []
         new_theta = {k:numpy.copy(v) for k,v in self.theta.iteritems()}
+        old_prob = new_prob = 0.0
+        #while new_prob < old_prob:
+        #self.step *= 1.2
+        print "New step: ", self.step
         for h in range(self.hidden_dims):
             h_prob = 0.0
             for theory_values, subs in self.substitute_values(theory, {}):
                 prob_logs = [log(x) for x in self.subs_probs(subs, h)]
                 values_prob_log = reduce(operator.add, prob_logs, 0.0)
                 for p_log, (key, value) in zip(prob_logs, subs.items()):
-                    try:
-                        p_exclusive = math.e**(values_prob_log - p_log)
-                    except OverflowError:
-                        print "Values:", values_prob_log, prob_logs
-                        raise
+                    p_exclusive = math.e**(values_prob_log - p_log)
                     delta = self.step*self.p_h[h]*p_exclusive
                     if key[0] == 'w':
                         new_theta[key][value, h] += delta
@@ -127,11 +129,30 @@ class Learner(object):
                 values_prob = math.e**values_prob_log
                 h_prob += values_prob
             h_probs.append(h_prob)
+        old_prob = 0.0
         for i, h_prob in enumerate(h_probs):
             delta = self.step*h_prob
+            old_prob += self.p_h[i]*h_prob
             self.p_h[i] += delta
+        # old_prob2 = self.prob(theory)
+        # assert abs(old_prob2 - old_prob) <= 1e-5
+
+        old_theta = self.theta
+        old_h = self.p_h
         self.theta = new_theta
         self.normalise()
+        print "Theta", self.theta
+        print "h:", self.p_h
+
+        new_prob = self.prob(theory)
+        print "Probabilities:", new_prob, old_prob
+        assert new_prob > old_prob
+
+            # if new_prob < old_prob:
+            #     self.theta = old_theta
+            #     self.p_h = old_h
+            #     self.step *= 0.5
+            #     print "Adjusting step downwards to %f" % self.step
 
             
     def subs_probs(self, subs, h):

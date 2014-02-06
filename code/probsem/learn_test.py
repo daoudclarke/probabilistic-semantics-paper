@@ -61,17 +61,17 @@ def test():
 
 # ================================ TESTS ======================================
 
-# @pytest.mark.xfail
-# def test_learn(train, test):
-#     learner = Learner()
-#     learner.learn(train)
-#     print learner.theta
+#@pytest.mark.xfail
+def test_learn(train, test):
+    learner = Learner()
+    learner.learn(train)
+    print learner.theta
 
-#     for text, hypothesis, expected in test:
-#         p_t = learner.prob([truth(text, True)])
-#         p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
-#         entailment = p_th/p_t
-#         assert (entailment > 0.9) == expected
+    for text, hypothesis, expected in test:
+        p_t = learner.prob([truth(text, True)])
+        p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
+        entailment = p_th/p_t
+        assert (entailment > 0.9) == expected
 
 def test_before_learn(train, test):
     learner = Learner()
@@ -99,7 +99,7 @@ def test_initialise(sentence, learner):
     assert abs(numpy.sum(a[:,1]) - 1.0) <= 1e-5
 
 
-def test_consistency(sentence, learner):
+def test_prob_consistency(sentence, learner):
     data1 = [truth(sentence, True)]
     data2 = [truth(sentence, True), truth(sentence, True)]
     
@@ -112,7 +112,7 @@ def test_consistency(sentence, learner):
     assert prob1 <= 1.0
     assert prob1 == prob2
 
-def test_entailment_not_greater_than_one(test):
+def test_prob_entailment_not_greater_than_one(test):
     learner = Learner()
     pickle_file = open('data/theta.pickle')
     learner.p_h, learner.theta = pickle.load(pickle_file)
@@ -125,7 +125,7 @@ def test_entailment_not_greater_than_one(test):
     assert p_th >= 0 and p_th <= 1
     assert p_th <= p_t
 
-def test_bounds(sentence):
+def test_prob_bounds(sentence):
     data = [truth(sentence, True)]
     learner = Learner()
     learner.hidden_dims = 2
@@ -135,11 +135,18 @@ def test_bounds(sentence):
     learner.initialise([data])
     prob = learner.prob(data)
 
-def test_contradiction(sentence, learner):
+def test_prob_contradiction(sentence, learner):
     data = [truth(sentence, True), truth(sentence, False)]
     print data
     prob = learner.prob(data)
     assert prob == 0.0
+
+def test_prob_sum_contradictions(sentence, learner):
+    data1 = [truth(sentence, True)]
+    data2 = [truth(sentence, False)]
+    prob1 = learner.prob(data1)
+    prob2 = learner.prob(data2)
+    assert abs(prob1 + prob2 - 1.0) <= 1e-5
 
 def test_substitute_values(sentence, learner):
     data = (truth(sentence, True),)
@@ -149,7 +156,24 @@ def test_substitute_values(sentence, learner):
     for x, subs in results[:10]:
         print x, subs
         assert len(subs) > 0
+
+def test_substitute_true_and_false(sentence, learner):
+    data1 = (truth(sentence, True),)
+    data2 = (truth(sentence, False),)
+
+    results1 = list(learner.substitute_values(data1, {}))
+    results2 = list(learner.substitute_values(data2, {}))
+
+    for x, subs in results1[:10]:
+        print x, subs
+        assert len(subs) > 0
     
+    s1 = set(x[0] for x in results1)
+    s2 = set(x[0] for x in results2)
+
+    assert len(s1 & s2) == 0
+    assert len(results1) == len(results2)
+        
 def test_substitute_values_with_duplicates(sentence, learner):
     data1 = (truth(sentence, True),)
     data2 = (truth(sentence, True), truth(sentence, True))
@@ -193,7 +217,7 @@ def test_substitute_expression_repeated_values(learner):
     assert len(values) == 4
 
 def test_gradient(learner, sentence):
-    data = (truth(sentence, True),)
+    data = (truth(sentence, False),)
 
     prob_before = learner.prob(data)
     gradient = learner.ascend(data)
