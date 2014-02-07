@@ -33,6 +33,7 @@ class Learner(object):
         self.p_h = numpy.array([0.5]*self.hidden_dims)
         self.initial_step = 0.5
         self.step = self.initial_step
+        self.max_its = 100
 
     def learn(self, input_theories):
         self.initialise(input_theories)
@@ -43,7 +44,7 @@ class Learner(object):
         log_probs = [log(self.prob(t)) for t in theories]
         old_log_prob = reduce(operator.add, log_probs, 0.0)
         indices = list(numpy.argsort(log_probs))
-        for i in range(500):
+        for i in range(self.max_its):
             print "Learn iteration:", i, "Probability:", old_log_prob
             working = indices[:len(indices)/3]
             remainder = indices[len(indices)/3:]
@@ -124,7 +125,7 @@ class Learner(object):
         total_prob = 0.0
         for h in range(self.hidden_dims):
             h_prob = 0.0
-            for theory_values, subs in self.substitute_values(theory, {}):
+            for theory_values, subs in self.substitute_values(theory):
                 values_prob = reduce(operator.mul,
                                      self.subs_probs(subs, h),
                                      1.0)
@@ -145,10 +146,10 @@ class Learner(object):
         #print "New step: ", self.step
         for h in range(self.hidden_dims):
             h_prob = 0.0
-            for theory_values, subs in self.substitute_values(theory, {}):
+            for theory_values, subs in self.substitute_values(theory):
                 prob_logs = [log(x) for x in self.subs_probs(subs, h)]
                 values_prob_log = reduce(operator.add, prob_logs, 0.0)
-                for p_log, (key, value) in zip(prob_logs, subs.items()):
+                for p_log, (key, value) in zip(prob_logs, subs):
                     p_exclusive = math.e**(values_prob_log - p_log)
                     delta = self.step*self.p_h[h]*p_exclusive
                     if key[0] == 'w':
@@ -183,7 +184,7 @@ class Learner(object):
 
             
     def subs_probs(self, subs, h):
-        for key, value in subs.iteritems():
+        for key, value in subs:
             if key[0] == 'w':
                 v = self.theta[key][value, h]
                 assert v >= 0.0 and v <= 1.0
@@ -193,7 +194,7 @@ class Learner(object):
                 assert v >= 0.0 and v <= 1.0
                 yield v
 
-    def substitute_values(self, theory, subs):
+    def substitute_values(self, theory, subs = ()):
         """
         Returns an iterable of all possible value assignments for a theory
         """
@@ -207,27 +208,31 @@ class Learner(object):
             for remainder, remainder_subs in self.substitute_values(theory[1:], new_subs):
                 yield (expression,) + remainder, remainder_subs
 
-    def substitute_expression_values(self, expression, subs):
+    def substitute_expression_values(self, expression, subs = ()):
         if expression[0] == 'w':
             key = expression
-            if key in subs:
-                yield expression + (subs[key],), subs
+            value = find(subs, key)
+            if value is not None:
+                yield expression + (value,), subs
             else:
                 for i in range(self.dims[expression[1]]):
-                    subs_copy = deepcopy(subs)
-                    subs_copy[key] = i
+                    subs_copy = subs + ((key, i),)
+                    #print "Subs1", subs_copy
                     yield expression + (i,), subs_copy
         else:
             for new_expression1, new_subs1 in self.substitute_expression_values(expression[2], subs):
                 for new_expression2, new_subs2 in self.substitute_expression_values(expression[3], new_subs1):
                     key = (expression[0], expression[1], new_expression1[1], new_expression2[1], new_expression1[-1], new_expression2[-1])
-                    if key in new_subs2:
-                        yield expression[:2] + (new_expression1, new_expression2, new_subs2[key]), new_subs2
+                    value = find(new_subs2, key)
+                    if value is not None:
+                        yield expression[:2] + (new_expression1, new_expression2, value), new_subs2
                     else:
                         for i in range(self.dims[expression[1]]):
-                            subs_copy = deepcopy(new_subs2)
-                            subs_copy[key] = i
+                            subs_copy = new_subs2 + ((key, i),)
+                            #print "Subs2", subs_copy
                             yield expression[:2] + (new_expression1, new_expression2, i), subs_copy
                         
-                
-
+def find(to_search, key):
+    for k, v in to_search:
+        if k == key:
+            return v

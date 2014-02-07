@@ -184,7 +184,7 @@ def test_prob_sum_contradictions(sentence, learner):
 def test_substitute_values(sentence, learner):
     data = (truth(sentence, True),)
 
-    results = list(learner.substitute_values(data, {}))
+    results = list(learner.substitute_values(data))
     print "First ten expressions:"
     for x, subs in results[:10]:
         print x, subs
@@ -194,8 +194,8 @@ def test_substitute_true_and_false(sentence, learner):
     data1 = (truth(sentence, True),)
     data2 = (truth(sentence, False),)
 
-    results1 = list(learner.substitute_values(data1, {}))
-    results2 = list(learner.substitute_values(data2, {}))
+    results1 = list(learner.substitute_values(data1))
+    results2 = list(learner.substitute_values(data2))
 
     for x, subs in results1[:10]:
         print x, subs
@@ -211,19 +211,19 @@ def test_substitute_values_with_duplicates(sentence, learner):
     data1 = (truth(sentence, True),)
     data2 = (truth(sentence, True), truth(sentence, True))
     
-    results1 = list(learner.substitute_values(data1, {}))
-    results2 = list(learner.substitute_values(data2, {}))
+    results1 = list(learner.substitute_values(data1))
+    results2 = list(learner.substitute_values(data2))
     assert len(results1) == len(results2)
 
 def test_substitute_values_contradiction(sentence, learner):
     data = (truth(sentence, True), truth(sentence, False))
     
-    results = list(learner.substitute_values(data, {}))
+    results = list(learner.substitute_values(data))
     assert len(results) == 0
     
 def test_substitute_expression_word(learner):
     expression = ('w', 'det', 'some')
-    values = list(learner.substitute_expression_values(expression, {}))
+    values = list(learner.substitute_expression_values(expression))
 
     assert len(values) == 2
     for e, subs in values:
@@ -234,7 +234,7 @@ def test_substitute_expression_word(learner):
         
 def test_substitute_expression_recursion(learner):
     expression = ('f', 'np', ('w', 'det', 'some'), ('w', 'noun', 'cats'))
-    values = list(learner.substitute_expression_values(expression, {}))
+    values = list(learner.substitute_expression_values(expression))
     assert len(values) == 8
     for e, subs in values:
         print e, subs
@@ -246,7 +246,7 @@ def test_substitute_expression_recursion(learner):
 
 def test_substitute_expression_repeated_values(learner):
     expression = ('f', 'np', ('w', 'det', 'some'), ('w', 'det', 'some'))
-    values = list(learner.substitute_expression_values(expression, {}))
+    values = list(learner.substitute_expression_values(expression))
     assert len(values) == 4
 
 def test_gradient(learner, sentence):
