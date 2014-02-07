@@ -2,16 +2,16 @@
 
 # Learn distributions for probabilistic semantics using expectation maximisation
 
+from random import Random
 import numpy
 from numpy import random
 from itertools import product
 from copy import deepcopy
 import operator
-from random import Random
 import math
 from math import log
 
-random.seed(1)
+random.seed(4)
 
 import logging
 
@@ -34,24 +34,48 @@ class Learner(object):
         self.initial_step = 0.5
         self.step = self.initial_step
 
-    def learn(self, theories):
-        self.initialise(theories)
+    def learn(self, input_theories):
+        self.initialise(input_theories)
         self.step = self.initial_step
         r = Random(1)
-        shuffled = deepcopy(theories)
-        r.shuffle(shuffled)
+        theories = deepcopy(input_theories)
+        #r.shuffle(shuffled)
         log_probs = [log(self.prob(t)) for t in theories]
         old_log_prob = reduce(operator.add, log_probs, 0.0)
-        for i in range(10):
+        indices = list(numpy.argsort(log_probs))
+        for i in range(500):
             print "Learn iteration:", i, "Probability:", old_log_prob
-            for t in shuffled:
-                self.ascend(t)
+            working = indices[:len(indices)/3]
+            remainder = indices[len(indices)/3:]
+            r.shuffle(remainder)
+            old_theta = self.theta
+            old_h = self.p_h
+            r.shuffle(indices)
+            for i in indices: #working + remainder[:len(remainder)/3]:
+                print "Learning on index:", i
+                increased = self.ascend(theories[i])
+                if not increased:
+                    self.step *= 0.9
+                    print "Gradient descent failed for example, decreasing step:", self.step
             log_probs = [log(self.prob(t)) for t in theories]
             log_prob = reduce(operator.add, log_probs, 0.0)
-            assert log_prob > old_log_prob
+            indices = list(numpy.argsort(log_probs))
+            if log_prob >= old_log_prob:
+                print "Successfully increased probability:", log_prob, old_log_prob
+                self.step *= 1.2
+                old_log_prob = log_prob
+            else:
+                self.theta = old_theta
+                self.p_h = old_h
+                print "Probability decreased:", log_prob, old_log_prob                
+                self.step *= 0.5
+            #self.step *= 0.5
+            print "New step:", self.step
+            if self.step < 1e-10:
+                print "Converged."
+                break
             #if log_prob/old_log_prob > 0.999:
             #    break
-            old_log_prob = log_prob
 
     def normalise(self):
         self.p_h /= numpy.sum(self.p_h)
@@ -90,6 +114,11 @@ class Learner(object):
         else:
             raise ValueError('Should be "w" or "f"')
 
+    def prob_all(self, theories):
+        log_probs = [log(self.prob(t)) for t in theories]
+        log_prob = reduce(operator.add, log_probs, 0.0)
+        return math.e**(log_prob)
+
     def prob(self, theory):
         #print "Theta", self.theta
         total_prob = 0.0
@@ -100,20 +129,20 @@ class Learner(object):
                                      self.subs_probs(subs, h),
                                      1.0)
                 h_prob += values_prob
-            assert h_prob <= 1.0
+            assert h_prob < 1.0 + 1e-5
             total_prob += self.p_h[h]*h_prob
         assert total_prob >= 0.0 and total_prob <= 1.0
         return total_prob
 
     def ascend(self, theory):
-        print "Theta", self.theta
-        print "h:", self.p_h
+        #print "Theta", self.theta
+        #print "h:", self.p_h
         h_probs = []
         new_theta = {k:numpy.copy(v) for k,v in self.theta.iteritems()}
         old_prob = new_prob = 0.0
         #while new_prob < old_prob:
         #self.step *= 1.2
-        print "New step: ", self.step
+        #print "New step: ", self.step
         for h in range(self.hidden_dims):
             h_prob = 0.0
             for theory_values, subs in self.substitute_values(theory, {}):
@@ -137,16 +166,14 @@ class Learner(object):
         # old_prob2 = self.prob(theory)
         # assert abs(old_prob2 - old_prob) <= 1e-5
 
-        old_theta = self.theta
-        old_h = self.p_h
         self.theta = new_theta
         self.normalise()
-        print "Theta", self.theta
-        print "h:", self.p_h
+        #print "Theta", self.theta
+        #print "h:", self.p_h
 
         new_prob = self.prob(theory)
         print "Probabilities:", new_prob, old_prob
-        assert new_prob > old_prob
+        return new_prob > old_prob
 
             # if new_prob < old_prob:
             #     self.theta = old_theta

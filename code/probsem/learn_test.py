@@ -4,7 +4,7 @@ import logging
 import sys
 import numpy
 import cPickle as pickle
-
+from random import Random
 
 @pytest.fixture
 def sentence():
@@ -37,20 +37,33 @@ def truth(l, v):
     return ['truth', l, v]
 
 @pytest.fixture
-def train():
+def train_sentences():
     train_sentences = [('some cats like all dogs', 'some animals like all dogs'),
                        ('no animals like all dogs', 'no cats like all dogs'),
                        ('some dogs like all dogs', 'some animals like all dogs'),
                        ('no animals like all dogs', 'no dogs like all dogs'),
                        ('some men like all dogs', 'some people like all dogs')]
-    train = [(make_sentence(t), make_sentence(h)) for t,h in train_sentences]
+    return [(make_sentence(t), make_sentence(h)) for t,h in train_sentences]
+
+@pytest.fixture
+def train():
+    train = train_sentences()
     train_data = [(truth(text, True), truth(hypothesis, True))
                   for text, hypothesis in train]
-    train_data += [(truth(text, False), truth(hypothesis, True))
-                   for text, hypothesis in train]
-    train_data += [(truth(text, False), truth(hypothesis, False))
+    train_data += [(truth(text, False),)
                    for text, hypothesis in train]
     return train_data
+
+# @pytest.fixture
+# def train():
+#     train = train_sentences()
+#     train_data = [(truth(text, True), truth(hypothesis, True))
+#                   for text, hypothesis in train]
+#     train_data += [(truth(text, False), truth(hypothesis, True))
+#                    for text, hypothesis in train]
+#     train_data += [(truth(text, False), truth(hypothesis, False))
+#                    for text, hypothesis in train]
+#     return train_data
 
 @pytest.fixture
 def test():
@@ -62,16 +75,36 @@ def test():
 # ================================ TESTS ======================================
 
 #@pytest.mark.xfail
-def test_learn(train, test):
+def test_learn(train, train_sentences):
     learner = Learner()
     learner.learn(train)
     print learner.theta
 
-    for text, hypothesis, expected in test:
+    for text, hypothesis in train_sentences:
         p_t = learner.prob([truth(text, True)])
         p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
         entailment = p_th/p_t
-        assert (entailment > 0.9) == expected
+        print "Text: ", text
+        print "Hypothesis: ", hypothesis
+        assert entailment > 0.85
+
+@pytest.mark.xfail
+def test_learn_finds_local_maximum(train, train_sentences):
+    learner = Learner()
+    data = [train[0], train[5]]
+    learner.learn(data)
+    print learner.theta
+
+    prob = learner.prob_all(data)
+    r = Random(1)
+    for i in range(10):
+        key = r.choice(learner.theta.keys())
+        delta = r.choice([1e-5, -1e-5])
+        index = r.randint(0, len(learner.theta[key].flat) - 1)
+        learner.theta[key].flat[index] += delta
+        new_prob = learner.prob_all(data)
+        print "Check %d, key %s, index %d" % (i, key, index)
+        assert new_prob <= prob
 
 def test_before_learn(train, test):
     learner = Learner()
