@@ -42,7 +42,7 @@ class Learner(object):
         theories = deepcopy(input_theories)
         #r.shuffle(shuffled)
         log_probs = [log(self.prob(t)) for t in theories]
-        old_log_prob = reduce(operator.add, log_probs, 0.0)
+        old_log_prob = sum(log_probs)
         indices = list(numpy.argsort(log_probs))
         for i in range(self.max_its):
             print "Learn iteration:", i, "Probability:", old_log_prob
@@ -59,7 +59,7 @@ class Learner(object):
                     self.step *= 0.9
                     print "Gradient descent failed for example, decreasing step:", self.step
             log_probs = [log(self.prob(t)) for t in theories]
-            log_prob = reduce(operator.add, log_probs, 0.0)
+            log_prob = sum(log_probs)
             indices = list(numpy.argsort(log_probs))
             if log_prob >= old_log_prob:
                 print "Successfully increased probability:", log_prob, old_log_prob
@@ -117,7 +117,7 @@ class Learner(object):
 
     def prob_all(self, theories):
         log_probs = [log(self.prob(t)) for t in theories]
-        log_prob = reduce(operator.add, log_probs, 0.0)
+        log_prob = sum(log_probs)
         return math.e**(log_prob)
 
     def prob(self, theory):
@@ -148,7 +148,7 @@ class Learner(object):
             h_prob = 0.0
             for theory_values, subs in self.substitute_values(theory):
                 prob_logs = [log(x) for x in self.subs_probs(subs, h)]
-                values_prob_log = reduce(operator.add, prob_logs, 0.0)
+                values_prob_log = sum(prob_logs)
                 for p_log, (key, value) in zip(prob_logs, subs):
                     p_exclusive = math.e**(values_prob_log - p_log)
                     delta = self.step*self.p_h[h]*p_exclusive

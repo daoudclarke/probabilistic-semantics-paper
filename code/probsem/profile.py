@@ -7,7 +7,11 @@ def run():
     train_data = train()
     data = [train_data[0], train_data[5]]
     learner = Learner()
-    learner.max_its = 3
+    learner.hidden_dims = 2
+    learner.dims['noun'] = 3
+    learner.dims['det'] = 4
+    learner.dims['np'] = 5
+    learner.max_its = 1
     learner.learn(data)
 
 
