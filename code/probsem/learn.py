@@ -206,7 +206,8 @@ class Learner(object):
             if value is not None:
                 yield expression + (value,), subs, prob
             else:
-                for i in range(self.dims[expression[1]]):
+                indices = self.get_best_indices(expression, key, h)
+                for i in indices:
                     subs_copy = subs + ((key, i),)
                     yield expression + (i,), subs_copy, prob * self.get_probability(key, i, h)
         else:
@@ -217,7 +218,8 @@ class Learner(object):
                     if value is not None:
                         yield expression[:2] + (new_expression1, new_expression2, value), new_subs2, new_prob2
                     else:
-                        for i in range(self.dims[expression[1]]):
+                        indices = self.get_best_indices(expression, key, h)
+                        for i in indices:
                             subs_copy = new_subs2 + ((key, i),)
                             yield expression[:2] + (new_expression1, new_expression2, i), subs_copy, new_prob2 * self.get_probability(key, i, h)
 
@@ -226,6 +228,10 @@ class Learner(object):
             return self.theta[key][value, h]
         else:
             return self.theta[key[:4]][value, key[4], key[5], h]        
+
+    def get_best_indices(self, expression, key, h):
+        probs = [self.get_probability(key, i, h) for i in range(self.dims[expression[1]])]
+        return list(numpy.argsort(probs))[:3]
                         
 def find(to_search, key):
     for k, v in to_search:
