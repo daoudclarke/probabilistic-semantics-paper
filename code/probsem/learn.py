@@ -125,10 +125,7 @@ class Learner(object):
         total_prob = 0.0
         for h in range(self.hidden_dims):
             h_prob = 0.0
-            for theory_values, subs in self.substitute_values(theory):
-                values_prob = reduce(operator.mul,
-                                     self.subs_probs(subs, h),
-                                     1.0)
+            for theory_values, subs, values_prob in self.substitute_values(theory, h):
                 h_prob += values_prob
             assert h_prob < 1.0 + 1e-5
             total_prob += self.p_h[h]*h_prob
@@ -146,9 +143,10 @@ class Learner(object):
         #print "New step: ", self.step
         for h in range(self.hidden_dims):
             h_prob = 0.0
-            for theory_values, subs in self.substitute_values(theory):
+            for theory_values, subs, _ in self.substitute_values(theory, h):
                 prob_logs = [log(x) for x in self.subs_probs(subs, h)]
                 values_prob_log = sum(prob_logs)
+                #values_prob_log = log(prob)
                 for p_log, (key, value) in zip(prob_logs, subs):
                     p_exclusive = math.e**(values_prob_log - p_log)
                     delta = self.step*self.p_h[h]*p_exclusive
@@ -185,52 +183,49 @@ class Learner(object):
             
     def subs_probs(self, subs, h):
         for key, value in subs:
-            if key[0] == 'w':
-                v = self.theta[key][value, h]
-                assert v >= 0.0 and v <= 1.0
-                yield v
-            else:
-                v = self.theta[key[:4]][value, key[4], key[5], h]
-                assert v >= 0.0 and v <= 1.0
-                yield v
+            yield self.get_probability(key, value, h)
 
-    def substitute_values(self, theory, subs = ()):
+    def substitute_values(self, theory, h, subs=(), prob=1.0):
         """
         Returns an iterable of all possible value assignments for a theory
         """
         if len(theory) == 0:
-            yield (), subs
+            yield (), subs, prob
             return
         truth, sentence, value = theory[0]
-        for expression, new_subs in self.substitute_expression_values(sentence, subs):
+        for expression, new_subs, new_prob1 in self.substitute_expression_values(sentence, h, subs, prob):
             if expression[-1] != value:
                 continue
-            for remainder, remainder_subs in self.substitute_values(theory[1:], new_subs):
-                yield (expression,) + remainder, remainder_subs
+            for remainder, remainder_subs, new_prob2 in self.substitute_values(theory[1:], h, new_subs, new_prob1):
+                yield (expression,) + remainder, remainder_subs, new_prob2
 
-    def substitute_expression_values(self, expression, subs = ()):
+    def substitute_expression_values(self, expression, h, subs=(), prob=1.0):
         if expression[0] == 'w':
             key = expression
             value = find(subs, key)
             if value is not None:
-                yield expression + (value,), subs
+                yield expression + (value,), subs, prob
             else:
                 for i in range(self.dims[expression[1]]):
                     subs_copy = subs + ((key, i),)
-                    #print "Subs1", subs_copy
-                    yield expression + (i,), subs_copy
+                    yield expression + (i,), subs_copy, prob * self.get_probability(key, i, h)
         else:
-            for new_expression1, new_subs1 in self.substitute_expression_values(expression[2], subs):
-                for new_expression2, new_subs2 in self.substitute_expression_values(expression[3], new_subs1):
+            for new_expression1, new_subs1, new_prob1 in self.substitute_expression_values(expression[2], h, subs, prob):
+                for new_expression2, new_subs2, new_prob2 in self.substitute_expression_values(expression[3], h, new_subs1, new_prob1):
                     key = (expression[0], expression[1], new_expression1[1], new_expression2[1], new_expression1[-1], new_expression2[-1])
                     value = find(new_subs2, key)
                     if value is not None:
-                        yield expression[:2] + (new_expression1, new_expression2, value), new_subs2
+                        yield expression[:2] + (new_expression1, new_expression2, value), new_subs2, new_prob2
                     else:
                         for i in range(self.dims[expression[1]]):
                             subs_copy = new_subs2 + ((key, i),)
-                            #print "Subs2", subs_copy
-                            yield expression[:2] + (new_expression1, new_expression2, i), subs_copy
+                            yield expression[:2] + (new_expression1, new_expression2, i), subs_copy, new_prob2 * self.get_probability(key, i, h)
+
+    def get_probability(self, key, value, h):
+        if key[0] == 'w':
+            return self.theta[key][value, h]
+        else:
+            return self.theta[key[:4]][value, key[4], key[5], h]        
                         
 def find(to_search, key):
     for k, v in to_search:
