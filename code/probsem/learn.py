@@ -11,7 +11,7 @@ import operator
 import math
 from math import log
 
-random.seed(4)
+random.seed(5)
 
 import logging
 
@@ -56,19 +56,19 @@ class Learner(object):
                 print "Learning on index:", i
                 increased = self.ascend(theories[i])
                 if not increased:
-                    self.step *= 0.9
-                    print "Gradient descent failed for example, decreasing step:", self.step
+                    #self.step *= 0.9
+                    print "Gradient descent failed for example, step is:", self.step
             log_probs = [log(self.prob(t)) for t in theories]
             log_prob = sum(log_probs)
             indices = list(numpy.argsort(log_probs))
             if log_prob >= old_log_prob:
-                print "Successfully increased probability:", log_prob, old_log_prob
+                print "*** Successfully increased probability:", log_prob, old_log_prob
                 self.step *= 1.2
                 old_log_prob = log_prob
             else:
                 self.theta = old_theta
                 self.p_h = old_h
-                print "Probability decreased:", log_prob, old_log_prob                
+                print "*** Probability decreased:", log_prob, old_log_prob                
                 self.step *= 0.5
             #self.step *= 0.5
             print "New step:", self.step
@@ -133,10 +133,25 @@ class Learner(object):
         return total_prob
 
     def ascend(self, theory):
+        delta, old_prob = self.gradient(theory)
+        print "Delta:", delta
+        for k, v in delta.iteritems():
+            self.theta[k] += self.step*v
+        self.normalise()
+        #print "Theta", self.theta
+        #print "h:", self.p_h
+
+        new_prob = self.prob(theory)
+        print "Probabilities:", new_prob, old_prob
+        return new_prob > old_prob
+
+    def gradient(self, theory):
         #print "Theta", self.theta
         #print "h:", self.p_h
         h_probs = []
-        new_theta = {k:numpy.copy(v) for k,v in self.theta.iteritems()}
+        delta = {k:numpy.zeros(v.shape) for k,v in self.theta.iteritems()}
+        print "Delta", delta
+
         old_prob = new_prob = 0.0
         #while new_prob < old_prob:
         #self.step *= 1.2
@@ -149,36 +164,30 @@ class Learner(object):
                 #values_prob_log = log(prob)
                 for p_log, (key, value) in zip(prob_logs, subs):
                     p_exclusive = math.e**(values_prob_log - p_log)
-                    delta = self.step*self.p_h[h]*p_exclusive
+                    step = self.p_h[h]*p_exclusive
                     if key[0] == 'w':
-                        new_theta[key][value, h] += delta
+                        delta[key][value, h] += step
                     else:
-                        new_theta[key[:4]][value, key[4], key[5], h] += delta
+                        delta[key[:4]][value, key[4], key[5], h] += step
                 values_prob = math.e**values_prob_log
                 h_prob += values_prob
             h_probs.append(h_prob)
         old_prob = 0.0
         for i, h_prob in enumerate(h_probs):
-            delta = self.step*h_prob
+            step = h_prob
             old_prob += self.p_h[i]*h_prob
-            self.p_h[i] += delta
+            self.p_h[i] += step
         # old_prob2 = self.prob(theory)
         # assert abs(old_prob2 - old_prob) <= 1e-5
-
-        self.theta = new_theta
-        self.normalise()
-        #print "Theta", self.theta
-        #print "h:", self.p_h
-
-        new_prob = self.prob(theory)
-        print "Probabilities:", new_prob, old_prob
-        return new_prob > old_prob
+        return delta, old_prob
 
             # if new_prob < old_prob:
             #     self.theta = old_theta
             #     self.p_h = old_h
             #     self.step *= 0.5
             #     print "Adjusting step downwards to %f" % self.step
+
+        
 
             
     def subs_probs(self, subs, h):
@@ -231,7 +240,7 @@ class Learner(object):
 
     def get_best_indices(self, expression, key, h):
         probs = [self.get_probability(key, i, h) for i in range(self.dims[expression[1]])]
-        return list(numpy.argsort(probs))[:3]
+        return list(numpy.argsort(probs))[:2]
                         
 def find(to_search, key):
     for k, v in to_search:

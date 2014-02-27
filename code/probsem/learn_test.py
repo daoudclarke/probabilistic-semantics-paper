@@ -75,8 +75,15 @@ def test():
 # ================================ TESTS ======================================
 
 #@pytest.mark.xfail
-def test_learn(train, train_sentences):
+def test_learn_simple(train, train_sentences):
     learner = Learner()
+    # learner.hidden_dims = 2
+    # learner.dims['noun'] = 3
+    # learner.dims['det'] = 3
+    # learner.dims['verb'] = 3
+    # learner.dims['np'] = 3
+    # learner.dims['vp'] = 3
+
     learner.learn(train)
     print learner.theta
 
@@ -88,7 +95,7 @@ def test_learn(train, train_sentences):
         print "Hypothesis: ", hypothesis
         assert entailment > 0.85
 
-@pytest.mark.xfail
+#@pytest.mark.xfail
 def test_learn_finds_local_maximum(train, train_sentences):
     learner = Learner()
     data = [train[0], train[5]]
