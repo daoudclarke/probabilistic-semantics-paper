@@ -75,7 +75,7 @@ def test():
 # ================================ TESTS ======================================
 
 #@pytest.mark.xfail
-def test_learn(train, train_sentences):
+def test_learn_simple(train, train_sentences):
     learner = Learner()
     learner.learn(train)
     print learner.theta
@@ -86,6 +86,7 @@ def test_learn(train, train_sentences):
         entailment = p_th/p_t
         print "Text: ", text
         print "Hypothesis: ", hypothesis
+        print "Entailment: ", entailment
         assert entailment > 0.85
 
 @pytest.mark.xfail
@@ -94,18 +95,19 @@ def test_learn_finds_local_maximum(train, train_sentences):
     data = [train[0], train[5]]
     learner.learn(data)
     print learner.theta
+    print "Keys:", learner.theta.keys()
 
     prob = learner.prob_all(data)
     r = Random(1)
     for i in range(10):
         key = r.choice(learner.theta.keys())
-        delta = r.choice([0.0001, -0.0001])
+        delta = r.choice([1e-8, -1e-8])
         index = r.randint(0, len(learner.theta[key].flat) - 1)
         learner.theta[key].flat[index] += delta
         learner.normalise()
         new_prob = learner.prob_all(data)
         print "Check %d, key %s, index %d" % (i, key, index)
-        assert new_prob <= prob
+        assert abs((new_prob - prob)/delta) <= 1e-5
 
 def test_before_learn(train, test):
     learner = Learner()
@@ -250,6 +252,7 @@ def test_substitute_expression_repeated_values(learner):
     values = list(learner.substitute_expression_values(expression))
     assert len(values) == 4
 
+#@pytest.mark.xfail
 def test_gradient(learner, sentence):
     data = (truth(sentence, False),)
 
@@ -258,3 +261,19 @@ def test_gradient(learner, sentence):
     prob_after = learner.prob(data)
     
     assert prob_after > prob_before
+
+def test_flat(learner, sentence):
+    old_theta = learner.theta
+    flat = learner.get_flat()
+    print "Flat", flat
+    learner.set_from_flat(flat)
+
+    print "Old theta", old_theta
+    print "New theta", learner.theta
+    for k, v in old_theta.iteritems():
+        if not (abs(learner.theta[k] - v) <= 1e-10).all():
+            print "Key", k
+            print "Original", v
+            print "New", learner.theta[k]
+            print "Difference", v - learner.theta[k]
+            assert False

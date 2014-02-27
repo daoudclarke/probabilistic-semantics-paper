@@ -2,16 +2,16 @@
 
 # Learn distributions for probabilistic semantics using expectation maximisation
 
-from random import Random
 import numpy
-from numpy import random
+from numpy.random import RandomState
 from itertools import product
 from copy import deepcopy
 import operator
 import math
 from math import log
+import scipy.optimize
 
-random.seed(4)
+#random.seed(0)
 
 import logging
 
@@ -34,49 +34,44 @@ class Learner(object):
         self.initial_step = 0.5
         self.step = self.initial_step
         self.max_its = 100
+        self.random = RandomState(1)
 
     def learn(self, input_theories):
         self.initialise(input_theories)
-        self.step = self.initial_step
-        r = Random(1)
-        theories = deepcopy(input_theories)
-        #r.shuffle(shuffled)
-        log_probs = [log(self.prob(t)) for t in theories]
-        old_log_prob = sum(log_probs)
-        indices = list(numpy.argsort(log_probs))
-        for i in range(self.max_its):
-            print "Learn iteration:", i, "Probability:", old_log_prob
-            working = indices[:len(indices)/3]
-            remainder = indices[len(indices)/3:]
-            r.shuffle(remainder)
-            old_theta = self.theta
-            old_h = self.p_h
-            r.shuffle(indices)
-            for i in indices: #working + remainder[:len(remainder)/3]:
-                print "Learning on index:", i
-                increased = self.ascend(theories[i])
-                if not increased:
-                    self.step *= 0.9
-                    print "Gradient descent failed for example, decreasing step:", self.step
-            log_probs = [log(self.prob(t)) for t in theories]
-            log_prob = sum(log_probs)
-            indices = list(numpy.argsort(log_probs))
-            if log_prob >= old_log_prob:
-                print "Successfully increased probability:", log_prob, old_log_prob
-                self.step *= 1.2
-                old_log_prob = log_prob
-            else:
-                self.theta = old_theta
-                self.p_h = old_h
-                print "Probability decreased:", log_prob, old_log_prob                
-                self.step *= 0.5
-            #self.step *= 0.5
-            print "New step:", self.step
-            if self.step < 1e-10:
-                print "Converged."
-                break
-            #if log_prob/old_log_prob > 0.999:
-            #    break
+
+        x0 = self.get_flat()
+        def objective(x):
+            theta_old = self.theta
+            p_h_old = self.p_h
+            self.set_from_flat(x)
+            log_probs = [log(self.prob(t)) for t in input_theories]
+            self.theta = theta_old
+            self.p_h = p_h_old
+            obj = -sum(log_probs)
+            #print "Objective %f, called with %r" % (obj, x)
+            return obj
+
+        #x, f, d = scipy.optimize.fmin_l_bfgs_b(objective, x0, approx_grad=True, factr=10, pgtol=1e-20, iprint=0, epsilon=1e-3, disp=1)
+        bounds = [(0.0, 1.0)]*x0.size
+        #x, f, d = scipy.optimize.fmin_l_bfgs_b(objective, x0, approx_grad=True, bounds=bounds, disp=1, pgtol=1e-10, factr=10)
+        x, f, d = scipy.optimize.fmin_l_bfgs_b(objective, x0, approx_grad=True, bounds=bounds, disp=1)
+        self.set_from_flat(x)
+        
+    def set_from_flat(self, flat):
+        theta_new = {k: numpy.zeros(v.shape) for k,v in self.theta.iteritems()}
+        i = 0
+        for k, v in sorted(theta_new.items()):
+            v = theta_new[k]
+            #print "Key", k, "Size", v.size
+            v.flat = flat[i: i+v.size]
+            i += v.size
+        self.p_h = flat[i: i+self.p_h.size]
+        self.theta = theta_new
+        self.normalise()
+
+    def get_flat(self):
+        #print "Sorted keys", [x[0] for x in sorted(self.theta.items())]
+        return numpy.concatenate([x.flat for k, x in sorted(self.theta.items())] + [self.p_h])
 
     def normalise(self):
         self.p_h /= numpy.sum(self.p_h)
@@ -89,7 +84,7 @@ class Learner(object):
                         v[:, i, j, h] /= numpy.sum(v[:, i, j, h])
 
         for key, v in self.theta.iteritems():
-            assert numpy.all((v >= 0.0) & (v <= 1.0))
+            assert numpy.all((v >= -1e-3) & (v <= 1.0 + 1e-3))
 
     def initialise(self, theories):
         self.theta = {}
@@ -99,17 +94,17 @@ class Learner(object):
                 if truth != 'truth':
                     raise ValueError('Expected truth assertion')
                 self.initialise_sub(f)
-            self.p_h = random.rand(self.hidden_dims)
+            self.p_h = self.random.rand(self.hidden_dims)
         self.normalise()
             
     def initialise_sub(self, f):
         if f[0] == 'w':
             assert f[1] in words
-            self.theta[f] = random.rand(self.dims[f[1]], self.hidden_dims)
+            self.theta[f] = self.random.rand(self.dims[f[1]], self.hidden_dims)
         elif f[0] == 'f':
             assert f[1] in functions
             f2, f3 = f[2][1], f[3][1]
-            self.theta[(f[0], f[1], f2, f3)] = random.rand(self.dims[f[1]], self.dims[f2], self.dims[f3], self.hidden_dims)
+            self.theta[(f[0], f[1], f2, f3)] = self.random.rand(self.dims[f[1]], self.dims[f2], self.dims[f3], self.hidden_dims)
             self.initialise_sub(f[2])
             self.initialise_sub(f[3])
         else:
