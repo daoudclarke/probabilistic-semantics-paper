@@ -72,7 +72,7 @@ class Learner(object):
                 self.step *= 0.5
             #self.step *= 0.5
             print "New step:", self.step
-            if self.step < 1e-10:
+            if self.step < 1e-12:
                 print "Converged."
                 break
             #if log_prob/old_log_prob > 0.999:
@@ -134,7 +134,7 @@ class Learner(object):
 
     def ascend(self, theory):
         delta, old_prob = self.gradient(theory)
-        print "Delta:", delta
+        #print "Delta:", delta
         for k, v in delta.iteritems():
             self.theta[k] += self.step*v
         self.normalise()
@@ -150,7 +150,7 @@ class Learner(object):
         #print "h:", self.p_h
         h_probs = []
         delta = {k:numpy.zeros(v.shape) for k,v in self.theta.iteritems()}
-        print "Delta", delta
+        #print "Delta", delta
 
         old_prob = new_prob = 0.0
         #while new_prob < old_prob:

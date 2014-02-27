@@ -106,9 +106,10 @@ def test_learn_finds_local_maximum(train, train_sentences):
     r = Random(1)
     for i in range(10):
         key = r.choice(learner.theta.keys())
-        delta = r.choice([1e-5, -1e-5])
+        delta = r.choice([0.1, -0.1])
         index = r.randint(0, len(learner.theta[key].flat) - 1)
         learner.theta[key].flat[index] += delta
+        learner.normalise()
         new_prob = learner.prob_all(data)
         print "Check %d, key %s, index %d" % (i, key, index)
         assert new_prob <= prob
