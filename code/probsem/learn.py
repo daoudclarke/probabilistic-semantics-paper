@@ -174,7 +174,7 @@ class Learner(object):
             h_probs.append(h_prob)
         old_prob = 0.0
         for i, h_prob in enumerate(h_probs):
-            step = h_prob
+            step = self.step*h_prob
             old_prob += self.p_h[i]*h_prob
             self.p_h[i] += step
         # old_prob2 = self.prob(theory)
