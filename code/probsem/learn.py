@@ -94,7 +94,7 @@ class Learner(object):
                 if truth != 'truth':
                     raise ValueError('Expected truth assertion')
                 self.initialise_sub(f)
-            self.p_h = self.random.rand(self.hidden_dims)
+        self.p_h = self.random.rand(self.hidden_dims)
         self.normalise()
             
     def initialise_sub(self, f):
@@ -181,13 +181,9 @@ class Learner(object):
     def subs_probs(self, subs, h):
         for key, value in subs:
             if key[0] == 'w':
-                v = self.theta[key][value, h]
-                assert v >= 0.0 and v <= 1.0
-                yield v
+                yield self.theta[key][value, h]
             else:
-                v = self.theta[key[:4]][value, key[4], key[5], h]
-                assert v >= 0.0 and v <= 1.0
-                yield v
+                yield self.theta[key[:4]][value, key[4], key[5], h]
 
     def substitute_values(self, theory, subs = ()):
         """

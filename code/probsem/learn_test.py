@@ -5,6 +5,7 @@ import sys
 import numpy
 import cPickle as pickle
 from random import Random
+import math
 
 @pytest.fixture
 def sentence():
@@ -89,8 +90,9 @@ def test_learn_simple(train, train_sentences):
         print "Entailment: ", entailment
         assert entailment > 0.85
 
-@pytest.mark.xfail
 def test_learn_finds_local_maximum(train, train_sentences):
+    delta = 1e-8
+
     learner = Learner()
     data = [train[0], train[5]]
     learner.learn(data)
@@ -99,15 +101,22 @@ def test_learn_finds_local_maximum(train, train_sentences):
 
     prob = learner.prob_all(data)
     r = Random(1)
-    for i in range(10):
-        key = r.choice(learner.theta.keys())
-        delta = r.choice([1e-8, -1e-8])
-        index = r.randint(0, len(learner.theta[key].flat) - 1)
-        learner.theta[key].flat[index] += delta
+    old_flat = learner.get_flat()
+    grad = numpy.zeros(old_flat.shape)
+    for i in range(len(old_flat)):
+        flat = numpy.copy(old_flat)
+        flat[i] += delta
+        learner.set_from_flat(flat)
         learner.normalise()
         new_prob = learner.prob_all(data)
-        print "Check %d, key %s, index %d" % (i, key, index)
-        assert abs((new_prob - prob)/delta) <= 1e-5
+        gradient = (prob - new_prob)/delta
+        projected_gradient = max(flat[i] - 1.0, gradient)
+        projected_gradient = min(flat[i], projected_gradient)
+        print "Value, gradient, projected gradient at index %d, %g, %g, %g" % (
+            i, flat[i], gradient, projected_gradient)
+        grad[i] = projected_gradient
+    norm = math.sqrt(numpy.dot(grad, grad))
+    assert norm <= 1e-5
 
 def test_before_learn(train, test):
     learner = Learner()
@@ -263,10 +272,20 @@ def test_gradient(learner, sentence):
     assert prob_after > prob_before
 
 def test_flat(learner, sentence):
-    old_theta = learner.theta
+    assert learner.p_h.shape == (2,)
+    assert learner.p_h.size == 2
+
+    old_theta = {k: numpy.copy(v) for k, v in learner.theta.iteritems()}
+    old_p_h = numpy.copy(learner.p_h)
     flat = learner.get_flat()
+    for k in learner.theta:
+        learner.theta[k] = numpy.zeros(learner.theta[k].shape)        
+    learner.p_h = numpy.zeros(learner.p_h.shape)
+    print "Theta after setting to zero:", learner.theta
+
     print "Flat", flat
     learner.set_from_flat(flat)
+    assert learner.p_h.shape == (2,)
 
     print "Old theta", old_theta
     print "New theta", learner.theta
@@ -277,3 +296,5 @@ def test_flat(learner, sentence):
             print "New", learner.theta[k]
             print "Difference", v - learner.theta[k]
             assert False
+    assert (abs(learner.p_h - old_p_h) <= 1e-10).all()
+
