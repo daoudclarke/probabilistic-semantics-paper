@@ -261,7 +261,7 @@ $$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
 
 \section{Probabilistic Montague Semantics}
 
-\subsection{Definitions}
+\subsection{Introduction}
 
 \begin{frame}{Probabilistic Montague Semantics}
 \begin{itemize}
@@ -269,6 +269,8 @@ $$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
 \item Probability distribution over models for higher order logic
 \end{itemize}
 \end{frame}
+
+\subsection{Montague Semantics}
 
 \begin{frame}{Set of Types $\mathcal{T}$}
 \begin{description}
@@ -287,6 +289,105 @@ $$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
 \item for every pair $\gamma,\delta\in \Lambda$ such that $\tau_\gamma
   = \alpha/\beta$ and $\tau_\delta = \alpha$, then $\gamma(\delta)\in
   \Lambda$, and $\tau_{\gamma(\delta)} = \beta$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Denotations}
+\begin{itemize}
+\item Let $E$ be a set of \emph{entities}
+\item The set $D_\alpha$ of \emph{possible denotations} of type $\alpha$ is
+defined recursively:
+\begin{eqnarray*}
+D_e &=& E\\
+D_t &=& \{\bot,\top\}\\
+D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
+\end{eqnarray*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretations}
+  \begin{itemize}
+  \item An \emph{interpretation} is a pair $\langle E,
+    F\rangle$ such that $E$ is a non-empty set and $F$ is a function with
+    domain $B$ such that $F(b) \in D_{\tau_b}$ for all $b\in B$.
+  \item A meaningful expression $\gamma$ has the value $\phi(\gamma)$ in the
+    interpretation $\langle E, F\rangle$ defined recursively
+    \begin{itemize}
+    \item $\phi(b) = F(b)$ for $b\in B$
+    \item $\phi(\gamma(\delta)) = \phi(\gamma)(\phi(\delta))$ for $\gamma
+      \in \Lambda_{\alpha/\beta}$ and $\delta \in \Lambda_\beta$.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Theories}
+  \begin{itemize}
+  \item A \emph{sentence} is a meaningful expression of type $t$.
+  \item A sentence $s$ is \emph{true} in interpretation $\langle E,
+    F\rangle$ if $\phi(s) = \top$, otherwise it is \emph{false}.
+  \item A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$
+    is a sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
+    \emph{model} for a theory $T$ is an interpretation $\langle E,
+    F\rangle$ such that $\phi(s) = \hat{s}$ for every sentence $s\in
+    T$. In this case we say that the model \emph{satisfies} $T$.
+  \end{itemize}
+\end{frame}
+
+\subsection{Probability}
+
+\begin{frame}{Probability Measures (new stuff!)}
+  \begin{itemize}
+  \item Let $\Omega$ be the set of all interpretations
+  \item $\sigma$ is the sigma algebra consisting of the set of all
+    sets of models that satisfy some theory.
+  \item Let $\mu$ be a probability measure on $\sigma$; then
+    $\langle\Omega,\sigma,\mu\rangle$ is a probability space which
+    describes the probability of theories.
+  \item Let $M(T)$ denote the set of all models for the theory $T$;
+    the probability of $T$ is $\mu(M(T))$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Entailment as Conditional Probability}
+  \begin{itemize}
+  \item The conditional probability of $s_1$ given $s_2$ is
+    $$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
+    \begin{itemize}
+    \item The {\em degree to which $s_2$ entails $s_1$\/}. 
+    \end{itemize}
+  \item If $s_2$ logically entails $s_1$ then the degree to which  $s_2$ entails $s_1$ is $1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Learning Semantics}
+  \begin{itemize}
+  \item There are too many variables to learn
+  \item Restrict the set of possible values for each type
+  \item Learning because feasible
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Constrained Montague Semantics}
+\begin{itemize}
+\item Fix $E$.
+\item Let $\phi_\tau = \{\phi(\lambda) : \lambda\in \Lambda_\tau\}$
+\item Let $n_\tau$ be a set of constants satisfying $n_\tau \le |D_\tau|$
+\item Constrain $F$ such that $|\phi_\tau| = n_\tau$
+\item Write $\phi_\tau = \{d_{\tau,1}, d_{\tau,2}, \ldots d_{\tau,
+    n_\tau}\}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Generative Model}
+\begin{itemize}
+\item Generate a hidden value $h\in H$
+\item Generate a value $F(b) \in \phi_{\tau_b}$ for each $b\in B$ according to
+  $P(d_{\tau_b,i}|b, h)$
+\item For each pair of types $\alpha/\beta, \beta$:
+\begin{itemize}
+\item Generate a value $\phi(d_{\alpha/\beta,i}(d_{\alpha,j}))$
+  according to $P(d_{\beta,i}|d_{\alpha/\beta,i}, d_{\alpha,j},h)$
 \end{itemize}
 \end{itemize}
 \end{frame}
