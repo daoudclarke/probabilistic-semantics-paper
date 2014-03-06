@@ -51,7 +51,9 @@ def train():
     train = train_sentences()
     train_data = [(truth(text, True), truth(hypothesis, True))
                   for text, hypothesis in train]
-    train_data += [(truth(text, False),)
+    train_data += [(truth(text, False), truth(hypothesis, True))
+                   for text, hypothesis in train]
+    train_data += [(truth(text, False), truth(hypothesis, False))
                    for text, hypothesis in train]
     return train_data
 
@@ -89,6 +91,22 @@ def test_learn_simple(train, train_sentences):
         print "Hypothesis: ", hypothesis
         print "Entailment: ", entailment
         assert entailment > 0.85
+
+def test_learn_new_data(train, test):
+    learner = Learner()
+    learner.learn(train)
+    #learner.initialise(train)
+    print learner.theta
+
+    for text, hypothesis, expected in test:
+        p_t = learner.prob([truth(text, True)])
+        p_th = learner.prob([truth(text, True), truth(hypothesis, True)])
+        entailment = p_th/p_t
+        print "Text: ", text
+        print "Hypothesis: ", hypothesis
+        print "Expected: ", expected
+        print "Entailment: ", entailment
+        #assert entailment > 0.85    
 
 def test_learn_finds_local_maximum(train, train_sentences):
     delta = 1e-8
