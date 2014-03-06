@@ -1,0 +1,562 @@
+% Bismillahi-r-Rahmani-r-Rahim
+% $Header$
+
+\documentclass{beamer}
+
+% This file is a solution template for:
+
+% - Talk at a conference/colloquium.
+% - Talk length is about 20min.
+% - Style is ornate.
+
+
+
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice. 
+
+\newlength{\wideitemsep}
+\setlength{\wideitemsep}{\itemsep}
+\addtolength{\wideitemsep}{10pt}
+\let\olditem\item
+\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
+
+
+\newcommand{\context}[1]{\ensuremath{\widehat{\mathit{#1}}}}
+\newcommand{\nl}[1]{\sl{#1}}
+
+\usepackage{rotating}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+
+%  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\usepackage{alltt}
+
+\title%[Short Paper Title] % (optional, use only with long paper titles)
+{Towards Probabilistic Semantics for Natural Language}
+
+%\subtitle
+%{Include Only If Paper Has a Subtitle}
+
+\author[Department of Informatics, University of Sussex] % (optional, use only with lots of authors)
+{Daoud Clarke and Bill Keller}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[University of Sussex] % (optional, but mostly needed)
+{
+  Department of Informatics\\
+  University of Sussex}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[University of York] % (optional, should be abbreviation of conference name)
+{University of York, 20th March 2014}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Computational Linguistics}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+%%% Delete this, if you do not want the table of contents to pop up at
+%%% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+%  \begin{frame}<beamer>{Outline}
+%    \tableofcontents[currentsection,currentsubsection]
+%  \end{frame}
+%}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Introduction}
+%\subsection{Background}
+
+\begin{frame}{Overview}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+
+% Structuring a talk is a difficult task and the following structure
+% may not be suitable. Here are some rules that apply for this
+% solution: 
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+% - A conference audience is likely to know very little of what you
+%   are going to talk about. So *simplify*!
+% - In a 20min talk, getting the main ideas across is hard
+%   enough. Leave out details, even if it means being less precise than
+%   you think necessary.
+% - If you omit details that are vital to the proof/implementation,
+%   just say so once. Everybody will be happy with that.
+
+\subsection{Motivation}
+
+\begin{frame}{Motivation}
+\begin{itemize}
+\item Combine logical and distributional semantics
+\item Foundation in probability theory
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Distributional Semantics}
+\begin{itemize}
+\item Learn meanings of words
+\item Degrees of relatedness
+\item Nothing to say about composition
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Logical Semantics}
+\begin{itemize}
+\item Represent subtle aspects of compositionality
+\item Generalised quantifiers, intensional semantics\ldots
+\item Not able to learn word meanings
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Our aim}
+\begin{itemize}
+\item Learn word meanings and composition
+\item Retain expressivity of logical semantics
+\item Application: textual entailment
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Textual Entailment Example}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent.\\
+\hline
+some cats like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no cats like all dogs & Yes\\
+some dogs like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no dogs like all dogs & Yes\\
+some men like all dogs & some people like all dogs & Yes\\
+\hline
+no people like all dogs & no men like all dogs & Yes\\
+no men like all dogs & no people like all dogs & No\\
+\hline
+\end{tabular}
+\end{frame}
+
+\subsection{Related Work}
+
+\begin{frame}{Related Work}
+\begin{itemize}
+\item Garrette and Erk use Markov Logic Networks
+\begin{itemize}
+\item Distributional information generates probabilistic rules
+\end{itemize}
+%\item Bos and Markert: build a model, look at its size
+%\item Neither is fully theoretically satisfying
+\item Lewis and Steedman use clustering to induce relational constants
+\item Ed Grefenstette expresses formal semantics using tensors
+\end{itemize}
+\end{frame}
+
+\section{Probabilistic Semantics}
+
+\subsection{Background}
+
+\begin{frame}{Probabilistic Semantics}
+\begin{itemize}
+\item Haim Gaifman (1964) \textit{Concerning Measures in First Order Calculi}
+\item Ronald Fagin et al.~(1990) \textit{A logic for reasoning about probabilities}
+\item Taisuke Sato (1995) \textit{A Statistical Learning Method for Logic Programs with Distribution Semantics}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sato Semantics}
+\begin{itemize}
+\item As in model-theoretic semantics, the denotation of a sentence is
+  the set of models for which it is true
+\item Assume a probability distribution over models
+\item More generally, assume a probability measure over the $\sigma$-algebra of all denotations
+\end{itemize}
+\end{frame}
+
+\subsection{Example}
+
+\begin{frame}{Sato Semantics Example}
+\begin{center}
+\begin{tabular}{|l|l|l||c|c|c|c|}
+\hline
+\multicolumn{3}{|c||}{Sentence} & \multicolumn{4}{c|}{Model (probability)}\\
+\hline
+& & & $m_1$& $m_2$& $m_3$& $m_4$\\
+\emph{subject} & \emph{verb} & \emph{object} & (0.1)& (0.2)& (0.3)& (0.4)\\
+\hline
+john & likes & john & 1 & 1 & 1 & 1\\
+john & likes & mary & 0 & 1 & 1 & 1\\
+mary & likes & john & 1 & 0 & 0 & 1\\
+mary & likes & mary & 0 & 0 & 1 & 1\\
+john & loves & john & 1 & 1 & 1 & 1\\
+john & loves & mary & 1 & 0 & 1 & 1\\
+mary & loves & john & 1 & 1 & 1 & 1\\
+mary & loves & mary & 1 & 0 & 1 & 1\\
+\hline
+\end{tabular}
+\end{center}
+$$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
+\end{frame}
+
+\section{Probabilistic Montague Semantics}
+
+\subsection{Definitions}
+
+\begin{frame}{Probabilistic Montague Semantics}
+\begin{itemize}
+\item Combine Sato Semantics and Montague Semantics
+\item Probability distribution over models for higher order logic
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Set of Types $\mathcal{T}$}
+\begin{description}
+\item [Basic types:] $e,t\in \mathcal{T}$
+\item[Complex types:]  if $\alpha, \beta\in \mathcal{T}$, then $\alpha/\beta\in \mathcal{T}$.
+\end{description}
+\end{frame}
+
+\begin{frame}{Meaningful Expressions}
+\begin{itemize}
+\item Let $B$ be a set of \emph{basic expressions}
+\item For each $b\in B$, we have a type $\tau_b\in \mathcal{T}$
+\item Define the set $\Lambda$ of meaningful expressions, and the extension of $\tau$ to $\Lambda$ recursively:
+\begin{itemize}
+\item $B\subseteq \Lambda$
+\item for every pair $\gamma,\delta\in \Lambda$ such that $\tau_\gamma
+  = \alpha/\beta$ and $\tau_\delta = \alpha$, then $\gamma(\delta)\in
+  \Lambda$, and $\tau_{\gamma(\delta)} = \beta$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% \subsection{Example}
+
+% \begin{frame}{Textual Entailment Example}
+% \begin{itemize}
+% \item Text: \emph{Oil prices, notoriously vulnerable to political events, spiked as high as \$40 a barrel during the Gulf War in 1991.}
+% \item Hypothesis: \emph{The Gulf War was fought in 1991.}
+% \end{itemize}
+% \end{frame}
+
+% \begin{frame}[fragile]{Model for Text}
+% \tiny
+% \begin{alltt}
+% model([d1],
+%   [f(1,a1as,[d1]),
+%    f(1,a1notoriously,[d1]),
+%    f(1,a1political,[d1]),
+%    f(1,c40number,[]),
+%    f(1,n1barrel,[]),
+%    f(1,n1dollar,[]),
+%    f(1,n1event,[d1]),
+%    f(1,n1numeral,[]),
+%    f(1,n1oil,[d1]),
+%    f(1,n1price,[d1]),
+%    f(1,nam1gulf_war,[d1]),
+%    f(1,t_1991XXXX,[d1]),
+%    f(1,v1high,[d1]),
+%    f(1,v1spike,[d1]),
+%    f(1,v1vulnerable,[d1]),
+%    f(2,card,[]),
+%    f(2,r1agent,[ (d1,d1)]),
+%    f(2,r1as,[]),
+%    f(2,r1during,[ (d1,d1)]),
+%    f(2,r1for,[]),
+%    f(2,r1in,[ (d1,d1)]),
+%    f(2,r1of,[ (d1,d1)]),
+%    f(2,r1theme,[ (d1,d1)]),
+%    f(2,r1to,[ (d1,d1)])]).
+
+
+% \end{alltt}
+% \end{frame}
+
+% \begin{frame}[fragile]{Model for Text AND Hypothesis}
+% \tiny
+% \begin{alltt}
+% model([d1],
+%   [f(1,a1as,[d1]),
+%    f(1,a1notoriously,[d1]),
+%    f(1,a1political,[d1]),
+%    f(1,c40number,[]),
+%    f(1,n1barrel,[]),
+%    f(1,n1dollar,[]),
+%    f(1,n1event,[d1]),
+%    f(1,n1numeral,[]),
+%    f(1,n1oil,[d1]),
+%    f(1,n1price,[d1]),
+%    f(1,nam1gulf_war,[d1]),
+%    f(1,t_1991XXXX,[d1]),
+%    \textcolor{red}{\textbf{f(1,v1fight,[d1]),}}
+%    f(1,v1high,[d1]),
+%    f(1,v1spike,[d1]),
+%    f(1,v1vulnerable,[d1]),
+%    f(2,card,[]),
+%    f(2,r1agent,[ (d1,d1)]),
+%    f(2,r1as,[]),
+%    f(2,r1during,[ (d1,d1)]),
+%    f(2,r1for,[]),
+%    f(2,r1in,[ (d1,d1)]),
+%    f(2,r1of,[ (d1,d1)]),
+%    \textcolor{red}{\textbf{f(2,r1patient,[ (d1,d1)]),}}
+%    f(2,r1theme,[ (d1,d1)]),
+%    f(2,r1to,[ (d1,d1)])]).
+% \end{alltt}
+% \end{frame}
+
+% \begin{frame}{Distributional Semantics and Models}
+% \begin{itemize}
+% \item Need to know that ``Gulf War'' was ``fought''
+% \item Distributional knowledge replaces (some) logical background knowledge
+% \item New idea: probability distribution over models
+% \end{itemize}
+% \end{frame}
+
+% \section{Probabilistic Semantics}
+
+% \subsection{Approach}
+
+% \begin{frame}{New approach}
+% \begin{itemize}
+% \item Generalise model-theoretic semantics
+% \begin{itemize}
+% \item Probabilistic semantics
+% \end{itemize}
+% \item Incorporate probabilistic distributional information
+% \item Well founded (but hard?)
+% \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Probabilistic Semantics}
+% \begin{itemize}
+% \item As in model-theoretic semantics, the denotation of a sentence is
+%   the set of models for which it is true
+% \item Assume a probability distribution over models
+% \item More generally, assume a probability measure over the $\sigma$-algebra of all denotations
+% \end{itemize}
+% \end{frame}
+
+% \subsection{Probability and Truth}
+
+% \begin{frame}{Probability of (the truth of) a Sentence}
+% \begin{itemize}
+% \item Given a sentence $S$
+% \begin{itemize}
+% \item Find set $M_S$ of all models for which $S$ is true
+% \item Probability that $S$ is true is sum of probability of all models in $M_S$
+% \item More generally $\mu(M_S)$ for some probability measure $\mu$
+% \end{itemize}
+% \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Entailment}
+% \begin{itemize}
+% \item Degree to which $S$ entails $T$ is
+% $$P(T|S) = \frac{P(M_S \cap M_T)}{P(M_S)}$$
+% \end{itemize}
+% \end{frame}
+
+% \section{In Practice}
+
+% \subsection{Model Probabilities}
+
+% \begin{frame}{Model Probabilities}
+% \begin{itemize}
+% % \item Problem: we need to sum over all models for a sentence
+% % \begin{itemize}
+% % \item Finding one model is hard enough!
+% % \end{itemize}
+% \item Problem: how to assign probabilities to models?
+% \item Bos and Markert: look at the size of the model
+% \item Use distributional semantics?
+% \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Generative Model for Models}
+% \begin{itemize}
+% \item Assume models are generated by a random process
+% \begin{itemize}
+% \item Similar to LDA or PLSA
+% \end{itemize}
+% \item Choose $N$ (number of entities)
+% \item For each entity, choose a value for its latent type
+% \item For each possible relation between entities
+% \begin{itemize}
+% \item Condition on latent types
+% \item Choose whether truth holds
+% \end{itemize}
+% \end{itemize}
+% \end{frame}
+
+% \begin{frame}[fragile]{Distributional Semantics}
+% \tiny
+% \begin{alltt}
+% model([d1],
+%   [f(1,a1as,[d1]),
+%    \textcolor{purple}{\textbf{f(1,a1notoriously,[d1]),}}
+%    \textcolor{purple}{\textbf{f(1,a1political,[d1]),}}
+%    \textcolor{blue}{\textbf{f(1,c40number,[]),}}
+%    f(1,n1barrel,[]),
+%    \textcolor{blue}{\textbf{f(1,n1dollar,[]),}}
+%    f(1,n1event,[d1]),
+%    \textcolor{blue}{\textbf{f(1,n1numeral,[]),}}
+%    f(1,n1oil,[d1]),
+%    \textcolor{blue}{\textbf{f(1,n1price,[d1]),}}
+%    \textcolor{green}{\textbf{f(1,nam1gulf\_war,[d1]),}}
+%    f(1,t\_1991XXXX,[d1]),
+%    \textcolor{green}{\textbf{f(1,v1fight,[d1]),}}
+%    \textcolor{orange}{\textbf{f(1,v1high,[d1]),}}
+%    \textcolor{orange}{\textbf{f(1,v1spike,[d1]),}}
+%    f(1,v1vulnerable,[d1]),
+%    f(2,card,[]),
+%    f(2,r1agent,[ (d1,d1)]),
+%    f(2,r1as,[]),
+%    f(2,r1during,[ (d1,d1)]),
+%    f(2,r1for,[]),
+%    f(2,r1in,[ (d1,d1)]),
+%    f(2,r1of,[ (d1,d1)]),
+%    f(2,r1patient,[ (d1,d1)]),
+%    f(2,r1theme,[ (d1,d1)]),
+%    f(2,r1to,[ (d1,d1)])]).
+% \end{alltt}
+% \end{frame}
+
+% \subsection{Computation}
+
+% \begin{frame}{Computing probabilities}
+% \begin{itemize}
+% \item Problem: need to sum probability over all models
+% \begin{itemize}
+% \item Finding one model is hard enough!
+% \end{itemize}
+% \item Possible solutions:
+% \begin{itemize}
+% \item Approximate by sampling models
+% \item Use models to estimate bounds on probabilities
+% \item Integrate probabilities into search for models
+% \end{itemize}
+% \end{itemize}
+% \end{frame}
+
+% \subsection{Conclusion}
+
+% \begin{frame}{Conclusion}
+% \begin{itemize}
+% \item Probability of a sentence:
+% \begin{itemize}
+% \item sum of probability of models for which the sentence is true
+% \end{itemize}
+% \item Probability incorporates distributional semantics
+% \end{itemize}
+% \end{frame}
+
+% % \begin{frame}{Independence Assumptions}
+% % \begin{itemize}
+% % \item John snores
+% % \item Mary snores
+% % \item John or Mary snores
+% % \item John snores or sneezes
+% % \end{itemize}
+% % \end{frame}
+
+% % \begin{frame}{Boolean Semantics to Probability}
+% % \begin{itemize}
+% % \item Keenan and Faltz: many categories form Boolean algebras
+% % \item Assume a probability measure on these algebras
+% % \item Probability of a sentence is product measure
+% % \end{itemize}
+% % \end{frame}
+
+% % \begin{frame}{Independence Assumptions}
+% % $$P(\textrm{John or Mary snores}) = P(\textrm{John or Mary})P(\textrm{snores})$$
+% % \end{frame}
+
+% % \begin{frame}{Distributional Probabilistic Semantics}
+% % \begin{itemize}
+% % \item Taxonomies replaced by measure spaces
+% % \item Distributional semantics gives us measure spaces
+% % \begin{itemize}
+% % \item Finite vector space
+% % \item Lattice operations min and max 
+% % \item \textbf{Abstract Lebesgue} space
+% % \end{itemize}
+% % \end{itemize}
+% % \end{frame}
+
+% % \section{Future work}
+
+% % \subsection{In Practice}
+
+% % \begin{frame}{In Practice}
+% % \begin{itemize}
+% % \item Need to estimate probability of a sentence
+% % \item Make independence assumptions
+% % \item Use model building in conjunction with machine learning
+% % \end{itemize}
+% % \end{frame}
+
+\end{document}
+
+
