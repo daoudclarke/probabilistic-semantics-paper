@@ -181,6 +181,21 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Traditional Approach to Logical Semantics}
+\begin{itemize}
+\item Translate natural language to logic
+\item Prove theorems/build models
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Our approach}
+\begin{itemize}
+\item Use a constrained set of models
+\item Translate directly to sets of models
+\item Learn a distribution over this set
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Textual Entailment Example}
 \begin{tabular}{|l|l|l|}
 \hline
@@ -324,13 +339,11 @@ D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
 \begin{frame}{Theories}
   \begin{itemize}
   \item A \emph{sentence} is a meaningful expression of type $t$.
-  \item A sentence $s$ is \emph{true} in interpretation $\langle E,
-    F\rangle$ if $\phi(s) = \top$, otherwise it is \emph{false}.
   \item A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$
-    is a sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
-    \emph{model} for a theory $T$ is an interpretation $\langle E,
-    F\rangle$ such that $\phi(s) = \hat{s}$ for every sentence $s\in
-    T$. In this case we say that the model \emph{satisfies} $T$.
+    is a sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value.
+  \item A \emph{model} for a theory $T$ is an interpretation $\langle
+    E, F\rangle$ such that $\phi(s) = \hat{s}$ for every sentence
+    $s\in T$. In this case we say that the model \emph{satisfies} $T$.
   \end{itemize}
 \end{frame}
 
@@ -448,6 +461,15 @@ no men like all dogs & no people like all dogs & 0.5\\
   \item Todo: calculate gradient
   \end{itemize}
 \end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+  \item Probability distribution over models
+  \item Constrained Montague semantics
+  \item Learn meanings from data
+  \end{itemize}
+\end{frame}
+
 
 % \begin{frame}{E}
 %   \begin{itemize}
