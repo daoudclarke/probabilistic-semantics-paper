@@ -122,7 +122,7 @@
   \titlepage
 \end{frame}
 
-\section{Introduction}
+\section{Motivation}
 %\subsection{Background}
 
 \begin{frame}{Overview}
@@ -148,7 +148,7 @@
 % - If you omit details that are vital to the proof/implementation,
 %   just say so once. Everybody will be happy with that.
 
-\subsection{Motivation}
+%\subsection{Motivation}
 
 \begin{frame}{Motivation}
 \begin{itemize}
@@ -213,9 +213,11 @@ no men like all dogs & no people like all dogs & No\\
 \end{tabular}
 \end{frame}
 
+\section{Background}
+
 \subsection{Related Work}
 
-\begin{frame}{Related Work}
+\begin{frame}{Related Work in NLP}
 \begin{itemize}
 \item Garrette and Erk use Markov Logic Networks
 \begin{itemize}
@@ -228,9 +230,9 @@ no men like all dogs & no people like all dogs & No\\
 \end{itemize}
 \end{frame}
 
-\section{Probabilistic Semantics}
+%\section{Probabilistic Semantics}
 
-\subsection{Background}
+\subsection{Probabilistic Semantics}
 
 \begin{frame}{Probabilistic Semantics}
 \begin{itemize}
@@ -248,8 +250,6 @@ no men like all dogs & no people like all dogs & No\\
 \item More generally, assume a probability measure over the $\sigma$-algebra of all denotations
 \end{itemize}
 \end{frame}
-
-\subsection{Example}
 
 \begin{frame}{Sato Semantics Example}
 \begin{center}
@@ -274,18 +274,11 @@ mary & loves & mary & 1 & 0 & 1 & 1\\
 $$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
 \end{frame}
 
-\section{Probabilistic Montague Semantics}
-
-\subsection{Introduction}
-
-\begin{frame}{Probabilistic Montague Semantics}
-\begin{itemize}
-\item Combine Sato Semantics and Montague Semantics
-\item Probability distribution over models for higher order logic
-\end{itemize}
-\end{frame}
+%\section{Probabilistic Montague Semantics}
 
 \subsection{Montague Semantics}
+
+%\subsection{Montague Semantics}
 
 \begin{frame}{Set of Types $\mathcal{T}$}
 \begin{description}
@@ -306,6 +299,15 @@ $$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
   \Lambda$, and $\tau_{\gamma(\delta)} = \beta$.
 \end{itemize}
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Types Example}
+\begin{eqnarray*}
+\mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
+\mathit{likes} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}\\
+\mathit{likes}(\mathit{john}) & \in & \Lambda_{((e/t)/t)/t}\\
+\mathit{likes}(\mathit{john})(\mathit{mary}) & \in & \Lambda_t
+\end{eqnarray*}
 \end{frame}
 
 \begin{frame}{Denotations}
@@ -336,6 +338,13 @@ D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Interpretation Example}
+\begin{itemize}
+\item $E = \{j, m\}$
+\item $\phi(\mathit{john}) = \{\{j\},\{j,m\}\}$
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Theories}
   \begin{itemize}
   \item A \emph{sentence} is a meaningful expression of type $t$.
@@ -347,9 +356,19 @@ D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
   \end{itemize}
 \end{frame}
 
-\subsection{Probability}
+\section{Probabilistic Montague Semantics}
 
-\begin{frame}{Probability Measures (new stuff!)}
+\subsection{Probability and Entailment}
+
+\begin{frame}{Probabilistic Montague Semantics}
+\begin{itemize}
+\item Our contribution
+\item Combine Sato Semantics and Montague Semantics
+\item Learn meanings from data
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Probability Measures}
   \begin{itemize}
   \item Let $\Omega$ be the set of all interpretations
   \item $\sigma$ is the sigma algebra consisting of the set of all
@@ -372,6 +391,8 @@ D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
   \item If $s_2$ logically entails $s_1$ then the degree to which  $s_2$ entails $s_1$ is $1$.
 \end{itemize}
 \end{frame}
+
+\subsection{Learning}
 
 \begin{frame}{Learning Semantics}
   \begin{itemize}
@@ -416,9 +437,9 @@ D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
 
 \begin{frame}{Learning from Entailment Pairs}
   \begin{itemize}
-    \item If $T$ entails $H$, add the following to $\mathcal{D}$:
-      $$\{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}$$
-    \item Otherwise add $\{(s_T,\top),(s_H,\bot)\}$
+    \item If $S_1$ entails $S_2$, add the following to $\mathcal{D}$:
+      $$\{(s_1,\top),(s_2,\top)\}, \{(s_1,\bot),(s_2,\top)\},\{(s_1,\bot),(s_2,\bot)\}$$
+    \item Otherwise add $\{(s_1,\top),(s_2,\bot)\}$
     \item Can learn from only positive entailments
   \end{itemize}
 \end{frame}
@@ -461,6 +482,8 @@ no men like all dogs & no people like all dogs & 0.5\\
   \item Todo: calculate gradient
   \end{itemize}
 \end{frame}
+
+\subsection{Conclusion}
 
 \begin{frame}{Conclusion}
   \begin{itemize}
