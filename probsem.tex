@@ -11,6 +11,7 @@
 \usepackage{listings}
 \usepackage{csvsimple}
 \usepackage{titleref}
+\usepackage{graphicx}
 %\usepackage{hyperref}
 %\usepackage{natbib}
 
@@ -175,8 +176,7 @@ In the following we sketch an approach to constructing a probabilistic
 extension of Montague semantics and demonstrate its properties on
 simple examples. We present a way of defining a probability
 distribution over models in terms of  a random generation process over
-interpretations.  We discuss how the technique could be applied to the
-core task of textual entailment.
+interpretations.
 
 % I'm not sure about referring to "distribution semantics" as it may
 % be confused with distributional semantics - perhaps just refer to it
@@ -497,7 +497,7 @@ $d_{\alpha,j}$, and hidden value $h$.
 \subsection{Inference}
 
 Given a theory $T$ and parameters $\theta$, we can compute the
-probability using the following algorithm:
+probability $P(T|\theta)$ using the following algorithm:
 \begin{itemize}
 \item For each hidden variable $h$:
 \begin{itemize}
@@ -516,49 +516,93 @@ probability using the following algorithm:
 
 We can use Maximum Likelihood to estimate these parameters given a set
 of observed theories $\mathcal{D} = \{T_1, T_2, \ldots T_N\}$. We look
-for the parameters that maximize the likelihood
-$$P(\mathcal{D}) = \prod_{n=1}^N P(T_i)$$
+for the parameters $\theta$ that maximize the likelihood
+$$P(\mathcal{D}|\theta) = \prod_{n=1}^N P(T_i|\theta)$$
 This can be maximised using gradient ascent or expectation
 maximisation. Our current implementation uses the L-BFGS-B algorithm
 in SciPy \cite{Zhu:97}.
 
-\subsection{Application to Textual Entailment}
+\subsection{Learning Determiner Monotonicity}
 
-The task of recognising textual entailment \cite{Dagan:05} is to
-determine, given two sentences $T$ (the \emph{text}) and $H$ (the
-\emph{hypothesis}), whether $T$ {\em textually entails\/} $H$. It is important to note that the notion of
-textual entailment is an informal one based on human judgments. This makes textual entailment much closer to the notion of degree of entailment available within our probabilistic approach than that of strict logical entailment.  The importance of textual entailment within natural language processing lies in its broad relevance to a range of tasks. It represents a core problem, a solution to which is required in order to develop applications in areas such as
-information retrieval, machine translation, question answering and
-summarisation.
+\begin{table}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent.\\
+\hline
+some cats like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no cats like all dogs & Yes\\
+some dogs like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no dogs like all dogs & Yes\\
+some men like all dogs & some people like all dogs & Yes\\
+\hline
+no people like all dogs & no men like all dogs & 1.0\\
+no men like all dogs & no people like all dogs & 0.5\\
+\hline
+\end{tabular}
+}
+\caption{Example of monotonically increasing (\emph{some}) and decreasing
+  (\emph{no}) determiners and whether entailment holds between the text and
+  the hypothesis. The bottom two lines show the degree of entailment
+  determined by our system after parameters have been learnt on data
+  generated from the first five lines.}
+\label{table:mono}
+\end{table}
 
-Previous attempts to apply logical representations of meaning to this
-task have applied {\em ad hoc\/} heuristics to handle the lack of robustness in
-standard approaches. \citet{Bos:06} used model builders to construct a
-model for $T$ and a model for $T$ and $H$ together and used the size
-of these models as an indication of the degree of entailment. The
-intuition here is that if the model for $T$ and $H$ together is larger
-than that for just $T$, then $H$ contains a lot of knowledge not in
-$T$ and there is a low degree of entailment.  This idea can be
-directly related to our approach: it amounts to assuming the existence of a probability
-distribution over models,
-with larger models less probable than smaller ones.
+We have demonstrated the feasibility of our approach by showing that
+it can learn the monotonicity of determiners on small examples (Table
+\ref{table:mono}). Our system is able to correctly predict that
+\emph{no people} entails \emph{no men}, having seen other example
+entailments.
 
-Textual entailment datasets can also be used to learn the parameters
-described in the previous section. A dataset typically consists of a
-set of natural language sentence pairs, each annotated as to whether
-entailment holds or not. Suppose we are given a pair $(T,H)$ with associated meaningful expressions $s_T$ and $s_H$. In the case that entailment holds for $T$ and $H$ then the dataset will contain the following theories as observations:
+For each example entailment pair for which entailment holds (the
+``text'' entails the ``hypothesis'', we add
+the following theories to $\mathcal{D}$:
 \[
 \{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
 \]
-In the case that entailment does not hold, on the other hand, then the dataset will contain just the following as an observation:
-\[
-\{(s_T,\top),(s_H,\bot)\}
-\]
+Where $s_T$ is the sentence associated with the text and $s_H$ the
+sentence associated with the hypothesis. We then learn the optimal
+parameters $\theta$ given this data, and use these to compute the
+degree of entailment on unseen pairs of sentences.
 
-This
-idea could be used as a supervised approach to the general task of recognising textual
-entailment.  However, we leave the evaluation of this idea to future
-work.
+% \subsection{Application to Textual Entailment}
+
+% The task of recognising textual entailment \cite{Dagan:05} is to
+% determine, given two sentences $T$ (the \emph{text}) and $H$ (the
+% \emph{hypothesis}), whether $T$ {\em textually entails\/} $H$. It is important to note that the notion of
+% textual entailment is an informal one based on human judgments. This makes textual entailment much closer to the notion of degree of entailment available within our probabilistic approach than that of strict logical entailment.  The importance of textual entailment within natural language processing lies in its broad relevance to a range of tasks. It represents a core problem, a solution to which is required in order to develop applications in areas such as
+% information retrieval, machine translation, question answering and
+% summarisation.
+
+% Previous attempts to apply logical representations of meaning to this
+% task have applied {\em ad hoc\/} heuristics to handle the lack of robustness in
+% standard approaches. \citet{Bos:06} used model builders to construct a
+% model for $T$ and a model for $T$ and $H$ together and used the size
+% of these models as an indication of the degree of entailment. The
+% intuition here is that if the model for $T$ and $H$ together is larger
+% than that for just $T$, then $H$ contains a lot of knowledge not in
+% $T$ and there is a low degree of entailment.  This idea can be
+% directly related to our approach: it amounts to assuming the existence of a probability
+% distribution over models,
+% with larger models less probable than smaller ones.
+
+% Textual entailment datasets can also be used to learn the parameters
+% described in the previous section. A dataset typically consists of a
+% set of natural language sentence pairs, each annotated as to whether
+% entailment holds or not. Suppose we are given a pair $(T,H)$ with associated meaningful expressions $s_T$ and $s_H$. In the case that entailment holds for $T$ and $H$ then the dataset will contain the following theories as observations:
+% \[
+% \{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
+% \]
+% In the case that entailment does not hold, on the other hand, then the dataset will contain just the following as an observation:
+% \[
+% \{(s_T,\top),(s_H,\bot)\}
+% \]
+
+% This
+% idea could be used as a supervised approach to the general task of recognising textual
+% entailment.  However, we leave the evaluation of this idea to future
+% work.
 
 \section{Related Work}
 
