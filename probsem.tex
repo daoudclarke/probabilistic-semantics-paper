@@ -459,9 +459,9 @@ would expect from logical semantics are preserved: the degree to which
 
 Our main objective is to be able to learn semantics from data,
 generalising lexical distributional semantics. In this section, we
-sketch a proposal for how this may be achieved within our
-framework. The central idea is to limit the number of denotations
-under consideration, and define a probabilistic generative model for
+propose one way that this may be achieved within our framework. The
+central idea is to limit the number of denotations under
+consideration, and define a probabilistic generative model for
 interpretations.
 
 Specifically we assume that $E$ is fixed. Let
@@ -556,7 +556,7 @@ it can learn the monotonicity of determiners on small examples (Table
 entailments.
 
 For each example entailment pair for which entailment holds (the
-``text'' entails the ``hypothesis'', we add
+``text'' entails the ``hypothesis''), we add
 the following theories to $\mathcal{D}$:
 \[
 \{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
