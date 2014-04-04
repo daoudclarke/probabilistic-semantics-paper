@@ -111,69 +111,72 @@ The contributions of this paper are as follows:
   semantics.
 \end{itemize}
 
-% Techniques which represent the meanings of words in terms of the contexts in
-% which they occur have become an indispensible tool in natural language
-% processing. Such distributional representations of meaning typically
-% represent words as vectors or probability distributions over
-% contexts. They have been applied to a wide variety of tasks,
-% including word sense
-% disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL},
-% prepositional phrase
-% attachment~\cite{Calvo05distributionalthesaurus}, textual
-% entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference
-% resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic
-% compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy
-% induction~\cite{fountain-lapata:2012:NAACL-HLT}.
+Techniques which represent the meanings of words in terms of the contexts in
+which they occur have become an indispensible tool in natural language
+processing. Such distributional representations of meaning typically
+represent words as vectors or probability distributions over
+contexts. They have been applied to a wide variety of tasks,
+including word sense
+disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL},
+prepositional phrase
+attachment~\cite{Calvo05distributionalthesaurus}, textual
+entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference
+resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic
+compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy
+induction~\cite{fountain-lapata:2012:NAACL-HLT}.
 
-% Current distributional approaches to the representation of meaning differ in many respects from compositional, model-theoretic treatments
-% such as Montague semantics or
-% Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of word meaning, but say little about how those meanings combine, compositional approaches provide an account of the way in which meanings combine to build a semantics for larger phrases, but have little to say about the meanings of words or how they are acquired.  Recently however, a number of researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches
-% \cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}.  In this paper, we present a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying
-% account. A key idea in probabilistic semantics is to extend standard model-theoretic
-% accounts of meaning by assuming a probability distribution over
-% models.  
+Current distributional approaches to the representation of meaning differ in many respects from compositional, model-theoretic treatments
+such as Montague semantics or
+Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of word meaning, but say little about how those meanings combine, compositional approaches provide an account of the way in which meanings combine to build a semantics for larger phrases, but have little to say about the meanings of words or how they are acquired.  Recently however, a number of researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches
+\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}.  In this paper, we present a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying
+account. A key idea in probabilistic semantics is to extend standard model-theoretic
+accounts of meaning by assuming a probability distribution over
+models.  
 
-% In model-theoretic semantics, one way to view the meaning
-% of a logical sentence $s$ is as the set of all interpretations
-% $\mathcal{M}_s$ for which $s$ is true. Interpretations in $\mathcal{M}_s$ are also called {\em models for\/}
-% $s$. Then $s$ {\em logically entails\/} $t$ if and only if any model for $s$ is a model for $t$: i.e. $\mathcal{M}_s \subseteq
-% \mathcal{M}_t$. We propose an extension to this idea where we assume
-% that models occur randomly. Informally, we may assume a probability
-% distribution over the set of models. Given such a probability distribution we can then estimate the
-% probability of a sentence $s$ as the sum of the probabilities of all
-% models $\mathcal{M}_s$, for $s$. The notion of a probability
+In model-theoretic semantics, one way to view the meaning
+of a logical sentence $s$ is as the set of all interpretations
+$\mathcal{M}_s$ for which $s$ is true. Interpretations in $\mathcal{M}_s$ are also called {\em models for\/}
+$s$. Then $s$ {\em logically entails\/} $t$ if and only if any model for $s$ is a model for $t$: i.e. $\mathcal{M}_s \subseteq
+\mathcal{M}_t$. We propose an extension to this idea where we assume
+that models occur randomly. Informally, we may assume a probability
+distribution over the set of models. Given such a probability distribution we can then estimate the
+probability of a sentence $s$ as the sum of the probabilities of all
+models $\mathcal{M}_s$, for $s$.
+
+%  The notion of a probability
 % distribution over models has been proposed as a probabilistic
 % semantics by \citet{Sato:95}, however to our knowledge it has not been
 % extended to higher order logic, nor applied to natural language
 % semantics.
 
+The proposed approach satisfies each of the following desirable properties:
+\begin{itemize}
+\item It is strongly grounded in probability theory: no ad-hoc methods
+  or heuristics are used to combine distributional semantics with
+  logical semantics.
+\item It provides the basis of an elegant extension of Montague
+  semantics to the probabilistic domain: in particular it combines the
+  strengths of a compositional, model-theoretic account of semantics,
+  complete with a well-defined notion of entailment, with a
+  distributional account of the meaning of expressions.
+\item It maintains the tradition of logical approaches to semantics
+  which are concerned with what models are satisfied rather than
+  assuming a single model: this means that composition does not
+  necessarily lead to a loss of meaning (for example by reducing the meaning of a
+  sentence to a single truth value).
+\item It admits an implementation in which probability distributions
+  over models can potentially be learnt from data: the account is
+  holistic, in that the learning of word meaning and composition are not
+  separated, with the potential benefit of more flexible and accurate
+  models of compositional distributional semantics.
+\end{itemize}
 
-% Our approach satisfies each of the following desirable properties:
-% \begin{itemize}
-% \item It is strongly grounded in probability theory: no ad-hoc methods
-%   or heuristics are used to combine distributional semantics with
-%   logical semantics.
-% \item It provides the basis of an elegant extension of Montague semantics to the
-%   probabilistic domain: in particular it combines the strengths of a compositional, model-theoretic account of semantics, complete with a well-defined notion of entailment, with a distributional account of the meaning of expressions.
-% \item It maintains the tradition of logical approaches to semantics
-%   which are concerned with what models are satisfied rather than
-%   assuming a single model: this means that composition does not
-%   necessarily lead to a loss of meaning (for example by reducing the meaning of a
-%   sentence to a single truth value).
-% \item It admits an implementation in which probability distributions
-%   over models can potentially be learnt from data: the account is
-%   holistic, in that the learning of word meaning and composition are not
-%   separated, with the potential benefit of more flexible and accurate
-%   models of compositional distributional semantics.
-% \end{itemize}
-
-
-% In the following we sketch an approach to constructing a probabilistic
-% extension of Montague semantics and demonstrate its properties on
-% simple examples. We present a way of defining a probability
-% distribution over models in terms of  a random generation process over
-% interpretations.  We discuss how the technique could be applied to the
-% core task of textual entailment.
+In the following we sketch an approach to constructing a probabilistic
+extension of Montague semantics and demonstrate its properties on
+simple examples. We present a way of defining a probability
+distribution over models in terms of  a random generation process over
+interpretations.  We discuss how the technique could be applied to the
+core task of textual entailment.
 
 % I'm not sure about referring to "distribution semantics" as it may
 % be confused with distributional semantics - perhaps just refer to it
