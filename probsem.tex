@@ -614,6 +614,42 @@ meaning.
 % \end{itemize}
 % \end{itemize}
 
+\begin{figure}
+\centering
+\begin{lstlisting}
+% Hidden variable
+values(hidden, [h0, h1]).
+
+% Types
+values(word(noun, Word, Hidden), [n0, n1]).
+values(word(verb, Word, Hidden), [v0, v1]).
+values(word(det, Word, Hidden), [d0, d1]).
+values(function(s, Value1, Value2, Hidden), [t0, t1]).
+values(function(np, Value1, Value2, Hidden), [np0, np1]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1]).
+
+evaluate(w(Word, Type), Hidden, Result) :-
+	msw(word(Type, Word, Hidden), Result).
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	msw(function(Type, XResult, YResult, Hidden), Result).
+
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result),
+	theory(Tail, Hidden).
+
+theory(T) :-
+	msw(hidden, Hidden),
+	theory(T, Hidden).
+\end{lstlisting}
+\caption{A PRISM program describing probability distributions over
+  natural language models used for our examples.}
+\label{figure:program}
+\end{figure}
+
+
 \subsection{Implementation}
 
 
