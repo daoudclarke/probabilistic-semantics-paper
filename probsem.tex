@@ -572,6 +572,53 @@ sentence associated with the hypothesis. We then learn the optimal
 parameters $\theta$ given this data, and use these to compute the
 degree of entailment on unseen pairs of sentences.
 
+\section{Distribution over Theories}
+
+\subsection{Handling Ambiguity}
+
+Our formulation of probabilistic Montague semantics arguably does not
+adequately account for ambiguity in natural language. Although we have
+a probability distribution over interpretations, in any given
+interpretation, each occurrence of a word must have the same
+denotation. This is intuitively unsatisfactory, since we can easily
+conceive two sentences where the same word has different meanings. The
+standard model-theoretic approach to this problem would be to
+disambiguate words before performing inference. This approach is
+seemingly inconsistent with a theory that tries to combine
+distributional and model-theoretic semantics, since part of the
+attraction of distributional semantics is that \emph{degrees} of
+ambiguity are incorporated into the representation of a word's
+meaning.
+
+One solution is to drop the requirement that each occurrence of a word
+have the same denotation. If we generalise this idea to denotations
+for all types, then we end up with an entirely different semantic
+model, in which we have a probability distribution over
+\emph{theories} instead of models. We can define a generative
+model for theories, analogous to the one for models, as follows:
+\begin{itemize}
+\item Choose a hidden value $h$
+\item Choose a number $n$ of sentences according to some distribution
+  (e.g. Poisson)
+\item Do $n$ times:
+\begin{itemize}
+\item For each basic expression occurrence $b$ in $s$, generate a
+  value in $\phi_{\tau_b}$ according to $P(d_{\tau_b,i}|b, h) =
+  \theta_{b,i,h}$
+\item For each expression of the form $\gamma(\delta)$, where $\gamma$
+  and $\delta$ have values $d_{\tau_\gamma,i}$ and $d_{\tau_\delta,j}$
+  respectively, choose a value in $\phi_{\tau_{\gamma(\delta)}}$
+    according to $P(d_{\tau_{\gamma(\delta)},k}|d_{\tau_\gamma,i},
+      d_{\tau_{\delta},j}) = \theta_{\tau_{\gamma(\delta)},i,j,k,h}$
+\end{itemize}
+\end{itemize}
+
+\subsection{Theoretical Properties}
+
+A semantic theory based on a distribution over theories loses some of
+the nice properties of a theory based on distribution over models. For
+example,
+
 % \subsection{Application to Textual Entailment}
 
 % The task of recognising textual entailment \cite{Dagan:05} is to
