@@ -560,49 +560,6 @@ This can be maximised using gradient ascent or expectation
 maximisation. Our current implementation uses the L-BFGS-B algorithm
 in SciPy \cite{Zhu:97}.
 
-\subsection{Learning Determiner Monotonicity}
-
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent.\\
-\hline
-some cats like all dogs & some animals like all dogs & Yes\\
-no animals like all dogs & no cats like all dogs & Yes\\
-some dogs like all dogs & some animals like all dogs & Yes\\
-no animals like all dogs & no dogs like all dogs & Yes\\
-some men like all dogs & some people like all dogs & Yes\\
-\hline
-no people like all dogs & no men like all dogs & 1.0\\
-no men like all dogs & no people like all dogs & 0.5\\
-\hline
-\end{tabular}
-\end{center}
-\caption{Example of monotonically increasing (\emph{some}) and decreasing
-  (\emph{no}) determiners and whether entailment holds between the text and
-  the hypothesis. The bottom two lines show the degree of entailment
-  determined by our system after parameters have been learnt on data
-  generated from the first five lines.}
-\label{table:mono}
-\end{table}
-
-We have demonstrated the feasibility of our approach by showing that
-it can learn the monotonicity of determiners on small examples (Table
-\ref{table:mono}). Our system is able to correctly predict that
-\emph{no people} entails \emph{no men}, having seen other example
-entailments.
-
-For each example entailment pair for which entailment holds (the
-``text'' entails the ``hypothesis''), we add
-the following theories to $\mathcal{D}$:
-\[
-\{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
-\]
-Where $s_T$ is the sentence associated with the text and $s_H$ the
-sentence associated with the hypothesis. We then learn the optimal
-parameters $\theta$ given this data, and use these to compute the
-degree of entailment on unseen pairs of sentences.
 
 \section{Sato Semantics for Natural Language}
 
@@ -703,9 +660,17 @@ The PRISM program shown in Figure \ref{figure:program} describes how sentences a
 introduces a switch for nouns having two possible outcomes, \texttt{n0} and \texttt{n1}.
 The outcomes are conditioned on the particular choice of noun (\texttt{Word}) and on the choice of hidden variable (\texttt{Hidden}). Similarly, the \texttt{values} predicate is used to declare switches associated with complex types. For example the values associated with a sentence (\texttt{s}) switch are conditioned on the choices of its component parts and a hidden variable.
 
-The probability of a theory is derived by evaluating the truth conditions of the sentences that make it up. Note that probability distributions are defined over models, not theories, so that  to evaluate the
-probability of a theory it is necessary to sum over the probabilities of all of its satisfying models. To achieve this,  the predicate \texttt{prob} is used. An
-example query returning the probability of the sentence {\em the cat likes the dog\/} is shown in figure \ref{figure:query}. 
+The probability of a theory is derived by evaluating the truth
+conditions of the sentences that make it up. Note that probability
+distributions are defined over models, not theories, so that to
+evaluate the probability of a theory it is necessary to sum over the
+probabilities of all of its satisfying models. To achieve this, the
+predicate \texttt{prob} is used. An example query returning the
+probability of the sentence {\em the cat likes the dog\/} is shown in
+figure \ref{figure:query}. This is expressed as a theory
+$\{(\mathit{likes}(\mathit{the}(\mathit{dog}))(\mathit{the}(\mathit{cat})),\top)\}$,
+which can be translated into a Prolog expression in a straightforward
+manner.
 
 
 
@@ -725,70 +690,113 @@ example query returning the probability of the sentence {\em the cat likes the d
 \label{figure:query}
 \end{figure}
 
-\subsection{Examples}
+\section{Learning Reversal of Entailment}
 
+We verified that our two systems were able to learn some simple
+logical features of natural language semantics, in particular that
+determiners such as ``no'' reverse the direction of entailment, so
+that while ``some cats'' entails ``some animals'', ``no animals''
+entails ``no cats'' (Table \ref{table:mono}).
 
-The PRISM framework is equipped with a proof-theoretic approach to learning so that it is possible to estimate parameters from observed data. A number of different learning algorithms are implemented within the framework. To estimate the
-parameters in the following examples we used the standard expectation maximisation algorithm.
-
-Table \ref{table:lexical} demonstrates that our system can learn
-simple lexical entailment rules. In this case it is learnt that \emph{cat} entails
-\emph{animal} on the basis of a small number of examples. Table \ref{table:quantifiers} demonstrates that our system can learn
-something more significant: it can learn that the entailment direction
-is reversed with certain quantifiers. Quantifiers such as \emph{some} are
-\textbf{monotonically increasing}, so that \emph{some cats} entails
-\emph{some animals}. Quantifiers like \emph{no} and \emph{all} are
-\textbf{monotonically decreasing}, so that \emph{no animals} entails
-\emph{no cats}. Our system is able to determine this from very little
-training data.
-
-\begin{table*}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent\\
-\hline
-\emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
-\emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
-\hline
-\emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
-\emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
-\hline
-\end{tabular}
-\caption{Learning lexical entailment from examples, showing training
-  data at the top, and test data below, with the degree of entailment
-  determined by our system.}
-\label{table:lexical}
-\end{table*}
-
-\begin{table*}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent\\
-\hline
-\emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
-\emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
-\emph{some men like all dogs} & \emph{some people like all dogs} & \\
-\hline
-\emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
-\emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
-\emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
-\hline
-\end{tabular}
-\caption{Learning how quantifiers reverse the entailment direction,
-  with training data at the top, and test data below, with the degree
-  of entailment determined by our system.}
-\label{table:quantifiers}
-\end{table*}
+% We have demonstrated the feasibility of our approach by showing that
+% it can learn the monotonicity of determiners on small examples (Table
+% \ref{table:mono}). Our system is able to correctly predict that
+% \emph{no people} entails \emph{no men}, having seen other example
+% entailments.
 
 \begin{table}
-\centering
-\csvautotabular{lexical.csv}
-\caption{Learnt probabilities for the nouns in the example
-  in Table \ref{table:quantifiers}}
-\label{table:lexical-sato}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent.\\
+\hline
+some cats like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no cats like all dogs & Yes\\
+some dogs like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no dogs like all dogs & Yes\\
+some men like all dogs & some people like all dogs & Yes\\
+\hline
+no people like all dogs & no men like all dogs & Yes\\
+no men like all dogs & no people like all dogs & No\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Text and Hypothesis sentences, and whether entailment
+  holds. We expect that a system should be able to learn from
+  the data above the line that the determiner ``no'' reverses the
+  direction of entailment.}
+\label{table:mono}
 \end{table}
+
+
+For each example entailment pair for which entailment holds (the
+``text'' entails the ``hypothesis''), we add
+the following theories to $\mathcal{D}$:
+\[
+\{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
+\]
+Where $s_T$ is the sentence associated with the text and $s_H$ the
+sentence associated with the hypothesis. We then learn the optimal
+parameters $\theta$ given this data, and use these to compute the
+degree of entailment on unseen pairs of sentences.
+
+
+%\subsection{Examples}
+
+
+% The PRISM framework is equipped with a proof-theoretic approach to learning so that it is possible to estimate parameters from observed data. A number of different learning algorithms are implemented within the framework. To estimate the
+% parameters in the following examples we used the standard expectation maximisation algorithm.
+
+% Table \ref{table:lexical} demonstrates that our system can learn
+% simple lexical entailment rules. In this case it is learnt that \emph{cat} entails
+% \emph{animal} on the basis of a small number of examples. Table \ref{table:quantifiers} demonstrates that our system can learn
+% something more significant: it can learn that the entailment direction
+% is reversed with certain quantifiers. Quantifiers such as \emph{some} are
+% \textbf{monotonically increasing}, so that \emph{some cats} entails
+% \emph{some animals}. Quantifiers like \emph{no} and \emph{all} are
+% \textbf{monotonically decreasing}, so that \emph{no animals} entails
+% \emph{no cats}. Our system is able to determine this from very little
+% training data.
+
+% \begin{table*}
+% \centering
+% \begin{tabular}{|l|l|l|}
+% \hline
+% Text & Hypothesis & Ent\\
+% \hline
+% \emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
+% \emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
+% \hline
+% \emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
+% \emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
+% \hline
+% \end{tabular}
+% \caption{Learning lexical entailment from examples, showing training
+%   data at the top, and test data below, with the degree of entailment
+%   determined by our system.}
+% \label{table:lexical}
+% \end{table*}
+
+% \begin{table*}
+% \centering
+% \begin{tabular}{|l|l|l|}
+% \hline
+% Text & Hypothesis & Ent\\
+% \hline
+% \emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
+% \emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
+% \emph{some men like all dogs} & \emph{some people like all dogs} & \\
+% \hline
+% \emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
+% \emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
+% \emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
+% \hline
+% \end{tabular}
+% \caption{Learning how quantifiers reverse the entailment direction,
+%   with training data at the top, and test data below, with the degree
+%   of entailment determined by our system.}
+% \label{table:quantifiers}
+% \end{table*}
 
 \subsection{Recovering Lexical Semantics}
 \label{sec:recovering}
@@ -803,6 +811,14 @@ values for the nouns in the example in Table
 \ref{table:quantifiers}. Allowing the distribution to vary with the
 hidden variable is precisely what enables learning of the behaviour of
 quantifiers. Without this flexibility learning would not be possible.
+
+\begin{table}
+\centering
+\csvautotabular{lexical.csv}
+\caption{Learnt probabilities for the nouns in the example
+  in Table \ref{table:quantifiers}}
+\label{table:lexical-sato}
+\end{table}
 
 If we want to compare words in a manner similar to vector based
 representations of meaning, we can consider the matrix entries as a
