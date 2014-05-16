@@ -1,25 +1,32 @@
-%File: formatting-instruction.tex
-\documentclass[letterpaper]{article}
-\usepackage{starsem2014}
-\usepackage{times}
-\usepackage{url}
-\usepackage{latexsym}
+\documentclass{svmult}
+
+% SVMult required packages
+\usepackage{mathptmx}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{multicol}
+\usepackage{footmisc}
+
+
+%\usepackage{url}
+%\usepackage{latexsym}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{listings}
 \usepackage{csvsimple}
-\usepackage{titleref}
 \usepackage{graphicx}
-%\usepackage{hyperref}
-%\usepackage{natbib}
 
-\renewcommand{\theTitleReference}[2]{\emph{#2}}
+
+%\renewcommand{\theTitleReference}[2]{\emph{#2}}
 
 %\renewcommand{\cite}{\citep}
 %\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
-\newcommand{\citet}[1]{\newcite{#1}}
+%\newcommand{\citet}[1]{\cite{#1}}
+
 
 \lstset{
          basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -62,8 +69,9 @@
 % }
 \author{}
 \maketitle
-\begin{abstract}
+%\begin{abstract}
 % \begin{quote}
+\abstract{
   Distributional accounts of meaning represent words as vectors or
   probability distributions over contexts. Such approaches differ from
   compositional, model-theoretic treatments of meaning such as
@@ -76,8 +84,9 @@
   to higher-order logic for the first time. We also propose an
   approach for learning semantics directly from data, and demonstrate
   its feasibility on small examples.
+}
 % \end{quote}
-\end{abstract}
+%\end{abstract}
 
 
 \section{Introduction}
@@ -254,8 +263,8 @@ $\langle E, F\rangle \models T$.
 
 The idea of attaching probability to the truth of sentences is an old
 one, and is related to the foundation of probability itself
-\cite{Keynes:21,Los:55}. \citet{Gaifman:64} discusses probability
-measures for first order calculus; the work of \citet{Sato:95}
+\cite{Keynes:21,Los:55}. Gaifman \cite{Gaifman:64} discusses probability
+measures for first order calculus; the work of Sato \cite{Sato:95}
 concerns probability measures for logic programs.
 
 % The idea that we adopt from these approaches is to associate
@@ -822,7 +831,7 @@ example,
 
 %\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-\citet{Coecke:10} proposed a framework based on category-theoretic
+Coecke et al.~\cite{Coecke:10} proposed a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
 approach is arguably the most closely related to ours since it is also
 founded in Montague semantics: words are treated as linear functions
@@ -851,18 +860,19 @@ which are vector based, such as latent semantic analysis
 ours is closer to probabilistic approaches such as latent Dirichlet
 allocation \cite{Blei:03}.
 
-\citet{Garrette:11} describe an approach to combining logical
+Garrette et al.~\cite{Garrette:11} describe an approach to combining logical
 semantics with distributional semantics using Markov Logic Networks
 \cite{Richardson:06}. Sentences are parsed into logical form using
 Boxer \cite{Bos:04}, and probabilistic rules are added using the
-distributional model of \citet{Erk:10}.
+distributional model of \cite{Erk:10}.
 
-\citet{Lewis:13} take a standard logical approach to semantics except
-that the relational constants used are derived from distributional
-clustering. They use latent dirichlet allocation to describe a
-probability distribution over semantic categories for nouns, which are
-then combined with induced relation clusters to generate a probability
-distribution over logical forms for a given sentence.
+Lewis and Steedman \cite{Lewis:13} take a standard logical approach to
+semantics except that the relational constants used are derived from
+distributional clustering. They use latent dirichlet allocation to
+describe a probability distribution over semantic categories for
+nouns, which are then combined with induced relation clusters to
+generate a probability distribution over logical forms for a given
+sentence.
 
 \section{Conclusion}
 
@@ -899,6 +909,6 @@ and indexicals, amongst others.
 % There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. 
 
 
-\bibliographystyle{acl}
+\bibliographystyle{spmpsci}
 \bibliography{JW2012}
 \end{document}
