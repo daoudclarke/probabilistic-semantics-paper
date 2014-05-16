@@ -293,6 +293,145 @@ where $\Omega$ is the set of all models, $\sigma$ is a sigma algebra
 associated with theories and $\mu$ is a probability measure on
 $\sigma$.
 
+%\subsection{Example: Fine-grained Meanings}
+
+
+% One distinguishing feature of distributional semantics is its ability
+% to describe fine-grained aspects of meaning: the continuous nature of
+% the space allows arbitrary degrees of similarity. We use the example
+% from \cite{Clark:08}, computing the similarity of the two sentences
+% \emph{John likes Mary} and \emph{John loves Mary}.
+
+% We assume the following types for basic expressions:
+% \begin{eqnarray*}
+% \mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
+% \mathit{likes}, \mathit{loves} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}
+% \end{eqnarray*}
+% Proper nouns are interpreted as sets of sets of entities (functions
+% from functions from entities to truth values to truth values), while
+% verbs are functions from pairs of sets of sets of entities to truth
+% values.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l||c|c|c|c|}
+\hline
+\emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
+\hline
+john & likes & john & 1 & 1 & 1 & 1\\
+john & likes & mary & 0 & 1 & 1 & 1\\
+mary & likes & john & 1 & 0 & 0 & 1\\
+mary & likes & mary & 0 & 0 & 1 & 1\\
+john & loves & john & 1 & 1 & 1 & 1\\
+john & loves & mary & 1 & 0 & 1 & 1\\
+mary & loves & john & 1 & 1 & 1 & 1\\
+mary & loves & mary & 1 & 0 & 1 & 1\\
+\hline
+\end{tabular}
+\caption{Four possible models describing relationships between John
+  and Mary.}
+\end{center}
+\label{table:models}
+\end{table}
+
+% For simplicity of exposition, and to make the number of
+% interpretations we have to consider smaller, we will give some
+% properties which will be fixed for all interpretations under
+% consideration, i.e.~interpretations which do not satisfy the given
+% property will be given probability zero. For example, we assume that
+% the set $E$ of entities is fixed, $E = \{\mathbf{john},
+% \mathbf{mary}\}$, and that the interpretation of nouns is fixed:
+% $$\mathit{john}(x) = \begin{cases}
+% \top & \text{if } x(\mathbf{john}) = \top\\
+% \bot & \text{otherwise}
+% \end{cases}$$ i.e.~$\mathit{john}$ is the set of all sets containing
+% the entity $\mathbf{john}$, and similarly for $\mathit{mary}$, if we
+% interpret functions with range $\{\top,\bot\}$ as indicator
+% functions. We further assume that $\mathit{likes}$ and
+% $\mathit{loves}$ behave logically so that if ``John likes $x$'' is
+% true and ``Mary likes $x$'' is true then ``John and Mary like $x$'' is
+% also true (note that this isn't true for all verbs; consider ``John
+% and Mary played chess''). Similarly we assume that if ``$x$ likes
+% John'' and ``$x$ likes Mary'' are true then ``$x$ likes John and
+% Mary'' is true.
+
+% Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
+% described in Table \ref{table:models}. At this point our example
+% diverges from standard model-theoretic semantics. 
+
+In general, the set of models will be infinite, but for the purposes
+of exposition, it helps to consider a simple example with a fixed
+number of models, such as that described by Table
+\ref{table:models}. Each of the columns $m_1$ to $m_4$ describe a
+different model describing relationships between John and Mary.  We
+assume a probability distribution over the set of models, with $P(m_1)
+= 0.1$, $P(m_2) = 0.2$, $P(m_3) = 0.3$, $P(m_4) = 0.4$ and all other
+possible models have zero probability.
+
+Using this set of models we can say:
+\begin{itemize}
+\item The probability that John likes Mary is $\mu(\{m_2, m_3, m_4\}) =
+  P(m_2) + P(m_3) + P(m_4) = 0.9$.
+\item The probability that Mary likes John or Mary is $\mu(\{m_1, m_3, m_4\}) =
+  P(m_1) + P(m_3) + P(m_4) = 0.8$.
+\item The probability that John likes Mary given that he loves her
+  is\\ $\mu(\{m_3, m_4\})/\mu(\{m_1, m_3, m_4\}) = 0.7/0.8$.
+\end{itemize}
+
+% We assume that the categorial grammar assigns the meaningful
+% expression $\mathit{likes}(\mathit{mary})(\mathit{john})$ to the
+% sentence ``John likes Mary''. The probability of this sentence is
+% \begin{eqnarray*}
+% \mu(M(\{\mathit{likes}(\mathit{mary})(\mathit{john})\})) &=&
+% \mu(\{m_2, m_3, m_4\})\\
+% &=&0.9
+% \end{eqnarray*}
+% Similarly, the models which are true for the sentence ``John loves
+% Mary'' are $\{m_1, m_3, m_4\}$, having probability 0.8. The models
+% which satisfy both of these sentences are $\{m_3, m_4\}$ with
+% probability 0.7, so the
+% degree to which ``John loves Mary'' entails ``John likes Mary'' is
+% $0.7/0.8$. Note that in this case there is no logical entailment, but
+% there is a high degree of entailment.
+
+% \subsection{Example: Conjunction and Disjunction}
+
+% Our formalism inherits the nice properties of model-theoretic
+% semantics with respect to conjunction and disjunction. We describe the
+% conjunction of nouns with the basic expression $\mathit{and}$ of type
+% $(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is a function taking two sets of
+% sets of entities, and returning another set of sets of
+% entities. Specifically we assume that it returns the intersection of
+% the two sets. Similarly $\mathit{or}$ is a function of the same type,
+% returning the union of the two sets.
+
+% Then $\mathit{and}(john)(mary)$ is the set of sets containing both
+% $\mathbf{john}$ and $\mathbf{mary}$. Assume the categorial grammar
+% gives the meaningful expression
+% $\mathit{likes}(\mathit{and}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
+% to the sentence ``Mary likes John and Mary''. The set of models
+% satisfying this sentence is $\{m_4\}$, so this sentence has
+% probability 0.4. The set of models satisfying
+% $\mathit{likes}(\mathit{or}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
+% for ``Mary likes John or Mary'' is $\{m_1, m_3, m_4\}$, so this
+% sentence has probability 0.8. Note that the logical entailments we
+% would expect from logical semantics are preserved: the degree to which
+% ``Mary likes John and Mary'' entails ``Mary likes John'' is 1.
+
+%  In this example, we
+% assume that meanings are described by a measure space for each part of
+% speech. Measure spaces for larger constituents are then constructed as
+% product measures \cite{Taylor:06} of their constituent measure
+% spaces. This idea is an extension of the observation of
+% \citet{Keenan:85} that there is a Boolean algebra associated with each
+% constituent.
+
+% A measure space can be constructed for a particular part of speech
+% directly from the distributional semantic representations of the
+% associated words, or from an ontology with frequency information
+% \cite{Clarke:07}.
+
+
 \section{Probabilistic Montague Semantics}
 
 In this section we describe our first model for probabilistic
@@ -346,134 +485,13 @@ We interpret this conditional probability as the {\em degree to which $s_2$ enta
 
 %\section{Examples}
 
-One can envisage many possible ways of describing probability measures
-$\mu$. Our main goal is to be able to learn such measures from corpus
-data, and we describe one possible approach to doing this in Section
-\ref{section:distributions}. However, in this section, to demonstrate
-the potential for our approach, we give examples in which measures are
-given explicitly.
+% One can envisage many possible ways of describing probability measures
+% $\mu$. Our main goal is to be able to learn such measures from corpus
+% data, and we describe one possible approach to doing this in Section
+% \ref{section:distributions}. However, in this section, to demonstrate
+% the potential for our approach, we give examples in which measures are
+% given explicitly.
  
-\subsection{Example: Fine-grained Meanings}
-
-One distinguishing feature of distributional semantics is its ability
-to describe fine-grained aspects of meaning: the continuous nature of
-the space allows arbitrary degrees of similarity. We use the example
-from \cite{Clark:08}, computing the similarity of the two sentences
-\emph{John likes Mary} and \emph{John loves Mary}.
-
-We assume the following types for basic expressions:
-\begin{eqnarray*}
-\mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
-\mathit{likes}, \mathit{loves} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}
-\end{eqnarray*}
-Proper nouns are interpreted as sets of sets of entities (functions
-from functions from entities to truth values to truth values), while
-verbs are functions from pairs of sets of sets of entities to truth
-values.
-
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|l|l||c|c|c|c|}
-\hline
-\emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
-\hline
-john & likes & john & 1 & 1 & 1 & 1\\
-john & likes & mary & 0 & 1 & 1 & 1\\
-mary & likes & john & 1 & 0 & 0 & 1\\
-mary & likes & mary & 0 & 0 & 1 & 1\\
-john & loves & john & 1 & 1 & 1 & 1\\
-john & loves & mary & 1 & 0 & 1 & 1\\
-mary & loves & john & 1 & 1 & 1 & 1\\
-mary & loves & mary & 1 & 0 & 1 & 1\\
-\hline
-\end{tabular}
-\caption{Four possible models describing relationships between John
-  and Mary.}
-\end{center}
-\label{table:models}
-\end{table}
-
-For simplicity of exposition, and to make the number of
-interpretations we have to consider smaller, we will give some
-properties which will be fixed for all interpretations under
-consideration, i.e.~interpretations which do not satisfy the given
-property will be given probability zero. For example, we assume that
-the set $E$ of entities is fixed, $E = \{\mathbf{john},
-\mathbf{mary}\}$, and that the interpretation of nouns is fixed:
-$$\mathit{john}(x) = \begin{cases}
-\top & \text{if } x(\mathbf{john}) = \top\\
-\bot & \text{otherwise}
-\end{cases}$$ i.e.~$\mathit{john}$ is the set of all sets containing
-the entity $\mathbf{john}$, and similarly for $\mathit{mary}$, if we
-interpret functions with range $\{\top,\bot\}$ as indicator
-functions. We further assume that $\mathit{likes}$ and
-$\mathit{loves}$ behave logically so that if ``John likes $x$'' is
-true and ``Mary likes $x$'' is true then ``John and Mary like $x$'' is
-also true (note that this isn't true for all verbs; consider ``John
-and Mary played chess''). Similarly we assume that if ``$x$ likes
-John'' and ``$x$ likes Mary'' are true then ``$x$ likes John and
-Mary'' is true.
-
-Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
-described in Table \ref{table:models}. At this point our example
-diverges from standard model-theoretic semantics. We assume a
-probability distribution over the set of models: we assume that these
-models have probabilities 0.1, 0.2, 0.3 and 0.4 respectively, and all
-other models have probability zero.
-
-We assume that the categorial grammar assigns the meaningful
-expression $\mathit{likes}(\mathit{mary})(\mathit{john})$ to the
-sentence ``John likes Mary''. The probability of this sentence is
-\begin{eqnarray*}
-\mu(M(\{\mathit{likes}(\mathit{mary})(\mathit{john})\})) &=&
-\mu(\{m_2, m_3, m_4\})\\
-&=&0.9
-\end{eqnarray*}
-Similarly, the models which are true for the sentence ``John loves
-Mary'' are $\{m_1, m_3, m_4\}$, having probability 0.8. The models
-which satisfy both of these sentences are $\{m_3, m_4\}$ with
-probability 0.7, so the
-degree to which ``John loves Mary'' entails ``John likes Mary'' is
-$0.7/0.8$. Note that in this case there is no logical entailment, but
-there is a high degree of entailment.
-
-\subsection{Example: Conjunction and Disjunction}
-
-Our formalism inherits the nice properties of model-theoretic
-semantics with respect to conjunction and disjunction. We describe the
-conjunction of nouns with the basic expression $\mathit{and}$ of type
-$(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is a function taking two sets of
-sets of entities, and returning another set of sets of
-entities. Specifically we assume that it returns the intersection of
-the two sets. Similarly $\mathit{or}$ is a function of the same type,
-returning the union of the two sets.
-
-Then $\mathit{and}(john)(mary)$ is the set of sets containing both
-$\mathbf{john}$ and $\mathbf{mary}$. Assume the categorial grammar
-gives the meaningful expression
-$\mathit{likes}(\mathit{and}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
-to the sentence ``Mary likes John and Mary''. The set of models
-satisfying this sentence is $\{m_4\}$, so this sentence has
-probability 0.4. The set of models satisfying
-$\mathit{likes}(\mathit{or}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
-for ``Mary likes John or Mary'' is $\{m_1, m_3, m_4\}$, so this
-sentence has probability 0.8. Note that the logical entailments we
-would expect from logical semantics are preserved: the degree to which
-``Mary likes John and Mary'' entails ``Mary likes John'' is 1.
-
-%  In this example, we
-% assume that meanings are described by a measure space for each part of
-% speech. Measure spaces for larger constituents are then constructed as
-% product measures \cite{Taylor:06} of their constituent measure
-% spaces. This idea is an extension of the observation of
-% \citet{Keenan:85} that there is a Boolean algebra associated with each
-% constituent.
-
-% A measure space can be constructed for a particular part of speech
-% directly from the distributional semantic representations of the
-% associated words, or from an ontology with frequency information
-% \cite{Clarke:07}.
-
 \subsection{Restricting the Set of Models}
 \label{section:distributions}
 
