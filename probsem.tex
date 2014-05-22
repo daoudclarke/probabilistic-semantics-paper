@@ -1,24 +1,32 @@
-%File: formatting-instruction.tex
-\documentclass[letterpaper]{article}
-\usepackage{eacl2014}
-\usepackage{times}
-\usepackage{url}
-\usepackage{latexsym}
+\documentclass{svmult}
+
+% SVMult required packages
+\usepackage{mathptmx}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{multicol}
+\usepackage{footmisc}
+
+
+%\usepackage{url}
+%\usepackage{latexsym}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{listings}
 \usepackage{csvsimple}
-\usepackage{titleref}
-%\usepackage{hyperref}
-%\usepackage{natbib}
+\usepackage{graphicx}
 
-\renewcommand{\theTitleReference}[2]{\emph{#2}}
+
+%\renewcommand{\theTitleReference}[2]{\emph{#2}}
 
 %\renewcommand{\cite}{\citep}
 %\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
-\newcommand{\citet}[1]{\newcite{#1}}
+%\newcommand{\citet}[1]{\cite{#1}}
+
 
 \lstset{
          basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -53,7 +61,7 @@
 % The file aaai.sty is the style file for AAAI Press 
 % proceedings, working notes, and technical reports.
 %
-\title{Probabilistic Semantics for Natural Language}
+\title{Two Models of Probabilistic Semantics for Natural Language}
 % \author{Daoud Clarke and Bill Keller\\
 % Department of Informatics\\
 % University of Sussex\\
@@ -61,73 +69,105 @@
 % }
 \author{}
 \maketitle
-\begin{abstract}
+%\begin{abstract}
 % \begin{quote}
+\abstract{
   Distributional accounts of meaning represent words as vectors or
   probability distributions over contexts. Such approaches differ from
   compositional, model-theoretic treatments of meaning such as
   Montague semantics. Recently, researchers have begun to address the
   problem of developing a unified account of natural language
   semantics that combines the strengths of both the distributional and
-  compositional approaches. This paper presents ongoing work to
-  develop a new formalism, {\em probabilistic semantics\/}, which
-  seeks to provide such a unifying account. Probabilistic semantics
-  extends standard model-theoretic accounts by assuming a probability
-  distribution over models. We sketch a probabilistic extension for a
-  Montague-style semantics and demonstrate its properties on simple
-  examples. We also propose an approach for learning semantics
-  directly from data, and discuss how the technique could be applied
-  to the task of recognising textual entailment.
+  compositional approaches. This paper seeks to provide such a
+  unifying account by combining existing approaches to probabilistic
+  semantics with Montague semantics, extending probabilistic semantics
+  to higher-order logic for the first time. We also propose an
+  approach for learning semantics directly from data, and demonstrate
+  its feasibility on small examples.
+}
 % \end{quote}
-\end{abstract}
+%\end{abstract}
 
 
 \section{Introduction}
+
+This paper argues for the adoption of probabilistic semantics as a
+framework for combining distributional and logical semantics. The
+success of lexical distributional representations of meaning has
+recently lead to a concerted effort to describe compositionality
+within distributional semantics
+\cite{Widdows:08,Mitchell:08,Baroni2010,Garrette:11,Grefenstette:11,Socher:12,Lewis:13},
+and efforts have been made to find a theoretical foundation for such
+work \cite{Clarke:12,Kartsaklis:14}. In this paper, we argue that
+existing work in probabilistic semantics
+\cite{Gaifman:64,Nilsson:86,Sato:95} provides a rich seam of ideas
+that can be applied to this problem.
+
+The contributions of this paper are as follows:
+\begin{itemize}
+\item We propose a framework for natural language semantics which
+  combines Montague semantics with probabilistic semantics by
+  specifying a probability distribution over Montague-style models. As
+  far as we are aware, this is the first time that probabilistic
+  semantics has been applied to higher-order logic.
+\item We describe ongoing work to construct a probabilistic Montague
+  semantics in which meanings are learnt from data, and demonstrate
+  some desirable properties of this formalism. We show that
+  restricting the space of models makes learning feasible, whilst
+  retaining many of the desirable properties of full Montague
+  semantics.
+\end{itemize}
 
 Techniques which represent the meanings of words in terms of the contexts in
 which they occur have become an indispensible tool in natural language
 processing. Such distributional representations of meaning typically
 represent words as vectors or probability distributions over
-contexts. They have been applied to a wide variety of tasks,
-including word sense
-disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL},
-prepositional phrase
-attachment~\cite{Calvo05distributionalthesaurus}, textual
-entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference
-resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic
-compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy
-induction~\cite{fountain-lapata:2012:NAACL-HLT}.
+contexts.
 
-Current distributional approaches to the representation of meaning differ in many respects from compositional, model-theoretic treatments
-such as Montague semantics or
-Discourse Representation Theory \cite{Blackburn:05}. Whilst distributional approaches provide an account of word meaning, but say little about how those meanings combine, compositional approaches provide an account of the way in which meanings combine to build a semantics for larger phrases, but have little to say about the meanings of words or how they are acquired.  Recently however, a number of researchers have begun to address the problem of  developing a unified account of natural language semantics that combines the strengths of both the distributional and compositional approaches
-\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}.  In this paper, we present a new formalism, {\em probabilistic semantics\/}, which seeks to provide such a unifying
-account. A key idea in probabilistic semantics is to extend standard model-theoretic
-accounts of meaning by assuming a probability distribution over
-models.  
+%  They have been applied to a wide variety of tasks,
+% including word sense
+% disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL},
+% prepositional phrase
+% attachment~\cite{Calvo05distributionalthesaurus}, textual
+% entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference
+% resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic
+% compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy
+% induction~\cite{fountain-lapata:2012:NAACL-HLT}.
 
-In model-theoretic semantics, one way to view the meaning
-of a logical sentence $s$ is as the set of all interpretations
-$\mathcal{M}_s$ for which $s$ is true. Interpretations in $\mathcal{M}_s$ are also called {\em models for\/}
-$s$. Then $s$ {\em logically entails\/} $t$ if and only if any model for $s$ is a model for $t$: i.e. $\mathcal{M}_s \subseteq
-\mathcal{M}_t$. We propose an extension to this idea where we assume
-that models occur randomly. Informally, we may assume a probability
-distribution over the set of models. Given such a probability distribution we can then estimate the
-probability of a sentence $s$ as the sum of the probabilities of all
-models $\mathcal{M}_s$, for $s$. The notion of a probability
-distribution over models has been proposed as a probabilistic
-semantics by \citet{Sato:95}, however to our knowledge it has not been
-extended to higher order logic, nor applied to natural language
-semantics.
+Current distributional approaches to the representation of meaning
+differ in many respects from compositional, model-theoretic treatments
+such as Montague semantics or Discourse Representation Theory
+\cite{Blackburn:05}. Whilst distributional approaches provide an
+account of word meaning, but say little about how those meanings
+combine, compositional approaches provide an account of the way in
+which meanings combine to build a semantics for larger phrases, but
+have little to say about the meanings of words or how they are
+acquired.
 
+Recently however, a number of researchers have begun to address the
+problem of developing a unified account of natural language semantics
+that combines the strengths of both the distributional and
+model-theoretic approaches
+\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}.  In this paper, we
+propose combining probabilistic semantics with Montague semantics,
+seeking to provide such a unifying account.
 
-Our approach satisfies each of the following desirable properties:
+%  The notion of a probability
+% distribution over models has been proposed as a probabilistic
+% semantics by \citet{Sato:95}, however to our knowledge it has not been
+% extended to higher order logic, nor applied to natural language
+% semantics.
+
+The proposed approach satisfies each of the following desirable properties:
 \begin{itemize}
 \item It is strongly grounded in probability theory: no ad-hoc methods
   or heuristics are used to combine distributional semantics with
   logical semantics.
-\item It provides the basis of an elegant extension of Montague semantics to the
-  probabilistic domain: in particular it combines the strengths of a compositional, model-theoretic account of semantics, complete with a well-defined notion of entailment, with a distributional account of the meaning of expressions.
+\item It provides the basis of an elegant extension of Montague
+  semantics to the probabilistic domain: in particular it combines the
+  strengths of a compositional, model-theoretic account of semantics,
+  complete with a well-defined notion of entailment, with a
+  distributional account of the meaning of expressions.
 \item It maintains the tradition of logical approaches to semantics
   which are concerned with what models are satisfied rather than
   assuming a single model: this means that composition does not
@@ -140,13 +180,11 @@ Our approach satisfies each of the following desirable properties:
   models of compositional distributional semantics.
 \end{itemize}
 
-
 In the following we sketch an approach to constructing a probabilistic
 extension of Montague semantics and demonstrate its properties on
 simple examples. We present a way of defining a probability
 distribution over models in terms of  a random generation process over
-interpretations.  We discuss how the technique could be applied to the
-core task of textual entailment.
+interpretations.
 
 % I'm not sure about referring to "distribution semantics" as it may
 % be confused with distributional semantics - perhaps just refer to it
@@ -154,9 +192,11 @@ core task of textual entailment.
 
 % Yes - I agree with that - removed reference to distribution semantics.
 
+\section{Motivation}
 
-\section{Towards a Probabilistic Montague Semantics}
+\section{Background}
 
+\subsection{Montague Semantics}
 
 In a series of papers in the early 1970s \cite{Montague1970a,Montague1970b,Montague1973} the linguist and philosopher Richard Montague spelled out a formal treatment of the semantics of natural language. Montague's conception of semantics was truth-conditional and model-theoretic. He considered that a fundamental aim of any adequate theory of semantics was ``to characterise the notions of a true sentence (under a given interpretation) and of entailment'' \cite{Montague1970b}. A central methodological component of Montague's approach was the {\em Principle of Compositionality\/}, which states that the meaning of an expression is a function of the meanings of its parts and the way they are combined syntactically.
 
@@ -217,14 +257,203 @@ A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
 sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
 \emph{model} for a theory $T$ is an interpretation $\langle E,
 F\rangle$ such that $\phi(s) = \hat{s}$ for every sentence $s\in
-T$. In this case we say that the model \emph{satisfies} $T$.
+T$. In this case we say that the model \emph{satisfies} $T$, and write
+$\langle E, F\rangle \models T$.
 
-Let $\Omega$ be the set of all interpretations, and $\sigma$ be the
-sigma algebra consisting of the set of all sets of models that satisfy
-some theory. Let $\mu$ be a probability measure on $\sigma$; then
+\subsection{Probabilistic Semantics}
+
+The idea of attaching probability to the truth of sentences is an old
+one, and is related to the foundation of probability itself
+\cite{Keynes:21,Los:55}. Gaifman \cite{Gaifman:64} discusses probability
+measures for first order calculus; the work of Sato \cite{Sato:95}
+concerns probability measures for logic programs.
+
+% The idea that we adopt from these approaches is to associate
+% probability measures with the space of models for the associated
+% logic. To our knowledge, such measures have not been studied for
+% higher order logics, which is what we consider here.
+
+A key idea in probabilistic semantics is to extend standard
+model-theoretic accounts of meaning by assuming a probability
+distribution over models.  In model-theoretic semantics, one way to
+view the meaning of a logical sentence $s$ is as the set of all
+interpretations $\mathcal{M}_s$ for which $s$ is true. Interpretations
+in $\mathcal{M}_s$ are also called {\em models for\/} $s$. Then $s$
+{\em logically entails\/} $t$ if and only if any model for $s$ is a
+model for $t$: i.e. $\mathcal{M}_s \subseteq
+\mathcal{M}_t$. Probabilistic semantics extends this idea by assuming
+that models occur randomly. Informally, we may assume a probability
+distribution over the set of models. Given such a probability
+distribution we can then estimate the probability of a sentence $s$ as
+the sum of the probabilities of all models $\mathcal{M}_s$, for $s$.
+
+Formally, for the sake of generality, probabilities are defined in
+terms of a probability space $\langle \Omega, \sigma, \mu\rangle$,
+where $\Omega$ is the set of all models, $\sigma$ is a sigma algebra
+associated with theories and $\mu$ is a probability measure on
+$\sigma$.
+
+%\subsection{Example: Fine-grained Meanings}
+
+
+% One distinguishing feature of distributional semantics is its ability
+% to describe fine-grained aspects of meaning: the continuous nature of
+% the space allows arbitrary degrees of similarity. We use the example
+% from \cite{Clark:08}, computing the similarity of the two sentences
+% \emph{John likes Mary} and \emph{John loves Mary}.
+
+% We assume the following types for basic expressions:
+% \begin{eqnarray*}
+% \mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
+% \mathit{likes}, \mathit{loves} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}
+% \end{eqnarray*}
+% Proper nouns are interpreted as sets of sets of entities (functions
+% from functions from entities to truth values to truth values), while
+% verbs are functions from pairs of sets of sets of entities to truth
+% values.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l||c|c|c|c|}
+\hline
+\emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
+\hline
+john & likes & john & 1 & 1 & 1 & 1\\
+john & likes & mary & 0 & 1 & 1 & 1\\
+mary & likes & john & 1 & 0 & 0 & 1\\
+mary & likes & mary & 0 & 0 & 1 & 1\\
+john & loves & john & 1 & 1 & 1 & 1\\
+john & loves & mary & 1 & 0 & 1 & 1\\
+mary & loves & john & 1 & 1 & 1 & 1\\
+mary & loves & mary & 1 & 0 & 1 & 1\\
+\hline
+\end{tabular}
+\caption{Four possible models describing relationships between John
+  and Mary.}
+\end{center}
+\label{table:models}
+\end{table}
+
+% For simplicity of exposition, and to make the number of
+% interpretations we have to consider smaller, we will give some
+% properties which will be fixed for all interpretations under
+% consideration, i.e.~interpretations which do not satisfy the given
+% property will be given probability zero. For example, we assume that
+% the set $E$ of entities is fixed, $E = \{\mathbf{john},
+% \mathbf{mary}\}$, and that the interpretation of nouns is fixed:
+% $$\mathit{john}(x) = \begin{cases}
+% \top & \text{if } x(\mathbf{john}) = \top\\
+% \bot & \text{otherwise}
+% \end{cases}$$ i.e.~$\mathit{john}$ is the set of all sets containing
+% the entity $\mathbf{john}$, and similarly for $\mathit{mary}$, if we
+% interpret functions with range $\{\top,\bot\}$ as indicator
+% functions. We further assume that $\mathit{likes}$ and
+% $\mathit{loves}$ behave logically so that if ``John likes $x$'' is
+% true and ``Mary likes $x$'' is true then ``John and Mary like $x$'' is
+% also true (note that this isn't true for all verbs; consider ``John
+% and Mary played chess''). Similarly we assume that if ``$x$ likes
+% John'' and ``$x$ likes Mary'' are true then ``$x$ likes John and
+% Mary'' is true.
+
+% Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
+% described in Table \ref{table:models}. At this point our example
+% diverges from standard model-theoretic semantics. 
+
+In general, the set of models will be infinite, but for the purposes
+of exposition, it helps to consider a simple example with a fixed
+number of models, such as that described by Table
+\ref{table:models}. Each of the columns $m_1$ to $m_4$ describe a
+different model describing relationships between John and Mary.  We
+assume a probability distribution over the set of models, with $P(m_1)
+= 0.1$, $P(m_2) = 0.2$, $P(m_3) = 0.3$, $P(m_4) = 0.4$ and all other
+possible models have zero probability.
+
+Using this set of models we can say:
+\begin{itemize}
+\item The probability that John likes Mary is $\mu(\{m_2, m_3, m_4\}) =
+  P(m_2) + P(m_3) + P(m_4) = 0.9$.
+\item The probability that Mary likes John or Mary is $\mu(\{m_1, m_3, m_4\}) =
+  P(m_1) + P(m_3) + P(m_4) = 0.8$.
+\item The probability that John likes Mary given that he loves her
+  is\\ $\mu(\{m_3, m_4\})/\mu(\{m_1, m_3, m_4\}) = 0.7/0.8$.
+\end{itemize}
+
+% We assume that the categorial grammar assigns the meaningful
+% expression $\mathit{likes}(\mathit{mary})(\mathit{john})$ to the
+% sentence ``John likes Mary''. The probability of this sentence is
+% \begin{eqnarray*}
+% \mu(M(\{\mathit{likes}(\mathit{mary})(\mathit{john})\})) &=&
+% \mu(\{m_2, m_3, m_4\})\\
+% &=&0.9
+% \end{eqnarray*}
+% Similarly, the models which are true for the sentence ``John loves
+% Mary'' are $\{m_1, m_3, m_4\}$, having probability 0.8. The models
+% which satisfy both of these sentences are $\{m_3, m_4\}$ with
+% probability 0.7, so the
+% degree to which ``John loves Mary'' entails ``John likes Mary'' is
+% $0.7/0.8$. Note that in this case there is no logical entailment, but
+% there is a high degree of entailment.
+
+% \subsection{Example: Conjunction and Disjunction}
+
+% Our formalism inherits the nice properties of model-theoretic
+% semantics with respect to conjunction and disjunction. We describe the
+% conjunction of nouns with the basic expression $\mathit{and}$ of type
+% $(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is a function taking two sets of
+% sets of entities, and returning another set of sets of
+% entities. Specifically we assume that it returns the intersection of
+% the two sets. Similarly $\mathit{or}$ is a function of the same type,
+% returning the union of the two sets.
+
+% Then $\mathit{and}(john)(mary)$ is the set of sets containing both
+% $\mathbf{john}$ and $\mathbf{mary}$. Assume the categorial grammar
+% gives the meaningful expression
+% $\mathit{likes}(\mathit{and}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
+% to the sentence ``Mary likes John and Mary''. The set of models
+% satisfying this sentence is $\{m_4\}$, so this sentence has
+% probability 0.4. The set of models satisfying
+% $\mathit{likes}(\mathit{or}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
+% for ``Mary likes John or Mary'' is $\{m_1, m_3, m_4\}$, so this
+% sentence has probability 0.8. Note that the logical entailments we
+% would expect from logical semantics are preserved: the degree to which
+% ``Mary likes John and Mary'' entails ``Mary likes John'' is 1.
+
+%  In this example, we
+% assume that meanings are described by a measure space for each part of
+% speech. Measure spaces for larger constituents are then constructed as
+% product measures \cite{Taylor:06} of their constituent measure
+% spaces. This idea is an extension of the observation of
+% \citet{Keenan:85} that there is a Boolean algebra associated with each
+% constituent.
+
+% A measure space can be constructed for a particular part of speech
+% directly from the distributional semantic representations of the
+% associated words, or from an ontology with frequency information
+% \cite{Clarke:07}.
+
+
+\section{Probabilistic Montague Semantics}
+
+In this section we describe our first model for probabilistic
+semantics in natural language, which generalises Montague semantics to
+the probabilistic domain in a natural way.
+
+Let $\Omega$ be the set of all Montague-style interpretations. Let
+$M(T)$ denote the set of all models for the theory $T$, and let
+$\sigma_0$ be the set of all sets of models that satisfy some theory:
+$$\sigma_0 = \{M(T) : T\text{ is a theory}\}$$
+In general, $\sigma_0$ is not a sigma algebra; in particular we cannot
+guarantee that $M(T_1)\cup M(T_2) \in \sigma_0$ for two theories $T_1$
+and $T_2$. For any Montague grammar which contains a propositional
+fragment, this would hold, however even if this is not the case, we
+can still define a probability space by considering the sigma algebra
+$\sigma$ generated by $\sigma_0$; this is defined as the smallest
+sigma algebra containing $\sigma_0$.
+
+Let $\mu$ be a probability measure on $\sigma$; then
 $\langle\Omega,\sigma,\mu\rangle$ is a probability space which
-describes the probability of theories. Let $M(T)$ denote the set of
-all models for the theory $T$; the probability of $T$ is $\mu(M(T))$.
+describes the probability of theories. The probability of $T$ is
+$\mu(M(T))$.
 
 % A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$ is a
 % sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value. A
@@ -254,144 +483,23 @@ We interpret this conditional probability as the {\em degree to which $s_2$ enta
 
 %\section{Learning}
 
-\section{Examples}
+%\section{Examples}
 
-One can envisage many possible ways of describing probability measures
-$\mu$. Our main goal is to be able to learn such measures from corpus
-data, and we describe one possible approach to doing this in Section
-\ref{section:distributions}. However, in this section, to demonstrate
-the potential for our approach, we give examples in which measures are
-given explicitly.
+% One can envisage many possible ways of describing probability measures
+% $\mu$. Our main goal is to be able to learn such measures from corpus
+% data, and we describe one possible approach to doing this in Section
+% \ref{section:distributions}. However, in this section, to demonstrate
+% the potential for our approach, we give examples in which measures are
+% given explicitly.
  
-\subsection{Fine-grained Meanings}
-
-One distinguishing feature of distributional semantics is its ability
-to describe fine-grained aspects of meaning: the continuous nature of
-the space allows arbitrary degrees of similarity. We use the example
-from \cite{Clark:08}, computing the similarity of the two sentences
-\emph{John likes Mary} and \emph{John loves Mary}.
-
-We assume the following types for basic expressions:
-\begin{eqnarray*}
-\mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
-\mathit{likes}, \mathit{loves} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}
-\end{eqnarray*}
-Proper nouns are interpreted as sets of sets of entities (functions
-from functions from entities to truth values to truth values), while
-verbs are functions from pairs of sets of sets of entities to truth
-values.
-
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|l|l||c|c|c|c|}
-\hline
-\emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
-\hline
-john & likes & john & 1 & 1 & 1 & 1\\
-john & likes & mary & 0 & 1 & 1 & 1\\
-mary & likes & john & 1 & 0 & 0 & 1\\
-mary & likes & mary & 0 & 0 & 1 & 1\\
-john & loves & john & 1 & 1 & 1 & 1\\
-john & loves & mary & 1 & 0 & 1 & 1\\
-mary & loves & john & 1 & 1 & 1 & 1\\
-mary & loves & mary & 1 & 0 & 1 & 1\\
-\hline
-\end{tabular}
-\caption{Four possible models describing relationships between John
-  and Mary.}
-\end{center}
-\label{table:models}
-\end{table}
-
-For simplicity of exposition, and to make the number of
-interpretations we have to consider smaller, we will give some
-properties which will be fixed for all interpretations under
-consideration, i.e.~interpretations which do not satisfy the given
-property will be given probability zero. For example, we assume that
-the set $E$ of entities is fixed, $E = \{\mathbf{john},
-\mathbf{mary}\}$, and that the interpretation of nouns is fixed:
-$$\mathit{john}(x) = \begin{cases}
-\top & \text{if } x(\mathbf{john}) = \top\\
-\bot & \text{otherwise}
-\end{cases}$$ i.e.~$\mathit{john}$ is the set of all sets containing
-the entity $\mathbf{john}$, and similarly for $\mathit{mary}$, if we
-interpret functions with range $\{\top,\bot\}$ as indicator
-functions. We further assume that $\mathit{likes}$ and
-$\mathit{loves}$ behave logically so that if ``John likes $x$'' is
-true and ``Mary likes $x$'' is true then ``John and Mary like $x$'' is
-also true (note that this isn't true for all verbs; consider ``John
-and Mary played chess''). Similarly we assume that if ``$x$ likes
-John'' and ``$x$ likes Mary'' are true then ``$x$ likes John and
-Mary'' is true.
-
-Four possible models $m_1, m_2, m_3, m_4$ under these assumptions are
-described in Table \ref{table:models}. At this point our example
-diverges from standard model-theoretic semantics. We assume a
-probability distribution over the set of models: we assume that these
-models have probabilities 0.1, 0.2, 0.3 and 0.4 respectively, and all
-other models have probability zero.
-
-We assume that the categorial grammar assigns the meaningful
-expression $\mathit{likes}(\mathit{mary})(\mathit{john})$ to the
-sentence ``John likes Mary''. The probability of this sentence is
-\begin{eqnarray*}
-\mu(M(\{\mathit{likes}(\mathit{mary})(\mathit{john})\})) &=&
-\mu(\{m_2, m_3, m_4\})\\
-&=&0.9
-\end{eqnarray*}
-Similarly, the models which are true for the sentence ``John loves
-Mary'' are $\{m_1, m_3, m_4\}$, having probability 0.8. The models
-which satisfy both of these sentences are $\{m_3, m_4\}$ with
-probability 0.7, so the
-degree to which ``John loves Mary'' entails ``John likes Mary'' is
-$0.7/0.8$. Note that in this case there is no logical entailment, but
-there is a high degree of entailment.
-
-\subsection{Conjunction and Disjunction}
-
-Our formalism inherits the nice properties of model-theoretic
-semantics with respect to conjunction and disjunction. We describe the
-conjunction of nouns with the basic expression $\mathit{and}$ of type
-$(((e/t)/t)/((e/t)/t))/((e/t)/t)$: it is a function taking two sets of
-sets of entities, and returning another set of sets of
-entities. Specifically we assume that it returns the intersection of
-the two sets. Similarly $\mathit{or}$ is a function of the same type,
-returning the union of the two sets.
-
-Then $\mathit{and}(john)(mary)$ is the set of sets containing both
-$\mathbf{john}$ and $\mathbf{mary}$. Assume the categorial grammar
-gives the meaningful expression
-$\mathit{likes}(\mathit{and}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
-to the sentence ``Mary likes John and Mary''. The set of models
-satisfying this sentence is $\{m_4\}$, so this sentence has
-probability 0.4. The set of models satisfying
-$\mathit{likes}(\mathit{or}(\mathit{john})(\mathit{mary}))(\mathit{mary})$
-for ``Mary likes John or Mary'' is $\{m_1, m_3, m_4\}$, so this
-sentence has probability 0.8. Note that the logical entailments we
-would expect from logical semantics are preserved: the degree to which
-``Mary likes John and Mary'' entails ``Mary likes John'' is 1.
-
-%  In this example, we
-% assume that meanings are described by a measure space for each part of
-% speech. Measure spaces for larger constituents are then constructed as
-% product measures \cite{Taylor:06} of their constituent measure
-% spaces. This idea is an extension of the observation of
-% \citet{Keenan:85} that there is a Boolean algebra associated with each
-% constituent.
-
-% A measure space can be constructed for a particular part of speech
-% directly from the distributional semantic representations of the
-% associated words, or from an ontology with frequency information
-% \cite{Clarke:07}.
-
-\section{Proposal for Learning Semantics}
+\subsection{Restricting the Set of Models}
 \label{section:distributions}
 
 Our main objective is to be able to learn semantics from data,
 generalising lexical distributional semantics. In this section, we
-sketch a proposal for how this may be achieved within our
-framework. The central idea is to limit the number of denotations
-under consideration, and define a probabilistic generative model for
+propose one way that this may be achieved within our framework. The
+central idea is to limit the number of denotations under
+consideration, and define a probabilistic generative model for
 interpretations.
 
 Specifically we assume that $E$ is fixed. Let
@@ -411,87 +519,400 @@ some set $H$. This gives us the following process to generate $F$:
 \begin{itemize}
 \item Generate a hidden value $h\in H$
 \item Generate a value $F(b) \in \phi_{\tau_b}$ for each $b\in B$ according to
-  $P(d_{\tau_b,i}|b, h)$
+  $P(d_{\tau_b,i}|b, h) = \theta_{b,i,h}$
 \item For each pair of types $\alpha/\beta, \beta$:
 \begin{itemize}
 \item Generate a value $\phi(d_{\alpha/\beta,i}(d_{\alpha,j}))$
-  according to $P(d_{\beta,i}|d_{\alpha/\beta,i}, d_{\alpha,j},h)$
+  according to $P(d_{\beta,k}|d_{\alpha/\beta,i}, d_{\alpha,j},h) = \theta_{\beta,i,j,k,h}$
+\end{itemize}
+\end{itemize}
+The parameters to be learnt are the probability distributions
+$\theta_{b,i,h}$ for each basic expression $b$ and hidden value $h$
+over possible values $d_{\tau_b,i}$, and $\theta_{\beta,i,j,k,h}$ over
+values $d_{\beta,k}$ for each function $d_{\alpha/\beta,i}$, argument
+$d_{\alpha,j}$, and hidden value $h$.
+
+\subsection{Inference}
+
+Given a theory $T$ and parameters $\theta$, we can compute the
+probability $P(T|\theta)$ using the following algorithm:
+\begin{itemize}
+\item For each hidden variable $h$:
+\begin{itemize}
+\item Iterate over models for $T$. This can be done in a bottom-up
+  fashion by first choosing the denotation for each basic expression,
+  then recursively for complex expressions. Choices that are made have
+  to be remembered, and any time a contradiction is detected, the
+  model is abandoned.
+\item The probability of each model given $h$ can be found by
+  multiplying the parameters associated with each choice made in the
+  previous step.
 \end{itemize}
 \end{itemize}
 
-Since we have described a restricted space of models, it should be
-feasible to learn the parameters in this process (the probability
-distributions $P$) directly from data, using a technique such as Maximum
-Likelihood Estimation, following a similar approach to
-\citet{Sato:95}. Despite being a restricted space of models, our hope
-is that it will be able to approximate the full space of models as
-$n_\tau$ and the number of hidden values are increased.
+\subsection{Learning}
 
-% \item For each sentence $s$:
+We can use Maximum Likelihood to estimate these parameters given a set
+of observed theories $\mathcal{D} = \{T_1, T_2, \ldots T_N\}$. We look
+for the parameters $\theta$ that maximize the likelihood
+$$P(\mathcal{D}|\theta) = \prod_{n=1}^N P(T_i|\theta)$$
+This can be maximised using gradient ascent or expectation
+maximisation. Our current implementation uses the L-BFGS-B algorithm
+in SciPy \cite{Zhu:97}.
+
+
+\section{Sato Semantics for Natural Language}
+
+In this section, we describe our second model of probabilistic
+semantics for natural language.
+
+\subsection{Handling Ambiguity}
+
+Our formulation of probabilistic Montague semantics arguably does not
+adequately account for ambiguity in natural language. Although we have
+a probability distribution over interpretations, in any given
+interpretation, each occurrence of a word must have the same
+denotation. This is intuitively unsatisfactory, since we can easily
+conceive two sentences where the same word has different meanings. The
+standard model-theoretic approach to this problem would be to
+disambiguate words before performing inference. This approach is
+seemingly inconsistent with a theory that tries to combine
+distributional and model-theoretic semantics, since part of the
+attraction of distributional semantics is that \emph{degrees} of
+ambiguity are incorporated into the representation of a word's
+meaning.
+
+One solution is to drop the requirement that each occurrence of a word
+have the same denotation. If we generalise this idea to denotations
+for all types, then we end up with an entirely different semantic
+model, which can easily be formulated in the framework of Sato
+\cite{Sato:97}.
+
+% in which we have a probability distribution over
+% \emph{theories} instead of models. We can define a generative
+% model for theories, analogous to the one for models, as follows:
 % \begin{itemize}
-% \item For each basic expression $b$ in $s$, choose a value $v$ for $F(b)$ from
-%   $D_{\tau_b}$ according to some distribution $P(v|b,h)$.
-% \item Recursively, for every meaningful expression $\gamma(\delta)$ in
-%   $s$, where $F(\delta) = v_\delta$ and $F(\gamma) = v_\gamma$, choose
-%   a value $v$ from $D_{\tau_{\delta(\gamma)}}$ according to
-%   $P(v|v_\delta, v_\gamma, h)$.
+% \item Choose a hidden value $h$
+% \item Choose a number $n$ of sentences according to some distribution
+%   (e.g. Poisson)
+% \item Do $n$ times:
+% \begin{itemize}
+% \item For each basic expression occurrence $b$ in $s$, generate a
+%   value in $\phi_{\tau_b}$ according to $P(d_{\tau_b,i}|b, h) =
+%   \theta_{b,i,h}$
+% \item For each expression of the form $\gamma(\delta)$, where $\gamma$
+%   and $\delta$ have values $d_{\tau_\gamma,i}$ and $d_{\tau_\delta,j}$
+%   respectively, choose a value in $\phi_{\tau_{\gamma(\delta)}}$
+%     according to $P(d_{\tau_{\gamma(\delta)},k}|d_{\tau_\gamma,i},
+%       d_{\tau_{\delta},j}) = \theta_{\tau_{\gamma(\delta)},i,j,k,h}$
+% \end{itemize}
 % \end{itemize}
 
-% In the following, we show that it is possible to learn the parameters
-% of this random generation process from data.  Our method falls within
-% the framework of \citet{Sato:95}. Consequently, we are able to reuse his
-% algorithms for learning and inference.  Given a set of observed
-% theories, the probability distributions $P$ can be learnt. In the
-% following we demonstrate this with examples, and give the code listing
-% for our implementation. It is also observed that the learnt parameters for a particular basic expression can
-% be viewed as its distributional representation. In
-% Section~\ref{sec:recovering} we consider how this representation
-% relates to standard approaches to distributional semantics.
+\begin{figure}
+\centering
+\begin{lstlisting}
+% Hidden variable
+values(hidden, [h0, h1]).
+
+% Types
+values(word(noun, Word, Hidden), [n0, n1]).
+values(word(verb, Word, Hidden), [v0, v1]).
+values(word(det, Word, Hidden), [d0, d1]).
+values(function(s, Value1, Value2, Hidden), [t0, t1]).
+values(function(np, Value1, Value2, Hidden), [np0, np1]).
+values(function(vp, Value1, Value2, Hidden), [vp0, vp1]).
+
+evaluate(w(Word, Type), Hidden, Result) :-
+	msw(word(Type, Word, Hidden), Result).
+evaluate(f(Type, X, Y), Hidden, Result) :-
+	evaluate(X, Hidden, XResult),
+	evaluate(Y, Hidden, YResult),
+	msw(function(Type, XResult, YResult, Hidden), Result).
+
+theory([], _).
+theory([truth(Sentence, Result)|Tail], Hidden) :-
+	evaluate(Sentence, Hidden, Result),
+	theory(Tail, Hidden).
+
+theory(T) :-
+	msw(hidden, Hidden),
+	theory(T, Hidden).
+\end{lstlisting}
+\caption{A PRISM program describing probability distributions over
+  natural language models used for our examples.}
+\label{figure:program}
+\end{figure}
 
 
-\section{Application to Textual Entailment}
+\subsection{Implementation}
 
-The task of recognising textual entailment \cite{Dagan:05} is to
-determine, given two sentences $T$ (the \emph{text}) and $H$ (the
-\emph{hypothesis}), whether $T$ {\em textually entails\/} $H$. It is important to note that the notion of
-textual entailment is an informal one based on human judgments. This makes textual entailment much closer to the notion of degree of entailment available within our probabilistic approach than that of strict logical entailment.  The importance of textual entailment within natural language processing lies in its broad relevance to a range of tasks. It represents a core problem, a solution to which is required in order to develop applications in areas such as
-information retrieval, machine translation, question answering and
-summarisation.
 
-Previous attempts to apply logical representations of meaning to this
-task have applied {\em ad hoc\/} heuristics to handle the lack of robustness in
-standard approaches. \citet{Bos:06} used model builders to construct a
-model for $T$ and a model for $T$ and $H$ together and used the size
-of these models as an indication of the degree of entailment. The
-intuition here is that if the model for $T$ and $H$ together is larger
-than that for just $T$, then $H$ contains a lot of knowledge not in
-$T$ and there is a low degree of entailment.  This idea can be
-directly related to our approach: it amounts to assuming the existence of a probability
-distribution over models,
-with larger models less probable than smaller ones.
+An implementation for our approach is shown in Figure 
+\ref{figure:program}. The code listed in the figure is written in PRISM \cite{Sato:97}, a probabilistic extension of the Prolog logic-progamming language. Note that to simplify the code, complex types of the underlying Montague grammar are referred to by their corresponding natural language
+categories. Thus, type $t$ is represented by \texttt{s} (a sentence), type $(e/t)$ by \texttt{vp} (a verb phrase) and type $(e/t)/t$ by \texttt{np} (a noun phrase). 
 
-Textual entailment datasets can also be used to learn the parameters
-described in the previous section. A dataset typically consists of a
-set of natural language sentence pairs, each annotated as to whether
-entailment holds or not. Suppose we are given a pair $(T,H)$ with associated meaningful expressions $s_T$ and $s_H$. In the case that entailment holds for $T$ and $H$ then the dataset will contain the following theories as observations:
+The PRISM language augments Prolog with probabilistic predicates and declarations. In particular, it incorporates random switches. The predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes during execution. 
+
+The PRISM program shown in Figure \ref{figure:program} describes how sentences are randomly assigned truth values using random switches. For example, the declaration 
+\begin{center}
+\texttt{values(word(noun,Word,Hidden),[n0,n1])} 
+\end{center}
+introduces a switch for nouns having two possible outcomes, \texttt{n0} and \texttt{n1}.
+The outcomes are conditioned on the particular choice of noun (\texttt{Word}) and on the choice of hidden variable (\texttt{Hidden}). Similarly, the \texttt{values} predicate is used to declare switches associated with complex types. For example the values associated with a sentence (\texttt{s}) switch are conditioned on the choices of its component parts and a hidden variable.
+
+The probability of a theory is derived by evaluating the truth
+conditions of the sentences that make it up. Note that probability
+distributions are defined over models, not theories, so that to
+evaluate the probability of a theory it is necessary to sum over the
+probabilities of all of its satisfying models. To achieve this, the
+predicate \texttt{prob} is used. An example query returning the
+probability of the sentence {\em the cat likes the dog\/} is shown in
+figure \ref{figure:query}. This is expressed as a theory
+$\{(\mathit{likes}(\mathit{the}(\mathit{dog}))(\mathit{the}(\mathit{cat})),\top)\}$,
+which can be translated into a Prolog expression in a straightforward
+manner.
+
+
+
+
+\begin{figure}
+\begin{lstlisting}
+:- prob(theory([
+  truth(f(s, f(np, w(the, det),
+                   w(cat, noun)),
+             f(vp, w(likes, verb),
+                   f(np, w(the, det),
+                         w(dog, noun)))),
+        t1)]), X).
+\end{lstlisting}
+\caption{PRISM query to evaluate the probability that the sentence
+  \emph{the cat likes the dog} is true.}
+\label{figure:query}
+\end{figure}
+
+\section{Learning Reversal of Entailment}
+
+We verified that our two systems were able to learn some simple
+logical features of natural language semantics, in particular that
+determiners such as ``no'' reverse the direction of entailment, so
+that while ``some cats'' entails ``some animals'', ``no animals''
+entails ``no cats'' (Table \ref{table:mono}).
+
+% We have demonstrated the feasibility of our approach by showing that
+% it can learn the monotonicity of determiners on small examples (Table
+% \ref{table:mono}). Our system is able to correctly predict that
+% \emph{no people} entails \emph{no men}, having seen other example
+% entailments.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent.\\
+\hline
+some cats like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no cats like all dogs & Yes\\
+some dogs like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no dogs like all dogs & Yes\\
+some men like all dogs & some people like all dogs & Yes\\
+\hline
+no people like all dogs & no men like all dogs & Yes\\
+no men like all dogs & no people like all dogs & No\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Text and Hypothesis sentences, and whether entailment
+  holds. We expect that a system should be able to learn from
+  the data above the line that the determiner ``no'' reverses the
+  direction of entailment.}
+\label{table:mono}
+\end{table}
+
+
+For each example entailment pair for which entailment holds (the
+``text'' entails the ``hypothesis''), we add
+the following theories to $\mathcal{D}$:
 \[
 \{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
 \]
-In the case that entailment does not hold, on the other hand, then the dataset will contain just the following as an observation:
-\[
-\{(s_T,\top),(s_H,\bot)\}
-\]
+Where $s_T$ is the sentence associated with the text and $s_H$ the
+sentence associated with the hypothesis. We then learn the optimal
+parameters $\theta$ given this data, and use these to compute the
+degree of entailment on unseen pairs of sentences.
 
-This
-idea could be used as a supervised approach to the general task of recognising textual
-entailment.  However, we leave the evaluation of this idea to future
-work.
+We verified that our system correctly predicted the reversal of
+entailment: pairs which we expected to entail were given a degree of
+entailment of 1.0 by our system, and pairs we expect not to entail
+were given a degree of entailment of 0.5. We did not see any
+difference between the two systems on these small examples.
+
+%\subsection{Examples}
+
+
+% The PRISM framework is equipped with a proof-theoretic approach to learning so that it is possible to estimate parameters from observed data. A number of different learning algorithms are implemented within the framework. To estimate the
+% parameters in the following examples we used the standard expectation maximisation algorithm.
+
+% Table \ref{table:lexical} demonstrates that our system can learn
+% simple lexical entailment rules. In this case it is learnt that \emph{cat} entails
+% \emph{animal} on the basis of a small number of examples. Table \ref{table:quantifiers} demonstrates that our system can learn
+% something more significant: it can learn that the entailment direction
+% is reversed with certain quantifiers. Quantifiers such as \emph{some} are
+% \textbf{monotonically increasing}, so that \emph{some cats} entails
+% \emph{some animals}. Quantifiers like \emph{no} and \emph{all} are
+% \textbf{monotonically decreasing}, so that \emph{no animals} entails
+% \emph{no cats}. Our system is able to determine this from very little
+% training data.
+
+% \begin{table*}
+% \centering
+% \begin{tabular}{|l|l|l|}
+% \hline
+% Text & Hypothesis & Ent\\
+% \hline
+% \emph{the cat chased the dog} & \emph{the animal chased the dog} & \\
+% \emph{the cat likes the dog} & \emph{the animal likes the dog} & \\
+% \hline
+% \emph{the cat loves the dog} & \emph{the animal loves the dog} & 1.0\\
+% \emph{the animal loves the dog} & \emph{the cat loves the dog} & 0.5\\
+% \hline
+% \end{tabular}
+% \caption{Learning lexical entailment from examples, showing training
+%   data at the top, and test data below, with the degree of entailment
+%   determined by our system.}
+% \label{table:lexical}
+% \end{table*}
+
+% \begin{table*}
+% \centering
+% \begin{tabular}{|l|l|l|}
+% \hline
+% Text & Hypothesis & Ent\\
+% \hline
+% \emph{some cats like all dogs} & \emph{some animals like all dogs} & \\
+% \emph{no animals like all dogs} & \emph{no cats like all dogs} & \\
+% \emph{some men like all dogs} & \emph{some people like all dogs} & \\
+% \hline
+% \emph{no people like all dogs} & \emph{no men like all dogs} & 1.0\\
+% \emph{no men like all dogs} & \emph{no people like all dogs} & 0.5\\
+% \emph{most people like all dogs} & \emph{most men like all dogs} & 0.75\\
+% \hline
+% \end{tabular}
+% \caption{Learning how quantifiers reverse the entailment direction,
+%   with training data at the top, and test data below, with the degree
+%   of entailment determined by our system.}
+% \label{table:quantifiers}
+% \end{table*}
+
+\subsection{Recovering Lexical Semantics}
+\label{sec:recovering}
+
+As may be apparent, our formalism does not make use of any explicit representation of
+lexical semantics. However, distributional representations of word
+meanings can be recovered from the learnt models. The representation
+of a word in this case is a matrix, rather than a vector, because there is a different 
+probability distribution over the possible values for a particular
+type corresponding to each hidden value. For example, Table \ref{table:lexical-sato} shows the learnt
+values for the nouns in the example in Table
+\ref{table:quantifiers}. Allowing the distribution to vary with the
+hidden variable is precisely what enables learning of the behaviour of
+quantifiers. Without this flexibility learning would not be possible.
+
+\begin{table}
+\centering
+\csvautotabular{lexical.csv}
+\caption{Learnt probabilities for the nouns in the example
+  in Table \ref{table:quantifiers}}
+\label{table:lexical-sato}
+\end{table}
+
+If we want to compare words in a manner similar to vector based
+representations of meaning, we can consider the matrix entries as a
+flat vector. In this case we can use any of the standard similarity measures (e.g. 
+cosine) to compare word representations.
+
+
+
+\section{Discussion}
+
+The two models of semantics we have discussed are closely
+related. Indeed, Sato semantics is also based around a probability
+distribution over models, however because of its foundation in logic
+programming, only \emph{Herbrand} models are considered. The semantics
+of the switches used in the PRISM language are that they are assigned
+a random value on each evaluation when determining the truth of a
+statement. This is what allows a term to have different meanings
+within a single interpretation. In contrast, the model based on
+Montague semantics would require switches to take the same value on
+each evaluation, which is not directly supported by PRISM.
+
+The extra flexibility granted by the Sato semantic formalism results
+in the loss of certain nice properties. For example, in the
+probabilistic Montague semantics formalism, it is easy to see that the
+degree to which any sentence entails itself is necessarily 1. This is
+no longer guaranteed in our instantiation of Sato semantics. Indeed
+this seems to be a necessary consequence of incorporating statistical
+ambiguity into the formalism. In standard model-theoretic semantics,
+sentences are typically disambiguated before any reasoning is
+performed. However, if we do not perform disambiguation, one cannot
+say that a sentence entails itself, since it may be disambiguated
+differently in different contexts. Thus it seems that if we accept
+ambiguity as an inherent feature of language, it makes sense to
+sacrifice some properties which are expected when handling logical
+expressions.
+
+The two models also have different computational properties. The Sato
+semantic formalism allows for efficient computation with dynamic
+programming. This is possible because of the re-evaluation of switch
+values: each evaluation is independent of previous ones. In contrast,
+in probabilistic Montague semantics, we need to remember choices made
+previously, which means we lose the independence property in general,
+making dynamic programming much less useful.
+
+
+
+% \subsection{Application to Textual Entailment}
+
+% The task of recognising textual entailment \cite{Dagan:05} is to
+% determine, given two sentences $T$ (the \emph{text}) and $H$ (the
+% \emph{hypothesis}), whether $T$ {\em textually entails\/} $H$. It is important to note that the notion of
+% textual entailment is an informal one based on human judgments. This makes textual entailment much closer to the notion of degree of entailment available within our probabilistic approach than that of strict logical entailment.  The importance of textual entailment within natural language processing lies in its broad relevance to a range of tasks. It represents a core problem, a solution to which is required in order to develop applications in areas such as
+% information retrieval, machine translation, question answering and
+% summarisation.
+
+% Previous attempts to apply logical representations of meaning to this
+% task have applied {\em ad hoc\/} heuristics to handle the lack of robustness in
+% standard approaches. \citet{Bos:06} used model builders to construct a
+% model for $T$ and a model for $T$ and $H$ together and used the size
+% of these models as an indication of the degree of entailment. The
+% intuition here is that if the model for $T$ and $H$ together is larger
+% than that for just $T$, then $H$ contains a lot of knowledge not in
+% $T$ and there is a low degree of entailment.  This idea can be
+% directly related to our approach: it amounts to assuming the existence of a probability
+% distribution over models,
+% with larger models less probable than smaller ones.
+
+% Textual entailment datasets can also be used to learn the parameters
+% described in the previous section. A dataset typically consists of a
+% set of natural language sentence pairs, each annotated as to whether
+% entailment holds or not. Suppose we are given a pair $(T,H)$ with associated meaningful expressions $s_T$ and $s_H$. In the case that entailment holds for $T$ and $H$ then the dataset will contain the following theories as observations:
+% \[
+% \{(s_T,\top),(s_H,\top)\}, \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
+% \]
+% In the case that entailment does not hold, on the other hand, then the dataset will contain just the following as an observation:
+% \[
+% \{(s_T,\top),(s_H,\bot)\}
+% \]
+
+% This
+% idea could be used as a supervised approach to the general task of recognising textual
+% entailment.  However, we leave the evaluation of this idea to future
+% work.
 
 \section{Related Work}
 
 %\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-\citet{Coecke:10} proposed a framework based on category-theoretic
+Coecke et al.~\cite{Coecke:10} proposed a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
 approach is arguably the most closely related to ours since it is also
 founded in Montague semantics: words are treated as linear functions
@@ -500,7 +921,7 @@ tensor product space, and a pregroup grammar is used to determine how
 these are composed using the inner product. It was recently
 demonstrated that this approach can be extended to allow the
 simulation of predicate calculus using
-tensors. \cite{Grefenstette:13}.
+tensors \cite{Grefenstette:13}.
 
 There are two main differences between their approach and ours. First,
 in the language of Montague semantics, they assume a single
@@ -520,18 +941,19 @@ which are vector based, such as latent semantic analysis
 ours is closer to probabilistic approaches such as latent Dirichlet
 allocation \cite{Blei:03}.
 
-\citet{Garrette:11} describe an approach to combining logical
+Garrette et al.~\cite{Garrette:11} describe an approach to combining logical
 semantics with distributional semantics using Markov Logic Networks
 \cite{Richardson:06}. Sentences are parsed into logical form using
 Boxer \cite{Bos:04}, and probabilistic rules are added using the
-distributional model of \citet{Erk:10}.
+distributional model of \cite{Erk:10}.
 
-\citet{Lewis:13} take a standard logical approach to semantics except
-that the relational constants used are derived from distributional
-clustering. They use latent dirichlet allocation to describe a
-probability distribution over semantic categories for nouns, which are
-then combined with induced relation clusters to generate a probability
-distribution over logical forms for a given sentence.
+Lewis and Steedman \cite{Lewis:13} take a standard logical approach to
+semantics except that the relational constants used are derived from
+distributional clustering. They use latent dirichlet allocation to
+describe a probability distribution over semantic categories for
+nouns, which are then combined with induced relation clusters to
+generate a probability distribution over logical forms for a given
+sentence.
 
 \section{Conclusion}
 
@@ -544,11 +966,11 @@ features of standard model-theoretic semantics, such as the simple
 representation of conjunction and disjunction are retained in our
 formalism.
 
-We also presented a restricted version of the semantics which should
-make it possible to learn meaning representations directly from data,
-and discussed the application of this idea to the task of recognising
-textual entailment. We plan to investigate practical implementations
-of both these ideas in future work.
+We also presented a restricted version of the semantics which makes it
+possible to learn meaning representations directly from data, and
+demonstrated that this formalism can learn the monotonicity of
+determiners from examples. We plan to apply this to practical tasks
+such as recognising textual entailment in future work.
 
 We also plan to investigate the relationship between our model and
 standard distributional semantic representations of meaning. This,
@@ -568,6 +990,6 @@ and indexicals, amongst others.
 % There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. 
 
 
-\bibliographystyle{acl}
+\bibliographystyle{spmpsci}
 \bibliography{JW2012}
 \end{document}

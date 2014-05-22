@@ -1,0 +1,509 @@
+% Bismillahi-r-Rahmani-r-Rahim
+% $Header$
+
+\documentclass{beamer}
+
+% This file is a solution template for:
+
+% - Talk at a conference/colloquium.
+% - Talk length is about 20min.
+% - Style is ornate.
+
+
+
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice. 
+
+\newlength{\wideitemsep}
+\setlength{\wideitemsep}{\itemsep}
+\addtolength{\wideitemsep}{10pt}
+\let\olditem\item
+\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
+
+
+\newcommand{\context}[1]{\ensuremath{\widehat{\mathit{#1}}}}
+\newcommand{\nl}[1]{\sl{#1}}
+
+\usepackage{rotating}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+
+%  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\usepackage{alltt}
+
+\title%[Short Paper Title] % (optional, use only with long paper titles)
+{Towards Probabilistic Semantics for Natural Language}
+
+%\subtitle
+%{Include Only If Paper Has a Subtitle}
+
+\author[Department of Informatics, University of Sussex] % (optional, use only with lots of authors)
+{Daoud Clarke and Bill Keller}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[University of Sussex] % (optional, but mostly needed)
+{
+  Department of Informatics\\
+  University of Sussex}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[University of York] % (optional, should be abbreviation of conference name)
+{University of York, 20th March 2014}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Computational Linguistics}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+%%% Delete this, if you do not want the table of contents to pop up at
+%%% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+%  \begin{frame}<beamer>{Outline}
+%    \tableofcontents[currentsection,currentsubsection]
+%  \end{frame}
+%}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Motivation}
+%\subsection{Background}
+
+\begin{frame}{Overview}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+
+% Structuring a talk is a difficult task and the following structure
+% may not be suitable. Here are some rules that apply for this
+% solution: 
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+% - A conference audience is likely to know very little of what you
+%   are going to talk about. So *simplify*!
+% - In a 20min talk, getting the main ideas across is hard
+%   enough. Leave out details, even if it means being less precise than
+%   you think necessary.
+% - If you omit details that are vital to the proof/implementation,
+%   just say so once. Everybody will be happy with that.
+
+%\subsection{Motivation}
+
+\begin{frame}{Motivation}
+\begin{itemize}
+\item Combine logical and distributional semantics
+\item Foundation in probability theory
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Distributional Semantics}
+\begin{itemize}
+\item Learn meanings of words
+\item Degrees of relatedness
+\item Nothing to say about composition
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Logical Semantics}
+\begin{itemize}
+\item Represent subtle aspects of compositionality
+\item Generalised quantifiers, intensional semantics\ldots
+\item Not able to learn word meanings
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Our aim}
+\begin{itemize}
+\item Learn word meanings and composition
+\item Retain expressivity of logical semantics
+\item Application: textual entailment
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Traditional Approach to Logical Semantics}
+\begin{itemize}
+\item Translate natural language to logic
+\item Prove theorems/build models
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Our approach}
+\begin{itemize}
+\item Use a constrained set of models
+\item Translate directly to sets of models
+\item Learn a distribution over this set
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Textual Entailment Example}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent.\\
+\hline
+some cats like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no cats like all dogs & Yes\\
+some dogs like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no dogs like all dogs & Yes\\
+some men like all dogs & some people like all dogs & Yes\\
+\hline
+no people like all dogs & no men like all dogs & Yes\\
+no men like all dogs & no people like all dogs & No\\
+\hline
+\end{tabular}
+\end{frame}
+
+\section{Background}
+
+\subsection{Related Work}
+
+\begin{frame}{Related Work in NLP}
+\begin{itemize}
+\item Garrette and Erk use Markov Logic Networks
+\begin{itemize}
+\item Distributional information generates probabilistic rules
+\end{itemize}
+%\item Bos and Markert: build a model, look at its size
+%\item Neither is fully theoretically satisfying
+\item Lewis and Steedman use clustering to induce relational constants
+\item Ed Grefenstette expresses formal semantics using tensors
+\end{itemize}
+\end{frame}
+
+%\section{Probabilistic Semantics}
+
+\subsection{Probabilistic Semantics}
+
+\begin{frame}{Probabilistic Semantics}
+\begin{itemize}
+\item Haim Gaifman (1964) \textit{Concerning Measures in First Order Calculi}
+\item Ronald Fagin et al.~(1990) \textit{A logic for reasoning about probabilities}
+\item Taisuke Sato (1995) \textit{A Statistical Learning Method for Logic Programs with Distribution Semantics}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sato Semantics}
+\begin{itemize}
+\item As in model-theoretic semantics, the denotation of a sentence is
+  the set of models for which it is true
+\item Assume a probability distribution over models
+\item More generally, assume a probability measure over the $\sigma$-algebra of all denotations
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sato Semantics Example}
+\begin{center}
+\begin{tabular}{|l|l|l||c|c|c|c|}
+\hline
+\multicolumn{3}{|c||}{Sentence} & \multicolumn{4}{c|}{Model (probability)}\\
+\hline
+& & & $m_1$& $m_2$& $m_3$& $m_4$\\
+\emph{subject} & \emph{verb} & \emph{object} & (0.1)& (0.2)& (0.3)& (0.4)\\
+\hline
+john & likes & john & 1 & 1 & 1 & 1\\
+john & likes & mary & 0 & 1 & 1 & 1\\
+mary & likes & john & 1 & 0 & 0 & 1\\
+mary & likes & mary & 0 & 0 & 1 & 1\\
+john & loves & john & 1 & 1 & 1 & 1\\
+john & loves & mary & 1 & 0 & 1 & 1\\
+mary & loves & john & 1 & 1 & 1 & 1\\
+mary & loves & mary & 1 & 0 & 1 & 1\\
+\hline
+\end{tabular}
+\end{center}
+$$P(\text{John likes Mary}|\text{John loves Mary}) = 0.7/0.8 $$
+\end{frame}
+
+%\section{Probabilistic Montague Semantics}
+
+\subsection{Montague Semantics}
+
+%\subsection{Montague Semantics}
+
+\begin{frame}{Set of Types $\mathcal{T}$}
+\begin{description}
+\item [Basic types:] $e,t\in \mathcal{T}$
+\item[Complex types:]  if $\alpha, \beta\in \mathcal{T}$, then $\alpha/\beta\in \mathcal{T}$.
+\end{description}
+\end{frame}
+
+\begin{frame}{Meaningful Expressions}
+\begin{itemize}
+\item Let $B$ be a set of \emph{basic expressions}
+\item For each $b\in B$, we have a type $\tau_b\in \mathcal{T}$
+\item Define the set $\Lambda$ of meaningful expressions, and the extension of $\tau$ to $\Lambda$ recursively:
+\begin{itemize}
+\item $B\subseteq \Lambda$
+\item for every pair $\gamma,\delta\in \Lambda$ such that $\tau_\gamma
+  = \alpha/\beta$ and $\tau_\delta = \alpha$, then $\gamma(\delta)\in
+  \Lambda$, and $\tau_{\gamma(\delta)} = \beta$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Types Example}
+\begin{eqnarray*}
+\mathit{john},\mathit{mary} & \in & \Lambda_{(e/t)/t}\\
+\mathit{likes} & \in & \Lambda_{(((e/t)/t)/((e/t)/t))/t}\\
+\mathit{likes}(\mathit{john}) & \in & \Lambda_{((e/t)/t)/t}\\
+\mathit{likes}(\mathit{john})(\mathit{mary}) & \in & \Lambda_t
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Denotations}
+\begin{itemize}
+\item Let $E$ be a set of \emph{entities}
+\item The set $D_\alpha$ of \emph{possible denotations} of type $\alpha$ is
+defined recursively:
+\begin{eqnarray*}
+D_e &=& E\\
+D_t &=& \{\bot,\top\}\\
+D_{\alpha/\beta} &=& {D_\beta}^{D_\alpha}
+\end{eqnarray*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretations}
+  \begin{itemize}
+  \item An \emph{interpretation} is a pair $\langle E,
+    F\rangle$ such that $E$ is a non-empty set and $F$ is a function with
+    domain $B$ such that $F(b) \in D_{\tau_b}$ for all $b\in B$.
+  \item A meaningful expression $\gamma$ has the value $\phi(\gamma)$ in the
+    interpretation $\langle E, F\rangle$ defined recursively
+    \begin{itemize}
+    \item $\phi(b) = F(b)$ for $b\in B$
+    \item $\phi(\gamma(\delta)) = \phi(\gamma)(\phi(\delta))$ for $\gamma
+      \in \Lambda_{\alpha/\beta}$ and $\delta \in \Lambda_\beta$.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretation Example}
+\begin{itemize}
+\item $E = \{j, m\}$
+\item $\phi(\mathit{john}) = \{\{j\},\{j,m\}\}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theories}
+  \begin{itemize}
+  \item A \emph{sentence} is a meaningful expression of type $t$.
+  \item A \emph{theory} is a set $T$ of pairs $(s,\hat{s})$, where $s$
+    is a sentence and $\hat{s}\in\{\top,\bot\}$ is a truth value.
+  \item A \emph{model} for a theory $T$ is an interpretation $\langle
+    E, F\rangle$ such that $\phi(s) = \hat{s}$ for every sentence
+    $s\in T$. In this case we say that the model \emph{satisfies} $T$.
+  \end{itemize}
+\end{frame}
+
+\section{Probabilistic Montague Semantics}
+
+\subsection{Probability and Entailment}
+
+\begin{frame}{Probabilistic Montague Semantics}
+\begin{itemize}
+\item Our contribution
+\item Combine Sato Semantics and Montague Semantics
+\item Learn meanings from data
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Probability Measures}
+  \begin{itemize}
+  \item Let $\Omega$ be the set of all interpretations
+  \item $\sigma$ is the sigma algebra consisting of the set of all
+    sets of models (interpretations) that satisfy some theory.
+  \item Let $\mu$ be a probability measure on $\sigma$; then
+    $\langle\Omega,\sigma,\mu\rangle$ is a probability space which
+    describes the probability of theories.
+  \item Let $M(T)$ denote the set of all models for the theory $T$;
+    the probability of $T$ is $\mu(M(T))$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Entailment as Conditional Probability}
+  \begin{itemize}
+  \item The conditional probability of $s_1$ given $s_2$ is
+    $$\frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
+    \begin{itemize}
+    \item The {\em degree to which $s_2$ entails $s_1$\/}. 
+    \end{itemize}
+  \item If $s_2$ logically entails $s_1$ then the degree to which  $s_2$ entails $s_1$ is $1$.
+\end{itemize}
+\end{frame}
+
+\subsection{Learning}
+
+\begin{frame}{Learning Semantics}
+  \begin{itemize}
+  \item There are too many variables to learn
+  \item Restrict the set of possible values for each type
+  \item Learning becomes feasible
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Constrained Montague Semantics}
+\begin{itemize}
+\item Fix $E$.
+\item Let $\phi_\tau = \{\phi(\lambda) : \lambda\in \Lambda_\tau\}$
+\item Let $n_\tau$ be a set of constants satisfying $n_\tau \le |D_\tau|$
+\item Constrain $F$ such that $|\phi_\tau| = n_\tau$
+\item Write $\phi_\tau = \{d_{\tau,1}, d_{\tau,2}, \ldots d_{\tau,
+    n_\tau}\}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Generative Model for Models}
+\begin{itemize}
+\item Generate a hidden value $h\in H$
+\item Generate a value $F(b) \in \phi_{\tau_b}$ for each $b\in B$ according to
+  $P(d_{\tau_b,i}|b, h)$
+\item For each pair of types $\alpha/\beta, \beta$:
+\begin{itemize}
+\item Generate a value $\phi(d_{\alpha/\beta,i}(d_{\alpha,j}))$
+  according to $P(d_{\beta,i}|d_{\alpha/\beta,i}, d_{\alpha,j},h)$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Learning}
+  \begin{itemize}
+  \item Parameters are $P(d_{\tau_b,i}|b, h)$ and $P(d_{\beta,i}|d_{\alpha/\beta,i}, d_{\alpha,j},h)$
+  \item Data: a set of theories $\mathcal{D} = \{T_1, T_2, \ldots, T_N\}$
+  \item Find the best parameters using maximum likelihood
+  \item Maximise $P(\mathcal{D}) = P(T_1)P(T_2)\cdots P(T_N)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Learning from Entailment Pairs}
+  \begin{itemize}
+    \item If $S_1$ entails $S_2$, add the following to $\mathcal{D}$:
+      $$\{(s_1,\top),(s_2,\top)\}, \{(s_1,\bot),(s_2,\top)\},\{(s_1,\bot),(s_2,\bot)\}$$
+    \item Otherwise add $\{(s_1,\top),(s_2,\bot)\}$
+    \item Can learn from only positive entailments
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Textual Entailment Example}
+\begin{tabular}{|l|l|l|}
+\hline
+Text & Hypothesis & Ent.\\
+\hline
+some cats like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no cats like all dogs & Yes\\
+some dogs like all dogs & some animals like all dogs & Yes\\
+no animals like all dogs & no dogs like all dogs & Yes\\
+some men like all dogs & some people like all dogs & Yes\\
+\hline
+no people like all dogs & no men like all dogs & 1.0\\
+no men like all dogs & no people like all dogs & 0.5\\
+\hline
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Implementation - Computing Probability}
+  \begin{itemize}
+  \item For each $h\in H$:
+    \begin{itemize}
+    \item Iterate over models for $T$
+    \item Choose values for $\phi(x)$ bottom-up
+    \item If we have seen $x$, $\phi(x)$ must be the same
+    \end{itemize}
+  \item Use beam search
+  \item Problem: dynamic programming
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Implementation - Learning}
+  \begin{itemize}
+  \item Hill climbing
+  \item Bounded Limited Memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS-B)
+  \item Scipy implementation 
+  \item Todo: calculate gradient
+  \end{itemize}
+\end{frame}
+
+\subsection{Conclusion}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+  \item Probability distribution over models
+  \item Constrained Montague semantics
+  \item Learn meanings from data
+  \end{itemize}
+\end{frame}
+
+
+% \begin{frame}{E}
+%   \begin{itemize}
+%   \item 
+%   \item 
+%   \item 
+%   \item 
+%   \end{itemize}
+% \end{frame}
+
+
+\end{document}
+
+
