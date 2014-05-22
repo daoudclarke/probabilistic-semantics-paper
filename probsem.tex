@@ -740,6 +740,11 @@ sentence associated with the hypothesis. We then learn the optimal
 parameters $\theta$ given this data, and use these to compute the
 degree of entailment on unseen pairs of sentences.
 
+We verified that our system correctly predicted the reversal of
+entailment: pairs which we expected to entail were given a degree of
+entailment of 1.0 by our system, and pairs we expect not to entail
+were given a degree of entailment of 0.5. We did not see any
+difference between the two systems on these small examples.
 
 %\subsection{Examples}
 
@@ -829,9 +834,41 @@ cosine) to compare word representations.
 
 \section{Discussion}
 
-A semantic theory based on a distribution over theories loses some of
-the nice properties of a theory based on distribution over models. For
-example,
+The two models of semantics we have discussed are closely
+related. Indeed, Sato semantics is also based around a probability
+distribution over models, however because of its foundation in logic
+programming, only \emph{Herbrand} models are considered. The semantics
+of the switches used in the PRISM language are that they are assigned
+a random value on each evaluation when determining the truth of a
+statement. This is what allows a term to have different meanings
+within a single interpretation. In contrast, the model based on
+Montague semantics would require switches to take the same value on
+each evaluation, which is not directly supported by PRISM.
+
+The extra flexibility granted by the Sato semantic formalism results
+in the loss of certain nice properties. For example, in the
+probabilistic Montague semantics formalism, it is easy to see that the
+degree to which any sentence entails itself is necessarily 1. This is
+no longer guaranteed in our instantiation of Sato semantics. Indeed
+this seems to be a necessary consequence of incorporating statistical
+ambiguity into the formalism. In standard model-theoretic semantics,
+sentences are typically disambiguated before any reasoning is
+performed. However, if we do not perform disambiguation, one cannot
+say that a sentence entails itself, since it may be disambiguated
+differently in different contexts. Thus it seems that if we accept
+ambiguity as an inherent feature of language, it makes sense to
+sacrifice some properties which are expected when handling logical
+expressions.
+
+The two models also have different computational properties. The Sato
+semantic formalism allows for efficient computation with dynamic
+programming. This is possible because of the re-evaluation of switch
+values: each evaluation is independent of previous ones. In contrast,
+in probabilistic Montague semantics, we need to remember choices made
+previously, which means we lose the independence property in general,
+making dynamic programming much less useful.
+
+
 
 % \subsection{Application to Textual Entailment}
 
