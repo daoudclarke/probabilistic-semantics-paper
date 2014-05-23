@@ -123,8 +123,8 @@ The contributions of this paper are as follows:
   Montague semantics.
 \item We show that taking account of lexical ambiguity leads to a new
   model in which pairs of sentences and truth values are generated
-  randomly. This new approach, \emph{stochastic semantics}, gives a
-  computationally more tractable formulation of the learning problem.
+  randomly. This new approach gives a computationally more tractable
+  formulation of the learning problem.
 \end{enumerate}
 
 Techniques which represent the meanings of words in terms of the contexts in
@@ -147,41 +147,51 @@ Recently, a number of researchers have begun to address the
 problem of developing a unified account of natural language semantics
 that combines the strengths of both the distributional and
 model-theoretic approaches
-\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}.  In this paper, we
-propose combining probabilistic semantics with Montague semantics,
-seeking to provide such a unifying account.
+\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-%  The notion of a probability
-% distribution over models has been proposed as a probabilistic
-% semantics by \citet{Sato:95}, however to our knowledge it has not been
-% extended to higher order logic, nor applied to natural language
-% semantics.
-
-The proposed approach satisfies each of the following desirable properties:
+In the following we consider two different ways of constructing a
+probabilistic semantics. Both approaches have the following desirable
+properties:
 \begin{itemize}
-\item It is strongly grounded in probability theory: no ad-hoc methods
+\item They are strongly grounded in probability theory: no ad-hoc methods
   or heuristics are used to combine distributional semantics with
   logical semantics.
-\item It provides the basis of an elegant extension of Montague
-  semantics to the probabilistic domain: in particular it combines the
-  strengths of a compositional, model-theoretic account of semantics,
-  complete with a well-defined notion of entailment, with a
-  distributional account of the meaning of expressions.
-\item It maintains the tradition of intensional approaches to semantics,
-  which are concerned with what models are satisfied rather than
-  assuming a single model: this means that composition does not
-  necessarily lead to a loss of meaning (for example by reducing the meaning of a
-  sentence to a single truth value).
-\item It admits an implementation in which probability distributions
-  over models can potentially be learnt from data: the account is
-  holistic, in that the learning of word meaning and composition are not
-  separated, with the potential benefit of more flexible and accurate
-  models of compositional distributional semantics.
+\item They admit an implementation in which probability distributions
+  can be learnt from data: the account is holistic, in that the
+  learning of word meaning and composition are not separated, with the
+  potential benefit of more flexible and accurate models of
+  compositional distributional semantics.
+\item Because both approaches describe a generative process,
+  composition does not necessarily lead to a loss of meaning (for
+  example by reducing the meaning of a sentence to a single truth
+  value).
 \end{itemize}
 
-In the following we consider two different ways of constructing a probabilistic extension of Montague semantics. We demonstrate their properties on
-simple natural language examples and show that it is feasible to learn semantics from text by restricting the space of models appropriately. In the first approach we define a probability distribution over models in terms of  a random generation process over
-interpretations. Whilst this provides a straightforward means of constructing a probabilistic semantics, it carries a restrictive assumption that in interpreting any given text, the meaning of all words is fixed in advance. That is, whilst the meaning of words may vary between different interpretations, for any given interpretation they are fixed. Clearly, this is unrealistic as it is easy to construct examples where the interpretation of a given word varies across the text. Our second approach removes this restriction and allows for ambiguity. This is consistent with distributional accounts of  lexical semantics, where the meaning of a polysemous word is identified with the combination of all of its distributional contexts. A surprising consequence of allowing for ambiguity is that learning semantics from text becomes more tractable. We present an implementation within the context of Sato's approach to the semantics of probabilistic logic programs. 
+In the first approach we define a probability
+distribution over Montague-style models in terms of a random
+generation process over interpretations. This provides the basis of an
+elegant extension of Montague semantics to the probabilistic domain:
+in particular it combines the strengths of a compositional,
+model-theoretic account of semantics, complete with a well-defined
+notion of entailment, with a distributional account of the meaning of
+expressions.  However, this approach carries a restrictive assumption
+that in interpreting any given text, the meaning of all words is fixed
+in advance. That is, whilst the meaning of words may vary between
+different interpretations, for any given interpretation they are
+fixed. Clearly, this is unrealistic as it is easy to construct
+examples where the interpretation of a given word varies across the
+text. Our second approach, which we call \emph{stochastic semantics},
+removes this restriction and allows for ambiguity. This is consistent
+with distributional accounts of lexical semantics, where the meaning
+of a polysemous word is identified with the combination of all of its
+distributional contexts. Stochastic semantics assumes a random
+generative process for pairs of sentences and truth values, instead of
+models, which means that we have to sacrifice some nice theoretical
+properties satisified by the first approach. A nice consequence of
+this approach, however, is that inference becomes more tractable since
+we can benefit from dynamic programming.  We present an implementation
+of stochastic semantics within the context of Sato's approach
+\cite{Sato:97} to the semantics of probabilistic logic programs.
 
 
 
