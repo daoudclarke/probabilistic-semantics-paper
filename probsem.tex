@@ -518,7 +518,7 @@ over possible values $d_{\tau_b,i}$, and $\theta_{\beta,i,j,k,h}$ over
 values $d_{\beta,k}$ for each function $d_{\alpha/\beta,i}$, argument
 $d_{\alpha,j}$, and hidden value $h$.
 
-\subsection{Inference}
+\subsection{Learning and Inference}
 
 Given a theory $T$ and parameters $\theta$, we can compute the
 probability $P(T|\theta)$ using the following algorithm:
@@ -536,8 +536,6 @@ probability $P(T|\theta)$ using the following algorithm:
 \end{itemize}
 \end{itemize}
 
-\subsection{Learning}
-
 We can use Maximum Likelihood to estimate these parameters given a set
 of observed theories $\mathcal{D} = \{T_1, T_2, \ldots T_N\}$. We look
 for the parameters $\theta$ that maximize the likelihood
@@ -545,8 +543,6 @@ $$P(\mathcal{D}|\theta) = \prod_{n=1}^N P(T_i|\theta)$$
 This can be maximised using gradient ascent or expectation
 maximisation. Our current implementation uses the L-BFGS-B algorithm
 in SciPy \cite{Zhu:97}.
-
-
 
 \section{Stochastic Semantics}
 
