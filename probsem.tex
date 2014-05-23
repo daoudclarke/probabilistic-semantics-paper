@@ -125,6 +125,8 @@ The contributions of this paper are as follows:
   model in which pairs of sentences and truth values are generated
   randomly. This new approach gives a computationally more tractable
   formulation of the learning problem.
+\item We show that both models are able to learn from a few examples
+  that quantifiers such as ``no'' reverse the direction of entailment.
 \end{enumerate}
 
 Techniques which represent the meanings of words in terms of the contexts in
@@ -167,32 +169,38 @@ properties:
   value).
 \end{itemize}
 
-In the first approach we define a probability
-distribution over Montague-style models in terms of a random
-generation process over interpretations. This provides the basis of an
-elegant extension of Montague semantics to the probabilistic domain:
-in particular it combines the strengths of a compositional,
-model-theoretic account of semantics, complete with a well-defined
-notion of entailment, with a distributional account of the meaning of
-expressions.  However, this approach carries a restrictive assumption
-that in interpreting any given text, the meaning of all words is fixed
-in advance. That is, whilst the meaning of words may vary between
-different interpretations, for any given interpretation they are
+In the first approach we define a probability distribution over
+Montague-style models in terms of a random generation process over
+interpretations. This provides the basis of an elegant extension of
+Montague semantics to the probabilistic domain: in particular it
+combines the strengths of a compositional, model-theoretic account of
+semantics, complete with a well-defined notion of entailment, with a
+distributional account of the meaning of expressions.  However, this
+approach carries a restrictive assumption that in interpreting any
+given text, whilst the meaning of words may vary between different
+interpretations, for any given interpretation the meanings are
 fixed. Clearly, this is unrealistic as it is easy to construct
 examples where the interpretation of a given word varies across the
-text. Our second approach, which we call \emph{stochastic semantics},
-removes this restriction and allows for ambiguity. This is consistent
-with distributional accounts of lexical semantics, where the meaning
-of a polysemous word is identified with the combination of all of its
-distributional contexts. Stochastic semantics assumes a random
-generative process for pairs of sentences and truth values, instead of
-models, which means that we have to sacrifice some nice theoretical
-properties satisified by the first approach. A nice consequence of
-this approach, however, is that inference becomes more tractable since
-we can benefit from dynamic programming.  We present an implementation
-of stochastic semantics within the context of Sato's approach
-\cite{Sato:97} to the semantics of probabilistic logic programs.
+text, for example, we may try and compute entailment between two
+sentences both containing the word ``bank'', one in the context of
+finance and one in the context of rivers, in which case we would like
+the interpretation to vary. Our second approach, which we call
+\emph{stochastic semantics}, removes this restriction and allows for
+ambiguity. This is consistent with distributional accounts of lexical
+semantics, where the meaning of a polysemous word is identified with
+the combination of all of its distributional contexts. Stochastic
+semantics assumes a random generative process for pairs of sentences
+and truth values, instead of models, which means that we have to
+sacrifice some nice theoretical properties satisified by the first
+approach. A nice consequence of this approach, however, is that
+inference becomes more tractable since we can benefit from dynamic
+programming.
 
+We describe implementations of both approaches, and show that both are
+able to perform learning and inference on small examples. For example,
+they can learn that while ``some cats $X$'' entails ``some animals
+$X$'', entailment is reversed with other quantifiers: ``no animals
+$X$'' entails ``no cats $X$''.
 
 
 % I'm not sure about referring to "distribution semantics" as it may
