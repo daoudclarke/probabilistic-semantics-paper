@@ -927,6 +927,29 @@ making dynamic programming much less useful.
 
 %\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
+In recent work, Cooper et al.~\cite{Cooper:14}, in a development on
+earlier work \cite{Eijck:12} have described a probabilistic semantics for natural language in which probability is distributed over situation types~\cite{Barwise:83}. They propose a rich type system in which the judgment about whether a given situation is of a given type is probabilistic and present a compositional interpretation function that assigns probability-conditions rather than truth-conditions to sentences. The work of Cooper et al shares similar motivations to ours. In particular, it aims to account for the gradience of semantic judgements (for example, gradations of entailment) and stresses the importance of providing an account of semantic learning within language acquisition.
+
+Their approach differs from ours in a number of key respects. 
+\begin{enumerate}
+\item they model probabilistic semantics not over worlds but over situations - claim to be more tractable?
+\item they define a probabilistic interpretation function - we don't - we define a generative process over models so that probabilities of meaning are defined in terms of probability distribution over worlds
+\item Defining probability over situation types rather than possible worlds (models) 
+\item They describe an approach to semantic learning which makes use
+  of observations of situations. Our approach is to learn from pairs
+  of sentences and truth values directly.
+\item The result of their learning is an assignment of probabilities
+  to situations; the result of our learning is the ability to
+  determine degrees of entailment between pairs of sentences.
+\item Our approach can be related back to distributional semantics: as
+  output of our learning procedure we can extract lexical
+  representations as matrices.
+\end{enumerate}
+
+
+
+
+
 Coecke et al.~\cite{Coecke:10} proposed a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
 approach is closely related to ours since it is also
@@ -955,17 +978,6 @@ which are vector based, such as latent semantic analysis
 \cite{Deerwester:90} and random indexing \cite{Sahlgren:02}, whereas
 ours is closer to probabilistic approaches such as latent Dirichlet
 allocation \cite{Blei:03}.
-
-In recent work, Cooper et al.~\cite{Cooper:14} have described a probabilistic semantics for natural language in which probability is distributed over situation types~\cite{Barwise:83}. They propose a rich type system in which the judgment about whether a given situation is of a given type is probabilistic and present a compositional interpretation function that assigns probability-conditions rather than truth-conditions to sentences. The work of Cooper et al shares similar motivations to ours. In particular, it aims to account for the gradience of semantic judgements (for example, gradations of entailment) and stresses the importance of providing an account of semantic learning within language acquisition.
-
-Their approach differs from ours in a number of key respects. 
-
-1) they model probabilistic semantics not over worlds but over situations - claim to be more tractable?
-2) they define a probabilistic interpretation function - we don't - we define a generative process over models so that probabilities of meaning are defined in terms of probability distribution over worlds
-3) 
-
-
-Defining probability over situation types rather than possible worlds (models) 
 
 Garrette et al.~\cite{Garrette:11} describe an approach to combining logical
 semantics with distributional semantics using Markov Logic Networks
