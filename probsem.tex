@@ -754,27 +754,37 @@ entails ``no cats'' (Table \ref{table:mono}).
 % entailments.
 
 \begin{table}
-\begin{center}
-\begin{tabular}{|l|l|l|}
-\hline
-Text & Hypothesis & Ent.\\
-\hline
-some cats like all dogs & some animals like all dogs & Yes\\
-no animals like all dogs & no cats like all dogs & Yes\\
-some dogs like all dogs & some animals like all dogs & Yes\\
-no animals like all dogs & no dogs like all dogs & Yes\\
-some men like all dogs & some people like all dogs & Yes\\
-\hline
-no people like all dogs & no men like all dogs & Yes\\
-no men like all dogs & no people like all dogs & No\\
-\hline
-\end{tabular}
-\end{center}
-\caption{Text and Hypothesis sentences, and whether entailment
-  holds. We expect that a system should be able to learn from
-  the data above the line that the determiner ``no'' reverses the
-  direction of entailment.}
-\label{table:mono}
+  \parbox{.62\linewidth}{
+    \begin{center}
+      \begin{tabular}{|l|l|l|}
+        \hline
+        Text & Hypothesis & Ent.\\
+        \hline
+        some cats like all dogs & some animals like all dogs & Yes\\
+        no animals like all dogs & no cats like all dogs & Yes\\
+        some dogs like all dogs & some animals like all dogs & Yes\\
+        no animals like all dogs & no dogs like all dogs & Yes\\
+        some men like all dogs & some people like all dogs & Yes\\
+        \hline
+        no people like all dogs & no men like all dogs & Yes\\
+        no men like all dogs & no people like all dogs & No\\
+        \hline
+      \end{tabular}
+      \caption{Text and Hypothesis sentences, and whether entailment
+        holds. We expect that a system should be able to learn from
+        the data above the line that the determiner ``no'' reverses the
+        direction of entailment.}
+      \label{table:mono}
+    \end{center}
+  }
+  \hfill
+  \parbox{.32\linewidth}{
+    \centering
+    \csvautotabular{lexical.csv}
+    \caption{Learnt probabilities obtained using the
+      stochastic semantics implementation.}
+    \label{table:lexical-sato}
+  }
 \end{table}
 
 
@@ -855,24 +865,17 @@ systems on these small examples.
 \subsection{Recovering Lexical Semantics}
 \label{sec:recovering}
 
-As may be apparent, our formalism does not make use of any explicit representation of
-lexical semantics. However, distributional representations of word
-meanings can be recovered from the learnt models. The representation
-of a word in this case is a matrix, rather than a vector, because there is a different 
-probability distribution over the possible values for a particular
-type corresponding to each hidden value. For example, Table \ref{table:lexical-sato} shows the learnt
-values for the nouns in the example in Table
-\ref{table:quantifiers}. Allowing the distribution to vary with the
-hidden variable is precisely what enables learning of the behaviour of
+As may be apparent, our formalism does not make use of any explicit
+representation of lexical semantics. However, distributional
+representations of word meanings can be recovered from the learnt
+models. The representation of a word in this case is a matrix, rather
+than a vector, because there is a different probability distribution
+over the possible values for a particular type corresponding to each
+hidden value. For example, Table \ref{table:lexical-sato} shows the
+learnt values for the nouns obtained using the stochastic semantics
+implementation. Allowing the distribution to vary with the hidden
+variable is precisely what enables learning of the behaviour of
 quantifiers. Without this flexibility learning would not be possible.
-
-\begin{table}
-\centering
-\csvautotabular{lexical.csv}
-\caption{Learnt probabilities for the nouns in the example
-  in Table \ref{table:quantifiers}}
-\label{table:lexical-sato}
-\end{table}
 
 If we want to compare words in a manner similar to vector based
 representations of meaning, we can consider the matrix entries as a
@@ -894,7 +897,7 @@ within a single interpretation. In contrast, the model based on
 Montague semantics would require switches to take the same value on
 each evaluation, which is not directly supported by PRISM.
 
-The extra flexibility granted by the Sato semantic formalism results
+The extra flexibility granted by the stochastic semantics formalism results
 in the loss of certain nice properties. For example, in the
 probabilistic Montague semantics formalism, it is easy to see that the
 degree to which any sentence entails itself is necessarily 1. This is
@@ -909,8 +912,8 @@ ambiguity as an inherent feature of language, it makes sense to
 sacrifice some properties which are expected when handling logical
 expressions.
 
-The two models also have different computational properties. The Sato
-semantic formalism allows for efficient computation with dynamic
+The two models also have different computational properties:
+stochastic semantics allows for efficient computation with dynamic
 programming. This is possible because of the re-evaluation of switch
 values: each evaluation is independent of previous ones. In contrast,
 in probabilistic Montague semantics, we need to remember choices made
