@@ -548,7 +548,7 @@ in SciPy \cite{Zhu:97}.
 
 
 
-\section{Handling Ambiguity}
+\section{Stochastic Semantics}
 
 
 The formulation of probabilistic Montague semantics presented above does not
@@ -570,6 +570,13 @@ have the same denotation. If we generalise this idea to denotations
 for all types, then we end up with an entirely different semantic
 model. It turns our that this model can easily be formulated within the framework due to Sato
 \cite{Sato:97}.
+
+We call our new framework \emph{stochastic semantics}. We no longer
+associate a set of models with a sentence. Instead of having a
+generative model for models, we now assume that pairs of sentences and
+truth values are randomly generated in sequence. The probability of
+each pair being generated is conditionally independent of previous
+pairs given the hidden variable.
 
 % in which we have a probability distribution over
 % \emph{theories} instead of models. We can define a generative
