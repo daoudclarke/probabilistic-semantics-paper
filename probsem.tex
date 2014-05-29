@@ -64,13 +64,13 @@
 % The file aaai.sty is the style file for AAAI Press 
 % proceedings, working notes, and technical reports.
 %
-\title{Two Models of Probabilistic Semantics for Natural Language}
-% \author{Daoud Clarke and Bill Keller\\
-% Department of Informatics\\
-% University of Sussex\\
-% Falmer, Brighton, UK\\
-% }
-\author{}
+\title*{Two Models of Probabilistic Semantics for Natural Language}
+\author{Daoud Clarke and Bill Keller\\
+%Department of Informatics\\
+%University of Sussex\\
+%Falmer, Brighton, UK\\
+}
+%\author{}
 \maketitle
 %\begin{abstract}
 % \begin{quote}
@@ -85,8 +85,8 @@
   unifying account. We consider two different approaches. The first is
   a probabilistic generalisation of Montague semantics in which we
   assume a probability distribution over models. This approach has
-  nice theoretical properties but does not seem to be consistent with
-  the view that ambiguity is inherent in natural language. This leads
+  nice theoretical properties but does not account for the ubiquitous nature of 
+  ambiguity in natural language. This leads
   us to our second approach, which we call \emph{stochastic
     semantics}, in which we assume that a sequence of pairs of
   sentences and truth values are generated randomly. We demonstrate
@@ -144,9 +144,7 @@ account of word meaning, they have little to say about how those meanings
 combine. In contrast, compositional approaches provide an account of the way in
 which meanings combine to build a semantics for larger phrases, but
 have little to say about the meanings of words or how they are
-acquired.
-
-Recently, a number of researchers have begun to address the
+acquired. Recently, a number of researchers have begun to address the
 problem of developing a unified account of natural language semantics
 that combines the strengths of both the distributional and
 model-theoretic approaches
@@ -182,9 +180,9 @@ given text, whilst the meaning of words may vary between different
 interpretations, for any given interpretation the meanings are
 fixed. Clearly, this is unrealistic as it is easy to construct
 examples where the interpretation of a given word varies across the
-text, for example, we may try and compute entailment between two
-sentences both containing the word ``bank'', one in the context of
-finance and one in the context of rivers, in which case we would like
+text. For example, consider a text with two
+occurrence of  the word ``bank'', one in the sense of
+financial institution and one in the sense of the land adjoining a river.  In this  case we would clearly like
 the interpretation to vary. Our second approach, which we call
 \emph{stochastic semantics}, removes this restriction and allows for
 ambiguity. This is consistent with distributional accounts of lexical
@@ -192,8 +190,8 @@ semantics, where the meaning of a polysemous word is identified with
 the combination of all of its distributional contexts. Stochastic
 semantics assumes a random generative process for pairs of sentences
 and truth values, instead of models, which means that we have to
-sacrifice some nice theoretical properties satisified by the first
-approach. A nice consequence of this approach, however, is that
+sacrifice some nice theoretical properties satisfied by the first
+approach. A positive consequence of this approach however, is that
 inference becomes more tractable since we can benefit from dynamic
 programming.
 
@@ -260,7 +258,7 @@ F\rangle$ such that $E$ is a non-empty set and $F$ is a function with
 domain $B$ such that $F(b) \in D_{\tau_b}$ for all $b\in B$.
 
 A meaningful expression $\gamma$ has the value $\interp{\gamma}$ in the
-interpretation $\langle E, F\rangle$ defined recursively
+interpretation $\langle E, F\rangle$ defined recursively as follows:
 \begin{itemize}
 \item $\interp{b} = F(b)$ for $b\in B$
 \item $\interp{\gamma(\delta)} = \interp{\gamma}(\interp{\delta})$ for $\gamma
@@ -285,7 +283,7 @@ measures for first order calculus; the work of Sato \cite{Sato:95}
 concerns probability measures for logic programs. The idea that we adopt from these approaches is to associate
 probability measures with the space of models for the associated
 logic. Our approach is closely related in terms of motivation to recent work by Cooper et al \cite{Cooper:14}, 
-which proposes a probabilistic type theory. 
+which proposes a semantics based on a probabilistic type theory. 
 
 %To our knowledge, such measures have not been studied for
 % higher order logics, which is what we consider here.
@@ -484,10 +482,10 @@ examples are given in Table \ref{table:statements}.
 
 \section{A Probabilistic Montague Semantics}
 
-In this section we describe our first model of a probabilistic
+\hide{In this section we describe our first model of a probabilistic
 semantics for natural language. This approach  generalises Montague semantics to
 the probabilistic domain in a natural way. 
-
+}
 Let $\Omega$ be the set of all Montague-style interpretations. Let
 $M(T)$ denote the set of all models for the theory $T$ and let
 $\sigma_0$ be the set of all sets of models that satisfy some theory:
@@ -549,10 +547,8 @@ generalising lexical distributional semantics. In this section, we
 propose one way that this may be achieved within our framework. The
 central idea is to limit the number of denotations under
 consideration and define a probabilistic generative model for
-interpretations.
-
-Specifically we assume that $E$ is fixed. Let
-$$\phi_\tau = \{\interp{\lambda} : \lambda\in \Lambda_\tau\}$$
+interpretations. Specifically we assume that $E$ is fixed. Let
+$\phi_\tau = \{\interp{\lambda} : \lambda\in \Lambda_\tau\}$
 be the set of denotations that occur with type $\tau$. We assume that
 $F$ is constrained such that $|\phi_\tau| = n_\tau$ where $n_\tau$
 is a constant for each type satisfying $n_\tau \le |D_\tau|$. This
@@ -609,7 +605,6 @@ in SciPy \cite{Zhu:97}.
 
 \section{Stochastic Semantics}
 
-
 The formulation of probabilistic Montague semantics presented above does not
 adequately account for ambiguity in natural language. Although we have
 a probability distribution over interpretations, in any given
@@ -618,9 +613,8 @@ denotation. This is intuitively unsatisfactory, since we can easily
 conceive two sentences where the same word has different meanings. The
 standard model-theoretic approach to this problem would be to
 disambiguate words before performing inference. This approach is
-seemingly inconsistent with a theory that tries to combine
-distributional and model-theoretic semantics, since part of the
-attraction of distributional semantics is that \emph{degrees} of
+however inconsistent with
+distributional  semantics, in which \emph{degrees} of
 ambiguity are incorporated into the representation of a word's
 meaning.
 
@@ -628,9 +622,7 @@ Our solution is to drop the requirement that in any given interpretation, each o
 have the same denotation. If we generalise this idea to denotations
 for all types, then we end up with an entirely different semantic
 model. It turns our that this model can easily be formulated within the framework due to Sato
-\cite{Sato:97}.
-
-We call our new framework \emph{stochastic semantics}. We no longer
+\cite{Sato:97}. We call our new framework \emph{stochastic semantics}. We no longer
 associate a set of models with a sentence. Instead of having a
 generative model for models, we now assume that pairs of sentences and
 truth values are randomly generated in sequence. The probability of
@@ -699,10 +691,10 @@ theory(T) :-
 An implementation for our approach is shown in Figure 
 \ref{figure:program}. The code listed in the figure is written in PRISM \cite{Sato:97}, a probabilistic extension of the Prolog logic-progamming language. Note that to simplify the code, complex types of the underlying Montague grammar are referred to by their corresponding natural language
 categories. Thus, type $t$ is represented by \texttt{s} (a sentence), type $(e/t)$ by \texttt{vp} (a verb phrase) and type $(e/t)/t$ by \texttt{np} (a noun phrase). 
-
+\hide{
 The PRISM language augments Prolog with probabilistic predicates and declarations. In particular, it incorporates random switches. The predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes during execution. 
-
-The PRISM program shown in Figure \ref{figure:program} describes how sentences are randomly assigned truth values using random switches. For example, the declaration 
+}
+The PRISM program shown in Figure \ref{figure:program} describes how sentences are randomly assigned truth values using probabilistic switch statements. For example, the declaration 
 \begin{center}
 \texttt{values(word(noun,Word,Hidden),[n0,n1])} 
 \end{center}
@@ -710,11 +702,11 @@ introduces a switch for nouns having two possible outcomes, \texttt{n0} and \tex
 The outcomes are conditioned on the particular choice of noun (\texttt{Word}) and on the choice of hidden variable (\texttt{Hidden}). Similarly, the \texttt{values} predicate is used to declare switches associated with complex types. For example the values associated with a sentence (\texttt{s}) switch are conditioned on the choices of its component parts and a hidden variable.
 
 The probability of a theory is derived by evaluating the truth
-conditions of the sentences that make it up. Note that probability
+conditions of the sentences that make it up.\hide{Note that probability
 distributions are defined over models, not theories, so that to
 evaluate the probability of a theory it is necessary to sum over the
 probabilities of all of its satisfying models. To achieve this, the
-predicate \texttt{prob} is used. An example query returning the
+predicate \texttt{prob} is used.} An example query returning the
 probability of the sentence {\em the cat likes the dog\/} is shown in
 figure \ref{figure:query}. This is expressed as a theory
 $\{(\mathit{likes}(\mathit{the}(\mathit{dog}))(\mathit{the}(\mathit{cat})),\top)\}$,
@@ -799,10 +791,9 @@ sentence associated with the hypothesis. We then learn the optimal
 parameters $\theta$ given this data, and use these to compute the
 degree of entailment on unseen pairs of sentences.
 
-Our system correctly predicted the reversal of entailment: pairs which
-we expected to entail were given a degree of entailment of 1.0 by our
-system, and pairs we expect not to entail were given a degree of
-entailment of 0.5. We did not see any difference between the two
+Our system correctly predicted the reversal of entailment. Pairs where entailment
+holds were given a degree of entailment of 1.0 by our
+system. For other pairs, the degree of entailment assigned was  0.5. We did not see any difference between the two
 systems on these small examples.
 
 %\subsection{Examples}
@@ -865,7 +856,7 @@ systems on these small examples.
 \subsection{Recovering Lexical Semantics}
 \label{sec:recovering}
 
-As may be apparent, our formalism does not make use of any explicit
+Our formalism does not make use of any explicit
 representation of lexical semantics. However, distributional
 representations of word meanings can be recovered from the learnt
 models. The representation of a word in this case is a matrix, rather
@@ -887,38 +878,35 @@ cosine) to compare word representations.
 \section{Discussion}
 
 The two models of semantics we have discussed are closely
-related. Indeed, Sato semantics is also based around a probability
-distribution over models, however because of its foundation in logic
+related. It is notable that Sato's framework is also based around a probability
+distribution over models. However, because of its foundation in logic
 programming, only \emph{Herbrand} models are considered. The semantics
-of the switches used in the PRISM language are that they are assigned
-a random value on each evaluation when determining the truth of a
-statement. This is what allows a term to have different meanings
+of the switches in the PRISM language means that they are assigned
+a random value on each evaluation. This is why a term may have different meanings
 within a single interpretation. In contrast, the model based on
 Montague semantics would require switches to take the same value on
 each evaluation, which is not directly supported by PRISM.
 
-The extra flexibility granted by the stochastic semantics formalism results
-in the loss of certain nice properties. For example, in the
-probabilistic Montague semantics formalism, it is easy to see that the
-degree to which any sentence entails itself is necessarily 1. This is
-no longer guaranteed in our instantiation of Sato semantics. Indeed
-this seems to be a necessary consequence of incorporating statistical
+The flexibility granted by stochastic semantics results
+in the loss of certain nice properties. Thus, for
+probabilistic Montague semantics, it is easy to verify that any given sentence must entail itself to degree 1. This is
+no longer guaranteed in our model of stochastic semantics. Indeed
+the failure of logical entailment in this case is a necessary consequence of incorporating stochastic
 ambiguity into the formalism. In standard model-theoretic semantics,
-sentences are typically disambiguated before any reasoning is
-performed. However, if we do not perform disambiguation, one cannot
-say that a sentence entails itself, since it may be disambiguated
-differently in different contexts. Thus it seems that if we accept
-ambiguity as an inherent feature of language, it makes sense to
+it may be assumed that sentences are disambiguated before any reasoning is
+performed. If we do not disambiguate however, then a sentence may not entail itself to degree 1 since it may mean different things
+in different contexts. We argue that it makes sense to
 sacrifice some properties which are expected when handling logical
-expressions.
+expressions in order to account for ambiguity as
+as an inherent property of language.
 
-The two models also have different computational properties:
-stochastic semantics allows for efficient computation with dynamic
+We note too that the two models also have different computational properties.
+In particular, stochastic semantics allows for efficient computation with dynamic
 programming. This is possible because of the re-evaluation of switch
 values: each evaluation is independent of previous ones. In contrast,
 in probabilistic Montague semantics, we need to remember choices made
 previously, which means we lose the independence property in general,
-making dynamic programming much less useful.
+making dynamic programming much less useful. 
 
 
 
@@ -964,30 +952,12 @@ making dynamic programming much less useful.
 
 %\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-In recent work, Cooper et al.~\cite{Cooper:14}, in a development on
-earlier work \cite{Eijck:12} have described a probabilistic semantics for natural language in which probability is distributed over situation types~\cite{Barwise:83}. They propose a rich type system in which the judgment about whether a given situation is of a given type is probabilistic and present a compositional interpretation function that assigns probability-conditions rather than truth-conditions to sentences. The work of Cooper et al shares similar motivations to ours. In particular, it aims to account for the gradience of semantic judgements (for example, gradations of entailment) and stresses the importance of providing an account of semantic learning within language acquisition.
+In recent work, Cooper et al.~\cite{Cooper:14} (see also
+\cite{Eijck:12}) have described a probabilistic semantics for natural language in which probability is distributed over situation types~\cite{Barwise:83}. They propose a rich type system in which the judgment about whether a given situation is of a given type is probabilistic. Rather than assigning truth-conditions to sentences, they present a compositional interpretation function that assigns probability-conditions. The work of Cooper et al shares similar motivations to ours. In particular, it aims to account for the gradience of semantic judgements (for example, gradations of entailment) and stresses the importance of providing an account of semantic learning within language acquisition.
 
-Their approach differs from ours in a number of key respects. 
-\begin{enumerate}
-\item they model probabilistic semantics not over worlds but over situations - claim to be more tractable?
-\item they define a probabilistic interpretation function - we don't - we define a generative process over models so that probabilities of meaning are defined in terms of probability distribution over worlds
-\item Defining probability over situation types rather than possible worlds (models) 
-\item They describe an approach to semantic learning which makes use
-  of observations of situations. Our approach is to learn from pairs
-  of sentences and truth values directly.
-\item The result of their learning is an assignment of probabilities
-  to situations; the result of our learning is the ability to
-  determine degrees of entailment between pairs of sentences.
-\item Our approach can be related back to distributional semantics: as
-  output of our learning procedure we can extract lexical
-  representations as matrices.
-\end{enumerate}
+Their approach differs from ours in a number of key respects. First, they define probability over situation types and provide a probabilistic interpretation function. In contrast, we define a generative process over interpreting structures so that probabilities of meaning are defined in terms of probability distribution over models. Second, they describe an approach to semantic learning that makes use of observations of situations. Our approach is to learn from pairs of sentences and truth values directly. The result of their learning is an assignment of probabilities to situations; the result of our learning is the ability to determine degrees of entailment between pairs of sentences. Third, our approach can be related to distributional semantics: as output of our learning procedure we can extract lexical representations as matrices.
 
-
-
-
-
-Coecke et al.~\cite{Coecke:10} proposed a framework based on category-theoretic
+In other related work, Coecke et al.~\cite{Coecke:10} have proposed a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
 approach is closely related to ours since it is also
 founded in Montague semantics: words are treated as linear functions
@@ -1047,7 +1017,7 @@ demonstrated that this formalism can learn the monotonicity of
 determiners from examples. We plan to apply this to practical tasks
 such as recognising textual entailment in future work.
 
-We also plan to investigate the relationship between our model and
+We plan to further investigate the relationship between our model and
 standard distributional semantic representations of meaning. This,
 together with a development of the theory, may lead to interesting
 new ways to describe probabilistic semantics that combines logical
