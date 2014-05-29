@@ -878,9 +878,11 @@ cosine) to compare word representations.
 \section{Discussion}
 
 The two models of semantics we have discussed are closely
-related. It is notable that Sato's framework is also based around a probability
-distribution over models. However, because of its foundation in logic
-programming, only \emph{Herbrand} models are considered. The semantics
+related.
+% It is notable that Sato's framework is also based around a probability
+% distribution over models. However, because of its foundation in logic
+% programming, only \emph{Herbrand} models are considered.
+The semantics
 of the switches in the PRISM language means that they are assigned
 a random value on each evaluation. This is why a term may have different meanings
 within a single interpretation. In contrast, the model based on
@@ -1002,22 +1004,35 @@ sentence.
 
 \section{Conclusion}
 
-We have introduced probabilistic semantics for natural language, a
-framework for representing natural language meaning which extends
-Montague semantics by assuming a probability distribution over
-models. We have explored some properties of the framework, showing
-that it can represent fine-grained aspects of meaning, and that nice
-features of standard model-theoretic semantics, such as the simple
-representation of conjunction and disjunction are retained in our
-formalism.
+We have presented two models for probabilistic semantics for natural
+language. The first of these is a generalisation of Montague semantics
+which assumes a distribution over models. We showed how restricting
+the space of models makes it feasible to learn semantic
+representations directly from data.
 
-We also presented a restricted version of the semantics which makes it
-possible to learn meaning representations directly from data, and
-demonstrated that this formalism can learn the monotonicity of
-determiners from examples. We plan to apply this to practical tasks
-such as recognising textual entailment in future work.
+The second model, stochastic semantics, allows for the ambiguity of
+natural language expressions to be handled naturally, whilst
+sacrificing some properties of logical semantics.
 
-We plan to further investigate the relationship between our model and
+
+% We have introduced probabilistic semantics for natural language, a
+% framework for representing natural language meaning which extends
+% Montague semantics by assuming a probability distribution over
+% models. We have explored some properties of the framework, showing
+% that it can represent fine-grained aspects of meaning, and that nice
+% features of standard model-theoretic semantics, such as the simple
+% representation of conjunction and disjunction are retained in our
+% formalism.
+
+% We also presented a restricted version of the semantics which makes it
+% possible to learn meaning representations directly from data, and
+% demonstrated that this formalism can learn the monotonicity of
+% determiners from examples. We plan to apply this to practical tasks
+% such as recognising textual entailment in future work.
+
+In future work, we plan to apply our ideas to practical tasks such as
+recognising textual entailment.
+We also plan to further investigate the relationship between our models and
 standard distributional semantic representations of meaning. This,
 together with a development of the theory, may lead to interesting
 new ways to describe probabilistic semantics that combines logical
