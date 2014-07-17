@@ -880,7 +880,34 @@ representations of meaning, we can consider the matrix entries as a
 flat vector. In this case we can use any of the standard similarity measures (e.g. 
 cosine) to compare word representations.
 
+\section{Relation to Probabilistic Lexical Semantics}
 
+% Bismillahi-r-Rahmani-r-Rahim
+
+Our model can be related to probabilistic models of lexical semantics
+such as latent Dirichlet allocation (LDA) \cite{Blei:03} and
+probabilistic latent semantic analysis \cite{Hofmann:99}. These are
+generative models that describe the probability of a document as the
+product of the probability of the terms making up the document, where
+the probability of the terms is conditioned on one or more hidden
+variables. These models do not take account of the order of the words
+in the document.
+
+\begin{figure}
+\includegraphics[width=\linewidth]{LDA.pdf}
+\caption{Latent Dirichlet allocation adapted to generate truth values.}
+\label{figure:lda}
+\end{figure}
+
+Figure \ref{figure:lda} shows how LDA can be adapted to generate truth
+values and words simultaneously. The probability of a word, truth
+value pair $(w,t)$ being generated is conditioned on the topic $z$
+generated for that word; in standard LDA only a word is generated. The
+rest of the model remains the same.
+
+If we consider words as sentences and documents as theories, then,
+this ``truth value LDA'' can be viewed as an instance of our
+stochastic semantics.
 
 \section{Discussion}
 
