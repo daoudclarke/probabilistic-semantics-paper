@@ -1,13 +1,23 @@
-\documentclass{svmult}
+\documentclass[11pt]{article}
+\usepackage{acl2012}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{url}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\setlength\titlebox{6.5cm}    % Expanding the titlebox
 
-% SVMult required packages
-\usepackage{mathptmx}
-\usepackage{helvet}
-\usepackage{courier}
-\usepackage{graphicx}
-\usepackage{makeidx}
-\usepackage{multicol}
-\usepackage{footmisc}
+%\documentclass{svmult}
+
+% % SVMult required packages
+% \usepackage{mathptmx}
+% \usepackage{helvet}
+% \usepackage{courier}
+% \usepackage{graphicx}
+% \usepackage{makeidx}
+% \usepackage{multicol}
+% \usepackage{footmisc}
 
 
 %\usepackage{url}
@@ -30,7 +40,8 @@
 
 
 \lstset{
-         basicstyle=\footnotesize\ttfamily, % Standardschrift
+  %basicstyle=\footnotesize\ttfamily, % Standardschrift
+         basicstyle=\scriptsize\ttfamily, % Standardschrift
          %numbers=left,               % Ort der Zeilennummern
          numberstyle=\tiny,          % Stil der Zeilennummern
          %stepnumber=2,               % Abstand zwischen den
@@ -60,36 +71,36 @@
 \newcommand{\interp}[1]{[\![ #1 ]\!]}
 \newcommand{\hide}[1]{}
 
+\title{Two Models of Probabilistic Semantics for Natural Language}
+\author{}
+\date{}
+
  \begin{document}
- \title*{Two Models of Probabilistic Semantics for Natural Language}
- \author{Daoud Clarke and Bill Keller}
- \institute{Daoud Clarke and Bill Keller \at Department of
-   Informatics, University of Sussex, Falmer, Brighton,
-   UK.\\ \email{\{d.clarke,~billk\}@sussex.ac.uk} }
+ % \author{Daoud Clarke and Bill Keller}
+ % \institute{Daoud Clarke and Bill Keller \at Department of
+ %   Informatics, University of Sussex, Falmer, Brighton,
+ %   UK.\\ \email{\{d.clarke,~billk\}@sussex.ac.uk} }
 \maketitle
-%\begin{abstract}
-% \begin{quote}
-\abstract{ Distributional accounts of meaning represent words as
-  vectors or probability distributions over contexts and differ
-  markedly from compositional, model-theoretic treatments of meaning
-  such as Montague semantics. Recently, researchers have begun to
-  address the problem of developing a unified account of natural
-  language semantics that combines the strengths of both the
-  distributional and compositional approaches. This paper argues for
-  the adoption of probabilistic semantics as a basis for such a
-  unifying account. We consider two different approaches. The first is
-  a probabilistic generalisation of Montague semantics in which we
-  assume a probability distribution over models. This approach has
-  nice theoretical properties but does not account for the ubiquitous nature of 
-  ambiguity in natural language. This leads
-  us to our second approach, which we call \emph{stochastic
-    semantics}, in which we assume that a sequence of pairs of
-  sentences and truth values are generated randomly. We demonstrate
-  that learning and inference are feasible in both approaches, and
-  that it is possible to learn that certain quantifiers reverse the
-  direction of entailment.}
-% \end{quote}
-%\end{abstract}
+\begin{abstract}
+  Distributional accounts of meaning represent words as vectors or
+  probability distributions over contexts and differ markedly from
+  compositional, model-theoretic treatments of meaning such as
+  Montague semantics. Recently, researchers have begun to address the
+  problem of developing a unified account of natural language
+  semantics that combines the strengths of both the distributional and
+  compositional approaches. This paper argues for the adoption of
+  probabilistic semantics as a basis for such a unifying account. We
+  consider two different approaches. The first is a probabilistic
+  generalisation of Montague semantics in which we assume a
+  probability distribution over models. This approach has nice
+  theoretical properties but does not account for the ubiquitous
+  nature of ambiguity in natural language. This leads us to our second
+  approach, which we call \emph{stochastic semantics}, in which we
+  assume that a sequence of pairs of sentences and truth values are
+  generated randomly. We demonstrate that learning and inference are
+  feasible in both approaches, and that it is possible to learn that
+  certain quantifiers reverse the direction of entailment.
+\end{abstract}
 
 
 \section{Introduction}
@@ -322,7 +333,7 @@ $\sigma$.
 % verbs are functions from pairs of sets of sets of entities to truth
 % values.
 
-\begin{table}
+\begin{table*}
   \parbox{.45\linewidth}{
     \centering
     \begin{tabular}{|l|l|l||c|c|c|c|}
@@ -371,7 +382,7 @@ $\sigma$.
     Table \ref{table:models}.}
   \label{table:statements}
 }
-\end{table}
+\end{table*}
 
 % \begin{table}
 %   \begin{minipage}[b]{.5\linewidth}
@@ -679,6 +690,22 @@ theory(T) :-
 \label{figure:program}
 \end{figure}
 
+\begin{figure}
+\begin{lstlisting}
+:- prob(theory([
+  truth(f(s, f(np, w(the, det),
+                   w(cat, noun)),
+             f(vp, w(likes, verb),
+                   f(np, w(the, det),
+                         w(dog, noun)))),
+        t1)]), X).
+\end{lstlisting}
+\caption{PRISM query to evaluate the probability that the sentence
+  \emph{the cat likes the dog} is true.}
+\label{figure:query}
+\end{figure}
+
+
 
 \subsection{Implementation}
 
@@ -711,21 +738,6 @@ manner.
 
 
 
-\begin{figure}
-\begin{lstlisting}
-:- prob(theory([
-  truth(f(s, f(np, w(the, det),
-                   w(cat, noun)),
-             f(vp, w(likes, verb),
-                   f(np, w(the, det),
-                         w(dog, noun)))),
-        t1)]), X).
-\end{lstlisting}
-\caption{PRISM query to evaluate the probability that the sentence
-  \emph{the cat likes the dog} is true.}
-\label{figure:query}
-\end{figure}
-
 \section{Learning Reversal of Entailment}
 
 We verified that our two systems were able to learn some simple
@@ -740,7 +752,7 @@ entails ``no cats'' (Table \ref{table:mono}).
 % \emph{no people} entails \emph{no men}, having seen other example
 % entailments.
 
-\begin{table}
+\begin{table*}
   \parbox{.62\linewidth}{
     \begin{center}
       \begin{tabular}{|l|l|l|}
@@ -772,7 +784,7 @@ entails ``no cats'' (Table \ref{table:mono}).
       stochastic semantics implementation.}
     \label{table:lexical-sato}
   }
-\end{table}
+\end{table*}
 
 
 For each example entailment pair for which entailment holds (the
@@ -1045,6 +1057,6 @@ and indexicals, amongst others.
 % There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. 
 
 
-\bibliographystyle{spmpsci}
+\bibliographystyle{acl}
 \bibliography{JW2012}
 \end{document}
