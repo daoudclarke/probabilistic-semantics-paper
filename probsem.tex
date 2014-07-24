@@ -24,7 +24,7 @@
 %\usepackage{latexsym}
 
 \usepackage{amssymb}
-\usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{color}
 \usepackage{listings}
 \usepackage{csvsimple}
@@ -38,6 +38,9 @@
 %\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
 %\newcommand{\citet}[1]{\cite{#1}}
 
+\newtheorem*{theorem}{Theorem}
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
 
 \lstset{
   %basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -908,6 +911,47 @@ rest of the model remains the same.
 If we consider words as sentences and documents as theories, then,
 this ``truth value LDA'' can be viewed as an instance of our
 stochastic semantics.
+
+\section{Complexity}
+
+\begin{definition}[PM-SAT]
+  We define the problem of probabilistic Montague semantics
+  satisfiability (PM-SAT) as follows: given a restricted probabilistic
+  Montague semantics for a language, that is, a restricted set of
+  denotations $\phi_\tau$ for each type $\tau$ and probability
+  distributions defined by $\theta$, determine whether the probability
+  of a given sentence taking the value $\top$ is nonzero.
+\end{definition}
+
+\begin{theorem}
+  \emph{PM-SAT} is NP-complete with respect to the length of the input
+  sentence.
+\end{theorem}
+
+\begin{proof}
+We can show NP-hardness by reduction from SAT. We construct a special
+language for propositional logic with symbols $x_i$ of type $t$,
+symbols $\land$ and $\lor$ of type $(t/t)/t$ and $\lnot$ of type
+$t/t$. We do not need the hidden values, so we can assume $H$ has only
+one element. We allow the variables $x_i$ to take values in $\{\top, \bot\}$
+with equal probability. We allow two denotations $d_{(t/t)/t, \land}$
+and $d_{(t/t)/t, \lor}$ for type $(t/t)/t$, and $\land$ and $\lor$
+take these denotations respectively with probability 1. We allow five
+denotations for type $t/t$, one for $\lnot$, and two each for the
+intermediate values taken by $\land$ and $\lor$ after operating on
+either $\top$ or $\bot$. It is then straightforward to define
+probabilities to match the rules of propositional logic: probability
+values are just 0 or 1 depending on the appropriate truth table for
+the operator under question. Then a sentence has truth value $\top$
+with nonzero probability if and only if it is satisfiable.
+
+PM-SAT can be solved in linear time by a non-deterministic machine by
+choosing a value from $H$, assigning every possible value to all basic
+expressions and then recursively to complex expressions. Any
+assignment that gives a non-zero probability for the sentence for the
+sentence taking the value $\top$ will return true. This implies that
+PM-SAT is in NP, and is thus NP-complete.
+\end{proof}
 
 \section{Discussion}
 
