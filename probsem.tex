@@ -74,7 +74,7 @@
 \newcommand{\interp}[1]{[\![ #1 ]\!]}
 \newcommand{\hide}[1]{}
 
-\title{Two Models of Probabilistic Semantics for Natural Language}
+\title{Efficiency in Ambiguity:\\ Two Models of Probabilistic Semantics for Natural Language}
 \author{}
 \date{}
 
@@ -955,6 +955,11 @@ sentence taking the value $\top$ will return true. This implies that
 PM-SAT is in NP, and is thus NP-complete.
 \end{proof}
 
+Let us call the problem of computing the probability of a sentence in
+probabilistic Montague semantics PM-PROB. Clearly PM-PROB is at least
+as hard as PM-SAT, since if we knew the probability of a sentence we
+would know whether it was nonzero; thus PM-PROB is NP-hard.
+
 \subsection{Complexity of Stochastic Semantics}
 
 Because there is no dependency between different parts of the sentence
@@ -979,7 +984,10 @@ probability of a sentence is as follows:
   expression and the type it acts on.
 \end{itemize}
 \end{itemize}
-Thus the total worst-case time complexity is $O(|H|Ln^2)$.
+Computing the probability of the sentence thus requires $L$
+computations each of complexity at most $n^2$; this must repeated
+$|H|$ times for each hidden value in $H$. Thus the total worst-case
+time complexity is $O(|H|Ln^2)$.
 
 \section{Discussion}
 
