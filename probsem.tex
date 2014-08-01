@@ -85,59 +85,65 @@
  %   UK.\\ \email{\{d.clarke,~billk\}@sussex.ac.uk} }
 \maketitle
 \begin{abstract}
-  Distributional accounts of meaning represent words as vectors or
-  probability distributions over contexts and differ markedly from
-  compositional, model-theoretic treatments of meaning such as
-  Montague semantics. Recently, researchers have begun to address the
-  problem of developing a unified account of natural language
-  semantics that combines the strengths of both the distributional and
-  compositional approaches. This paper argues for the adoption of
-  probabilistic semantics as a basis for such a unifying account. We
-  consider two different approaches. The first is a probabilistic
-  generalisation of Montague semantics in which we assume a
-  probability distribution over models. This approach has nice
-  theoretical properties but does not account for the ubiquitous
-  nature of ambiguity in natural language. This leads us to our second
-  approach, which we call \emph{stochastic semantics}, in which we
-  assume that a sequence of pairs of sentences and truth values are
-  generated randomly. We demonstrate that learning and inference are
-  feasible in both approaches, and that it is possible to learn that
-  certain quantifiers reverse the direction of entailment.
+  This paper examines two approaches to combining distributional and
+  model-theoretic semantics. The first approach augments Montague
+  semantics with a probability distribution over a restricted set of
+  models. Whilst this approach has nice theoretical properties it does
+  not account for the ubiquitous nature of ambiguity in natural
+  language; moreover we show that inference in the framework is
+  NP-hard. This leads us to our second approach, in which we assume
+  that a sequence of pairs of sentences and truth values are generated
+  randomly. By sacrificing some of the nice theoretical properties of
+  the first approach, we are able to model ambiguity naturally;
+  moreover inference in this approach has polynomial time
+  complexity. We also relate this approach to Latent Dirichlet
+  Allocation.
+
+  Both approaches are capable of modelling important features of
+  natural language semantics such as the reversal of entailment that
+  occurs with determiners such as ``all'' and ``no''.
 \end{abstract}
+
+
+% \begin{abstract}
+%   Distributional accounts of meaning represent words as vectors or
+%   probability distributions over contexts and differ markedly from
+%   compositional, model-theoretic treatments of meaning such as
+%   Montague semantics. Recently, researchers have begun to address the
+%   problem of developing a unified account of natural language
+%   semantics that combines the strengths of both the distributional and
+%   compositional approaches. This paper proposes probabilistic
+%   semantics as a basis of such a unifying account. 
+
+%  % This paper argues for the adoption of
+%  %  probabilistic semantics as a basis for such a unifying account. We
+%  %  consider two different approaches. The first is a probabilistic
+%  %  generalisation of Montague semantics in which we assume a
+%  %  probability distribution over models. This approach has nice
+%  %  theoretical properties but does not account for the ubiquitous
+%  %  nature of ambiguity in natural language. This leads us to our second
+%  %  approach, which we call \emph{stochastic semantics}, in which we
+%  %  assume that a sequence of pairs of sentences and truth values are
+%  %  generated randomly. We demonstrate that learning and inference are
+%  %  feasible in both approaches, and that it is possible to learn that
+%  %  certain quantifiers reverse the direction of entailment.
+% \end{abstract}
 
 
 \section{Introduction}
 
-This paper argues for the adoption of probabilistic semantics as a
-framework for combining distributional and logical semantics. The
-success of lexical distributional representations of meaning has
-recently lead to a concerted effort to describe compositionality
-within distributional semantics
+Distributional accounts of meaning represent words as vectors or
+probability distributions over contexts and differ markedly from
+compositional, model-theoretic treatments of meaning such as Montague
+semantics. The success of lexical distributional representations of
+meaning has recently lead to a concerted effort to describe
+compositionality within distributional semantics
 \cite{Widdows:08,Mitchell:08,Baroni2010,Garrette:11,Grefenstette:11,Socher:12,Lewis:13},
 and efforts have been made to find a theoretical foundation for such
 work \cite{Clarke:12,Kartsaklis:14}. In this paper, we argue that
 existing work in probabilistic semantics
 \cite{Gaifman:64,Nilsson:86,Sato:95} provides a rich seam of ideas
 that can be applied to this problem.
-
-The contributions of this paper are as follows:
-\begin{enumerate}
-\item We propose a framework for natural language semantics which
-  combines Montague semantics with probabilistic semantics by
-  specifying a probability distribution over Montague-style models.
-\item We describe ongoing work to construct a probabilistic Montague
-  semantics in which meanings are learnt from data, and demonstrate
-  some desirable properties of this formalism. 
-\item We show that restricting the space of models makes learning
-  feasible, whilst retaining many of the desirable properties of full
-  Montague semantics.
-\item We show that taking account of lexical ambiguity leads to a new
-  model in which pairs of sentences and truth values are generated
-  randomly. This new approach gives a computationally more tractable
-  formulation of the learning problem.
-\item We show that both models are able to learn from a few examples
-  that quantifiers such as ``no'' reverse the direction of entailment.
-\end{enumerate}
 
 Techniques which represent the meanings of words in terms of the contexts in
 which they occur have become an indispensable tool in natural language
@@ -159,23 +165,65 @@ that combines the strengths of both the distributional and
 model-theoretic approaches
 \cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-In the following we consider two different ways of constructing a
-probabilistic semantics. Both approaches have the following desirable
-properties:
+\subsection{Contributions}
+
+This paper explores theoretical properties of models of meaning. The
+reader may rightly question the value of a paper whose contributions
+are mainly theoretical in nature. Whilst we fully intend to explore
+our ideas in an experimental setting, we believe that readers who are
+interested in probabilistic approaches to natural language semantics
+will benefit from the theoretical ideas presented here. The reasons
+are as follows:
 \begin{itemize}
-\item They are strongly grounded in probability theory: no ad-hoc methods
-  or heuristics are used to combine distributional semantics with
-  logical semantics.
-\item They admit an implementation in which probability distributions
-  can be learnt from data: the account is holistic, in that the
-  learning of word meaning and composition are not separated, with the
-  potential benefit of more flexible and accurate models of
-  compositional distributional semantics.
-\item Because both approaches describe a generative process,
-  composition does not necessarily lead to a loss of meaning (for
-  example by reducing the meaning of a sentence to a single truth
-  value).
+\item We take a standard approach to natural language semantics
+  (Montague semantics) and augment it using a standard approach
+  (probabilistic semantics). We are thus in an area that seems natural
+  to explore.
+\item We are able to demonstrate deficiencies of this approach, both
+  in expressiveness and computational complexity, that may provide
+  useful guidance for others considering venturing into this
+  landscape.
+\item We identify an alternative area for exploration that alleviates
+  the difficulties associated with the first approach.
 \end{itemize}
+It is our hope that the ideas presented here can thus potentially save
+many wasted hours for those experimenting in this area. The specific
+contributions of this paper are as follows:
+\begin{enumerate}
+\item We show that Montague semantics can be combined with
+  probabilistic semantics by specifying a probability distribution
+  over Montague-style models.
+\item We show that it is possible to learn these probability
+  distributions directly from data by restricting the set of models,
+  whilst retaining many of the desirable properties of full Montague
+  semantics.
+\item We show that the problem of computing the probability that a
+  sentence is true is NP-hard.
+\item We show that taking account of lexical ambiguity leads to a new
+  model in which pairs of sentences and truth values are generated
+  randomly. The probability that a sentence is true can then be
+  computed in polynomial time.
+\item We show that both models are able to learn from a few examples
+  that quantifiers such as ``no'' reverse the direction of entailment.
+\end{enumerate}
+
+% In the following we consider two different ways of constructing a
+% probabilistic semantics. Both approaches have the following desirable
+% properties:
+% \begin{itemize}
+% \item They are strongly grounded in probability theory: no ad-hoc methods
+%   or heuristics are used to combine distributional semantics with
+%   logical semantics.
+% \item They admit an implementation in which probability distributions
+%   can be learnt from data: the account is holistic, in that the
+%   learning of word meaning and composition are not separated, with the
+%   potential benefit of more flexible and accurate models of
+%   compositional distributional semantics.
+% \item Because both approaches describe a generative process,
+%   composition does not necessarily lead to a loss of meaning (for
+%   example by reducing the meaning of a sentence to a single truth
+%   value).
+% \end{itemize}
 
 In the first approach we define a probability distribution over
 Montague-style models in terms of a random generation process over
@@ -204,7 +252,7 @@ approach. A positive consequence of this approach however, is that
 inference becomes more tractable since we can benefit from dynamic
 programming.
 
-We describe implementations of both approaches, and show that both are
+We show how to compute with both approaches, and show that both are
 able to perform learning and inference on small examples. For example,
 they can learn that while ``some cats $X$'' entails ``some animals
 $X$'', entailment is reversed with other quantifiers: ``no animals
@@ -741,6 +789,9 @@ manner.
 
 \section{Complexity}
 
+We focus on the task of determining the probability of a sentence,
+since this required for both learning and inference.
+
 \subsection{Complexity of Probabilistic Montague Semantics}
 
 \begin{definition}[PM-SAT]
@@ -1016,13 +1067,20 @@ sacrifice some properties which are expected when handling logical
 expressions in order to account for ambiguity as
 as an inherent property of language.
 
-We note too that the two models also have different computational properties.
-In particular, stochastic semantics allows for efficient computation with dynamic
-programming. This is possible because of the re-evaluation of switch
-values: each evaluation is independent of previous ones. In contrast,
-in probabilistic Montague semantics, we need to remember choices made
-previously, which means we lose the independence property in general,
-making dynamic programming much less useful. 
+It is interesting that the approach that accounts for ambiguity has
+lower complexity: the time to compute the probability of a sentence is
+linear in the length of the sentence. Intuitively, this is because we
+do not have to ``remember'' the interpretation previously assigned to
+an expression as we read the sentence; we are free to assign it a new
+interpretation.
+
+% We note too that the two models also have different computational properties.
+% In particular, stochastic semantics allows for efficient computation with dynamic
+% programming. This is possible because of the re-evaluation of switch
+% values: each evaluation is independent of previous ones. In contrast,
+% in probabilistic Montague semantics, we need to remember choices made
+% previously, which means we lose the independence property in general,
+% making dynamic programming much less useful. 
 
 
 
@@ -1128,6 +1186,10 @@ The second model, stochastic semantics, allows for the ambiguity of
 natural language expressions to be handled naturally, whilst
 sacrificing some properties of logical semantics.
 
+In the first model, the problem of computing the probability of a
+sentence is NP-hard with respect to the length of a sentence, whilst
+in the second model the computation time is linear in the sentence
+length.
 
 % We have introduced probabilistic semantics for natural language, a
 % framework for representing natural language meaning which extends
