@@ -914,6 +914,8 @@ stochastic semantics.
 
 \section{Complexity}
 
+\subsection{Complexity of Probabilistic Montague Semantics}
+
 \begin{definition}[PM-SAT]
   We define the problem of probabilistic Montague semantics
   satisfiability (PM-SAT) as follows: given a restricted probabilistic
@@ -952,6 +954,32 @@ assignment that gives a non-zero probability for the sentence for the
 sentence taking the value $\top$ will return true. This implies that
 PM-SAT is in NP, and is thus NP-complete.
 \end{proof}
+
+\subsection{Complexity of Stochastic Semantics}
+
+Because there is no dependency between different parts of the sentence
+in stochastic semantics, given a fixed hidden value, the probability
+of a sentence can be computed much more efficiently than in
+Probabilisticy Montague Semantics. To do this, we use dynamic
+programming, storing the probability distribution over the possible
+denotations of each expression so that they are only computed once for
+each hidden value. Let $L$ be the number of expressions in a sentence,
+$n$ the maximum number of denotations for all types, i.e.~the greatest
+value of $n_\tau$ for all types $\tau$. The algorithm to compute the
+probability of a sentence is as follows:
+\begin{itemize}
+\item For each $h\in H$:
+\begin{itemize}
+\item For each basic expression of type $\tau$, compute the
+  probability distribution over $\phi_\tau$; this can be computed in
+  maximum $O(n)$ time.
+\item Recursively for each complex expression of type $\tau$, compute
+  the probability distribution over $\phi_\tau$, this requires maximum
+  $O(n^2)$ time since we need to iterate over possible values of the
+  expression and the type it acts on.
+\end{itemize}
+\end{itemize}
+Thus the total worst-case time complexity is $O(|H|Ln^2)$.
 
 \section{Discussion}
 
