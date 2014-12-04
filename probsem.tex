@@ -602,18 +602,18 @@ probability $P(T|\theta)$ using the following algorithm:
 We can use Maximum Likelihood to estimate these parameters given a set
 of observed theories $\mathcal{D} = \{T_1, T_2, \ldots T_N\}$. We look
 for the parameters $\theta$ that maximize the likelihood
-$$P(\mathcal{D}|\theta) = \prod_{n=1}^N P(T_i|\theta)$$
-This can be maximised using gradient ascent or expectation
-maximisation. Our current implementation uses the L-BFGS-B algorithm
-in SciPy \cite{Zhu:97}.
+$$P(\mathcal{D}|\theta) = \prod_{n=1}^N P(T_i|\theta)$$ This can be
+maximised using gradient ascent or expectation maximisation. We have
+verified that this can be done for small examples using the L-BFGS-B
+algorithm in SciPy \cite{Zhu:97}.
 
 \section{Stochastic Semantics}
 
 The formulation of Probabilistic Montague Semantics presented above does not adequately account for ambiguity in natural language. Although we have a probability distribution over interpretations, in any given interpretation, each occurrence of a word must have the same denotation. This is unsatisfactory, since a particular word may exhibit different senses across a given text.  A  possible solution is to assume that word occurrences are sense-disambiguated.  However, this approach assumes the existence of some additional learning mechanism for acquiring word senses, quite separate from that employed to learn model parameters. 
 
-What is required is some way of allowing the interpretation of a word to vary across a text. This could be achieved within the framework of Probabilistic Montague Semantics presented above by assuming that each occurrence of a word is represented as a distinct predicate. So, for e.g. the first occurrence of {\em bank} would be represented by the predicate {\em bank}$_1$, the second by {\em bank}$_2$, and so on.  We consider here an alternative and more general approach in which \emph{degrees} of ambiguity are incorporated into the representation of a word's meaning. This approach is consistent with distributional  frameworks in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
+What is required is some way of allowing the interpretation of a word to vary across a text. This could be achieved within the framework of Probabilistic Montague Semantics presented above by assuming that each occurrence of a word is represented as a distinct predicate. So, for example the first occurrence of {\em bank} would be represented by the predicate {\em bank}$_1$, the second by {\em bank}$_2$, and so on.  We consider here an alternative and more general approach in which \emph{degrees} of ambiguity are incorporated into the representation of a word's meaning. This approach is consistent with distributional  frameworks in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
 
-Our solution is to drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. If we generalise this idea to denotations for all types, then we end up with an entirely different semantic model. It turns our that this model can easily be formulated within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
+Our solution is to drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. If we generalise this idea to denotations for all types, then we end up with an entirely different semantic model. It turns out that this model can easily be formulated within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
 associate a set of models with a sentence. Instead of having a
 generative model for models, we now assume that pairs of sentences and
 truth values are randomly generated in sequence. The probability of
@@ -723,7 +723,7 @@ manner.
 \section{Complexity}
 
 We focus on the task of determining the probability of a sentence,
-since this required for both learning and inference.
+since this is required for both learning and inference.
 
 \subsection{Complexity of Probabilistic Montague Semantics}
 
@@ -801,70 +801,37 @@ time complexity is thus $O(|H|Ln^2)$, which is linear in the length of the input
 
 
 
-\section{Learning Reversal of Entailment}
+%% \section{Toy Examples}
 
-We verified that our two systems were able to learn some simple
-logical features of natural language semantics, in particular that
-determiners such as ``no'' reverse the direction of entailment, so
-that while ``some cats'' entails ``some animals'', ``no animals''
-entails ``no cats'' (Table \ref{table:mono}).
+%% We verified that our two systems were able to learn some simple
+%% logical features of natural language semantics, in particular that
+%% determiners such as ``no'' reverse the direction of entailment, so
+%% that while ``some cats'' entails ``some animals'', ``no animals''
+%% entails ``no cats'' (Table \ref{table:mono}).
 
-% We have demonstrated the feasibility of our approach by showing that
-% it can learn the monotonicity of determiners on small examples (Table
-% \ref{table:mono}). Our system is able to correctly predict that
-% \emph{no people} entails \emph{no men}, having seen other example
-% entailments.
-
-\begin{table*}
-  \parbox{.62\linewidth}{
-    \begin{center}
-      \begin{tabular}{|l|l|l|}
-        \hline
-        Text & Hypothesis & Ent.\\
-        \hline
-        some cats like all dogs & some animals like all dogs & Yes\\
-        no animals like all dogs & no cats like all dogs & Yes\\
-        some dogs like all dogs & some animals like all dogs & Yes\\
-        no animals like all dogs & no dogs like all dogs & Yes\\
-        some men like all dogs & some people like all dogs & Yes\\
-        \hline
-        no people like all dogs & no men like all dogs & Yes\\
-        no men like all dogs & no people like all dogs & No\\
-        \hline
-      \end{tabular}
-      \caption{Text and Hypothesis sentences, and whether entailment
-        holds. We expect that a system should be able to learn from
-        the data above the line that the determiner ``no'' reverses the
-        direction of entailment.}
-      \label{table:mono}
-    \end{center}
-  }
-  \hfill
-  \parbox{.32\linewidth}{
-    \centering
-    \csvautotabular{lexical.csv}
-    \caption{Learnt probabilities obtained using the
-      Stochastic Semantics implementation.}
-    \label{table:lexical-sato}
-  }
-\end{table*}
+%% % We have demonstrated the feasibility of our approach by showing that
+%% % it can learn the monotonicity of determiners on small examples (Table
+%% % \ref{table:mono}). Our system is able to correctly predict that
+%% % \emph{no people} entails \emph{no men}, having seen other example
+%% % entailments.
 
 
-For each example entailment pair for which entailment holds (the
-``text'' entails the ``hypothesis''), we add
-the following theories to $\mathcal{D}$:
-\[
-\{(s_T,\top),(s_H,\top)\},  \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
-\]
-Where $s_T$ is the sentence associated with the text and $s_H$ the
-sentence associated with the hypothesis. We then learn the optimal
-parameters $\theta$ given this data, and use these to compute the
-degree of entailment on unseen pairs of sentences.
 
-Our system correctly predicted the reversal of entailment. Pairs where entailment
-holds were given a degree of entailment of 1.0 by our
-system. For other pairs, the degree of entailment assigned was  0.5. We did not see any difference between the two
-systems on these small examples.
+%% For each example entailment pair for which entailment holds (the
+%% ``text'' entails the ``hypothesis''), we add
+%% the following theories to $\mathcal{D}$:
+%% \[
+%% \{(s_T,\top),(s_H,\top)\},  \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
+%% \]
+%% Where $s_T$ is the sentence associated with the text and $s_H$ the
+%% sentence associated with the hypothesis. We then learn the optimal
+%% parameters $\theta$ given this data, and use these to compute the
+%% degree of entailment on unseen pairs of sentences.
+
+%% Our system correctly predicted the reversal of entailment. Pairs where entailment
+%% holds were given a degree of entailment of 1.0 by our
+%% system. For other pairs, the degree of entailment assigned was  0.5. We did not see any difference between the two
+%% systems on these small examples.
 
 %\subsection{Examples}
 
@@ -926,10 +893,6 @@ systems on these small examples.
 %\subsection{Recovering Lexical Semantics}
 %\label{sec:recovering}
 
-As an aside, we note that whilst our formalism does not make use of any explicit representation of lexical semantics, representations of word meanings can be recovered from the learnt models. The representation of a word in this case is a tensor, rather than a vector, because there is a different probability distribution over the possible values for a particular type corresponding to each hidden value. For example, Table \ref{table:lexical-sato} shows the learnt values for the nouns obtained using the Stochastic Semantics implementation. Allowing the distribution to vary with the hidden variable is precisely what enables learning of the behaviour of quantifiers. Without this flexibility learning would not be possible. If we want to compare words in a manner similar to vector based
-representations of meaning, we can consider the matrix entries as a
-flat vector. In this case we can use any of the standard similarity measures (e.g. 
-cosine) to compare word representations.
 
 %\section{Relation to Probabilistic Lexical Semantics}
 %
@@ -961,6 +924,68 @@ cosine) to compare word representations.
 %Stochastic Semantics.
 
 \section{Discussion}
+
+\begin{table*}
+  \parbox{.62\linewidth}{
+    \begin{center}
+      \begin{tabular}{|l|l|l|}
+        \hline
+        Text & Hypothesis & Ent.\\
+        \hline
+        some cats like all dogs & some animals like all dogs & Yes\\
+        no animals like all dogs & no cats like all dogs & Yes\\
+        some dogs like all dogs & some animals like all dogs & Yes\\
+        no animals like all dogs & no dogs like all dogs & Yes\\
+        some men like all dogs & some people like all dogs & Yes\\
+        \hline
+        no people like all dogs & no men like all dogs & Yes\\
+        no men like all dogs & no people like all dogs & No\\
+        \hline
+      \end{tabular}
+      \caption{Example Text and Hypothesis sentences, and whether
+        entailment holds. Both our systems are able to learn from the
+        data above the line that the determiner ``no'' reverses the
+        direction of entailment.}
+      \label{table:mono}
+    \end{center}
+  }
+  \hfill
+  \parbox{.32\linewidth}{
+    \centering
+    \csvautotabular{lexical.csv}
+    \caption{Learnt probabilities obtained using the
+      Stochastic Semantics implementation.}
+    \label{table:lexical-sato}
+  }
+\end{table*}
+
+The task of recognising textual entailment \cite{Dagan:05} has been
+developed as a generalisation of some important natural language tasks
+including question answering, summarisation and information
+extraction. The task is to determine whether one natural language
+sentence (the ``text'') entails another (the ``hypothesis'').
+
+A learning system such as those we have described can easily be
+adapted to this task. For example, a pair for which entailment holds
+could be translated to the following set of theories:
+\[
+\{(s_T,\top),(s_H,\top)\},  \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
+\]
+Where $s_T$ is the sentence associated with the text and $s_H$ the
+sentence associated with the hypothesis.
+
+We verified that our two systems were able to learn some simple
+logical features of natural language semantics on toy textual
+entailment examples, in particular that determiners such as ``no''
+reverse the direction of entailment, so that while ``some cats''
+entails ``some animals'', ``no animals'' entails ``no cats'' (Table
+\ref{table:mono}).
+
+Although our formalism does not make use of any explicit representation of lexical semantics, representations of word meanings can be recovered from the learnt models. The representation of a word in this case is a tensor, rather than a vector, because there is a different probability distribution over the possible values for a particular type corresponding to each hidden value. For example, Table \ref{table:lexical-sato} shows the learnt values for the nouns obtained using the Stochastic Semantics implementation. Allowing the distribution to vary with the hidden variable is precisely what enables learning of the behaviour of quantifiers. Without this flexibility learning would not be possible. If we want to compare words in a manner similar to vector based
+representations of meaning, we can consider the matrix entries as a
+flat vector. In this case we can use any of the standard similarity measures (e.g. 
+cosine) to compare word representations.
+
 
 %The two models of semantics we have discussed are closely
 %related.
