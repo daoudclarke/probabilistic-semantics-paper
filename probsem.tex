@@ -1015,7 +1015,17 @@ cosine) to compare word representations.
 
 The flexibility granted by Stochastic Semantics results in the loss of certain nice properties. For Probabilistic Montague Semantics, it is easy to verify that any given sentence must entail itself to degree 1. This is no longer guaranteed in our model of Stochastic Semantics. Indeed the failure of logical entailment in this case is a necessary consequence of incorporating stochastic ambiguity into the formalism. In standard model-theoretic semantics, it may be assumed that sentences are disambiguated before any reasoning is performed. If we do not disambiguate however, then a sentence may not entail itself to degree 1 since it may mean different things in different contexts. We argue that it makes sense to sacrifice some properties which are expected when handling logical expressions in order to account for ambiguity as as an inherent property of language.
 
-It is notable that the approach that accounts for ambiguity has lower complexity: the time to compute the probability of a sentence is linear in the length of the sentence. Intuitively, this is because we do not have to ``remember'' the interpretation previously assigned to an expression as we read the sentence; we are free to assign it a new interpretation.
+It is notable that the approach that accounts for ambiguity has lower
+complexity: the time to compute the probability of a sentence is
+linear in the length of the sentence. Intuitively, this is because we
+do not have to ``remember'' the interpretation previously assigned to
+an expression as we read the sentence; we are free to assign it a new
+interpretation. This also means that the expressive power of Montague
+semantics is greater than Stochastic Semantics. In the latter, the
+meaning of a sentence can be viewed as simply a distribution over
+hidden variables, whereas in Montague Semantics, the meaning also
+includes, for example, a record of all the words contained in the
+sentence.
 
 % We note too that the two models also have different computational properties.
 % In particular, Stochastic Semantics allows for efficient computation with dynamic
