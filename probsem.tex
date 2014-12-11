@@ -623,10 +623,34 @@ algorithm in SciPy \cite{Zhu:97}.
 
 \section{Stochastic Semantics}
 
-The formulation of Probabilistic Montague Semantics presented above does not adequately account for ambiguity in natural language. Although we have a probability distribution over interpretations, in any given interpretation, each occurrence of a word must have the same denotation. This is unsatisfactory, since a particular word may exhibit different senses across a given text.  A  possible solution is to assume that word occurrences are sense-disambiguated.  However, this approach assumes the existence of some additional learning mechanism for acquiring word senses, quite separate from that employed to learn model parameters. 
+The formulation of Probabilistic Montague Semantics presented above
+does not adequately account for ambiguity in natural
+language. Although we have a probability distribution over
+interpretations, in any given interpretation, each occurrence of a
+word must have the same denotation. This is unsatisfactory, since a
+particular word may exhibit different senses across a given
+theory. For example, we may want to compare two sentences both
+containing the word \emph{bank} with different senses. In our current
+formulation of Probabilistic Montague Semantics, both occurrences
+would have to have the same denotation.
 
-What is required is some way of allowing the interpretation of a word to vary across a text. This could be achieved within the framework of Probabilistic Montague Semantics presented above by assuming that each occurrence of a word is represented as a distinct predicate. So, for example the first occurrence of {\em bank} would be represented by the predicate {\em bank}$_1$, the second by {\em bank}$_2$, and so on.  We consider here an alternative and more general approach in which \emph{degrees} of ambiguity are incorporated into the representation of a word's meaning. This approach is consistent with distributional  frameworks in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
+What is required is some way of allowing the interpretation of a word
+to vary across a theory. One way this could be achieved is by allowing
+each occurrence of a word to be represented by a different
+predicate. For example, we may perform word sense disambiguation on
+each sentence, and decide that the two occurrences of \emph{bank} are
+unrelated; in this case the first occurrence of {\em bank} would be
+represented by the predicate {\em bank}$_1$ and the second by {\em
+  bank}$_2$.
 
+
+%%  This approach
+%% assumes the existence of some additional learning mechanism for
+%% acquiring word senses, quite separate from that employed to learn
+%% model parameters.
+
+
+We consider here an alternative approach in which \emph{degrees} of ambiguity are incorporated into the representation of a word's meaning. This approach is consistent with distributional  frameworks in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
 Our solution is to drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. If we generalise this idea to denotations for all types, then we end up with an entirely different semantic model. It turns out that this model can easily be formulated within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
 associate a set of models with a sentence. Instead of having a
 generative model for models, we now assume that pairs of sentences and
@@ -1030,8 +1054,8 @@ sentence.
 It is possible that Probabilistic Montague Semantics can be made more
 computationally efficient by placing further restrictions on the
 nature of distributions over models. For example, if we have no hidden
-variables, i.e.~all choices are independent of one another, then the
-distribution can be described using Markov Logic Networks. Again, this
+variables, i.e.~we do not have a mixture model, then the distribution
+can be described efficiently using Markov Logic Networks. Again, this
 restriction comes at the expense of expressive power.
 
 % We note too that the two models also have different computational properties.
