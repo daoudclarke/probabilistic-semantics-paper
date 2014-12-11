@@ -546,18 +546,21 @@ We interpret this conditional probability as the {\em degree to which $s_2$ enta
 \subsection{Restricting the Space of Models}
 \label{section:distributions}
 
-A key objective is to be able to learn semantics from corpus data.
-In this section, we
-propose one way that this may be achieved within our framework. The
-central idea is to limit the number of denotations under
-consideration and define a probabilistic generative model for
+A key objective is to be able to learn semantics from corpus data.  In
+this section, we propose one way that this may be achieved within our
+framework. The central idea is to limit the number of denotations
+under consideration and define a probabilistic generative model for
 interpretations. Specifically we assume that $E$ is fixed. Let
-$\phi_\tau = \{\interp{\lambda} : \lambda\in \Lambda_\tau\}$
-be the set of denotations that occur with type $\tau$. We assume that
-$F$ is constrained such that $|\phi_\tau| = n_\tau$ where $n_\tau$
-is a constant for each type satisfying $n_\tau \le |D_\tau|$. This
-restriction in the number of occurring denotations makes learning a
-distribution over models feasible. We also assume that the occurring
+$\phi_\tau = \{\interp{\lambda} : \lambda\in \Lambda_\tau\}$ be the
+set of denotations that occur with type $\tau$. We assume that $F$ is
+constrained such that $|\phi_\tau| = n_\tau$ where $n_\tau$ is a
+constant for each type satisfying $n_\tau \le |D_\tau|$. Note that
+$\phi_\tau \subseteq D_\tau$, and $\phi_\tau$ can be a lot smaller
+than $D_\tau$ if the range of $F$ restricted to $\Lambda_\tau$ does
+not cover all of $D_\tau$.
+
+This restriction in the number of occurring denotations makes learning
+a distribution over models feasible. We also assume that the occurring
 denotations are ordered so that we can write $\phi_\tau =
 \{d_{\tau,1}, d_{\tau,2}, \ldots d_{\tau, n_\tau}\}$.
 
