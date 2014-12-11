@@ -1027,6 +1027,13 @@ hidden variables, whereas in Montague Semantics, the meaning also
 includes, for example, a record of all the words contained in the
 sentence.
 
+It is possible that Probabilistic Montague Semantics can be made more
+computationally efficient by placing further restrictions on the
+nature of distributions over models. For example, if we have no hidden
+variables, i.e.~all choices are independent of one another, then the
+distribution can be described using Markov Logic Networks. Again, this
+restriction comes at the expense of expressive power.
+
 % We note too that the two models also have different computational properties.
 % In particular, Stochastic Semantics allows for efficient computation with dynamic
 % programming. This is possible because of the re-evaluation of switch
