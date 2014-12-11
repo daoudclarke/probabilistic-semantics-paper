@@ -557,13 +557,13 @@ constrained such that $|\phi_\tau| = n_\tau$ where $n_\tau$ is a
 constant for each type satisfying $n_\tau \le |D_\tau|$. Note that
 $\phi_\tau \subseteq D_\tau$, and $\phi_\tau$ can be a lot smaller
 than $D_\tau$ if the range of $F$ restricted to $\Lambda_\tau$ does
-not cover all of $D_\tau$.
-
-This restriction in the number of occurring denotations makes learning
-a distribution over models feasible. We also assume that the occurring
+not cover all of $D_\tau$.  We also assume that the occurring
 denotations are ordered so that we can write $\phi_\tau =
 \{d_{\tau,1}, d_{\tau,2}, \ldots d_{\tau, n_\tau}\}$.
 
+This restriction in the number of occurring denotations makes learning
+a distribution over models feasible, since the space of exploration
+can be made small enough to handle in a reasonable amount of time.
 
 We assume that denotations are generated with probabilities
 conditionally independent given a random variable taking values from
