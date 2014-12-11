@@ -712,7 +712,7 @@ theory(T) :-
 An illustrative implementation for our approach is shown in Figure \ref{figure:program}. The code listed in the figure is written in PRISM, a probabilistic extension of the Prolog logic-progamming language \cite{Sato:97}. The PRISM language augments Prolog with probabilistic predicates and declarations. In particular, it incorporates random switches. The predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes during execution. Note that to simplify the code, complex types of the underlying Montague grammar are referred to by their corresponding natural language
 categories. Thus, type $t$ is represented by \texttt{s} (a sentence), type $(e/t)$ by \texttt{vp} (a verb phrase) and type $(e/t)/t$ by \texttt{np} (a noun phrase). 
 The PRISM program shown in Figure \ref{figure:program} describes how sentences are randomly assigned truth values using probabilistic switch statements. For example, the declaration
-\vspace*{-0.8cm}
+%% \vspace*{-0.8cm}
 \begin{center}
 {\small
 \texttt{values(word(noun,Word,Hidden),[n0,n1])} 
