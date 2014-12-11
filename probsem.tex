@@ -1,12 +1,20 @@
-\documentclass[11pt]{article}
-\usepackage{acl2012}
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{graphicx}  %%% for including graphics
+\usepackage{url}       %%% for including URLs
 \usepackage{times}
-\usepackage{latexsym}
-\usepackage{amsmath}
-\usepackage{multirow}
-\usepackage{url}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\setlength\titlebox{6.5cm}    % Expanding the titlebox
+\usepackage{natbib}
+\usepackage[margin=25mm]{geometry}
+
+
+%% \documentclass[11pt]{article}
+%% \usepackage{acl2012}
+%% \usepackage{times}
+%% \usepackage{latexsym}
+%% \usepackage{multirow}
+%% \usepackage{url}
+%% \DeclareMathOperator*{\argmax}{arg\,max}
+%% \setlength\titlebox{6.5cm}    % Expanding the titlebox
 
 %\documentclass{svmult}
 
@@ -23,6 +31,7 @@
 %\usepackage{url}
 %\usepackage{latexsym}
 
+\usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{color}
@@ -34,7 +43,9 @@
 
 %\renewcommand{\theTitleReference}[2]{\emph{#2}}
 
-%\renewcommand{\cite}{\citep}
+\renewcommand{\cite}{\citep}
+\newcommand{\newcite}[1]{\citet{#1}}
+
 %\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
 %\newcommand{\citet}[1]{\cite{#1}}
 
@@ -1187,6 +1198,7 @@ and indexicals, amongst others.
 % There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. 
 
 
-\bibliographystyle{acl}
+\bibliographystyle{chicago}
+%% \bibliographystyle{acl}
 \bibliography{JW2012}
 \end{document}
