@@ -148,11 +148,11 @@ First, an adequate semantics should provide an account of both lexical and compo
 Vector space models of meaning have become a popular approach to computational semantics.
 Distributional models represent word meanings as vectors of corpus-based distributional contexts and have been successfully applied to a wide variety of tasks, including, word sense disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL}, prepositional phrase attachment~\cite{Calvo05distributionalthesaurus}, textual entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy induction~\cite{fountain-lapata:2012:NAACL-HLT}. 
 % % {\bf UPDATE THIS LIST??}
-The success of vector-space models is due to several factors. They support fine-grained judgements of similarity, allowing us to account for semantic gradience, for example, that the lexeme {\em pear} is more similar to {\em banana}  than to, say, {\em cat}. Moreover, distributional vectors can be learned from corpus data, either by counting occurrences of distributional contexts for a word or phrase or by applying connectionist models to acquire vector-based representations \cite{Socher:12,Mikolov:13}. 
+The success of vector-space models is due to several factors. They support fine-grained judgements of similarity, allowing us to account for semantic gradience, for example, that the lexeme {\em pear} is more similar to {\em banana}  than to, say, {\em cat}. Moreover, distributional vectors can be learned from corpus data by counting occurrences of distributional contexts for a word or phrase.  Alternatively, neural network architectures may be applied to acquire vector-based representations \cite{Socher:12,Mikolov:13}. 
 
 Vector-based approaches differ in many regards from compositional, model-theoretic treatments of meaning such as Montague semantics or Discourse Representation Theory \cite{Kamp:93}. It has proved challenging to extend vector space models to account for the way in which meanings may be composed and to support inference. The problem of developing a fully compositional, distributional semantics has recently become a very active area of research  \cite{Widdows:08,Mitchell:08,Baroni2010,Garrette:11,Grefenstette:11,Socher:12,Lewis:13} and efforts made to find a theoretical foundation \cite{Clarke:12,Kartsaklis:14}.  Researchers have also begun to address the problem of combining the strengths of both the distributional and model-theoretic approaches \cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-This paper considers an alternative  strategy for developing a computational semantics, in which a compositional framework is augmented by work in probabilistic semantics \cite{Gaifman:64,Nilsson:86,Sato:95}. Probabilistic semantics provides a rich seam of ideas that can be applied to the construction of a compositional semantics that exhibits desirable properties such as gradience and learnability. Below, we explore two different ways in which this might be achieved. Our objective is to map out some of the territory,  to consider issues of expressiveness and computational complexity and to provide useful guidance for others considering venturing into this landscape. 
+This paper considers an alternative  strategy for developing a computational semantics. Starting with a compositional, model-theoretic semantics, this is augmented by work in probabilistic semantics \cite{Gaifman:64,Nilsson:86,Sato:95}. Probabilistic semantics provides a rich seam of ideas that can be applied to the construction of a compositional semantics with desirable properties such as gradience and learnability. Below, we explore two different ways in which this might be achieved. Our objective is to map out some of the territory,  to consider issues of expressiveness and computational complexity and to provide useful guidance for others considering venturing into this landscape. 
 
 %In the first approach we define a probability distribution over Montague-style models in terms of a random generation process over interpretations. This provides the basis for a natural extension of Montague semantics to the probabilistic domain.  However, the approach embodies the assumption that whilst the meanings of words may vary between different interpretations, for any given interpretation they are fixed. This is clearly unrealistic: an adequate semantics should be capable of modelling cases where the interpretation of a given word varies across a text. Our second approach, which we call \emph{Stochastic Semantics}, addresses this restriction and allows for polysemy. Stochastic semantics assumes a random generative process for pairs of sentences and truth values, rather than models. As we show, this means that we have to sacrifice some nice theoretical properties satisfied by the first approach. However, the payoff is that in accounting for ambiguity,
 %inference becomes more tractable since we can benefit from dynamic programming.
@@ -232,17 +232,18 @@ $X$'' entails ``no cats $X$''.}
 In the early 1970s, 
 %the linguist and philosopher 
 Richard Montague detailed a formal treatment of natural language semantics \cite{Montague1970a,Montague1970b,Montague1973}. Montague's conception of semantics was truth-conditional and model-theoretic. He considered that a fundamental aim of any adequate theory of semantics was ``to characterise the notions of a true sentence (under a given interpretation) and of entailment'' \cite{Montague1970b}. A central methodological component of Montague's approach was the {\em Principle of Compositionality\/}: the meaning of an expression is a function of the meanings of its parts and the way they are combined syntactically.
+
 Following Montague, we assume that natural language expressions
 are parsed by a categorial grammar. Further,  every word has an
-associated function with a type. Let $\mathcal{T}$ be the set of types given by:
+associated function with a type. Let $\mathcal{T}$ be the smallest set such that:
 \begin{description}
 \item [Basic types:] $e,t\in \mathcal{T}$
 \item[Complex types:]  if $\alpha, \beta\in \mathcal{T}$, then $\alpha/\beta\in \mathcal{T}$.
 \end{description}
-Nothing else is in $\mathcal{T}$. Type $\alpha/\beta$ is the type of a function from type
+Note that type $\alpha/\beta$ is the type of a function from type
 $\alpha$ to type $\beta$.
 
-The set $B$ (\emph{basic expressions}) comprises
+The set $B$ of \emph{basic expressions} comprises
 symbols denoting meanings of words. Each $b\in B$ has a type $\tau_b$. The set $\Lambda$ of
 \emph{well-formed expressions} (\wfes\!\!), and the extension of $\tau$ to $\Lambda$ are
 defined as follows. Let $\Lambda$ be the smallest set such that:
@@ -253,7 +254,6 @@ defined as follows. Let $\Lambda$ be the smallest set such that:
   = \alpha/\beta$ and $\tau_\delta = \alpha$, then $\gamma(\delta)\in
   \Lambda$ and $\tau_{\gamma(\delta)} = \beta$.
 \end{itemize}
-
 Let $\Lambda_\tau$ denote the set of \wfes of type
 $\tau$. A \emph{sentence} is a \wfe of type $t$.
 
@@ -520,11 +520,11 @@ can still define a probability space by considering the sigma algebra
 $\sigma$ generated by $\sigma_0$: the smallest
 sigma algebra containing $\sigma_0$. For $\mu$ a probability measure on $\sigma$, 
 $\langle\Omega,\sigma,\mu\rangle$ is a probability space
-over theories. The probability of $T$ is
+describing the probability of theories. The probability of $T$ is
 $\mu(M(T))$. The conditional
-probability of $s_1$ given $s_2$ is given by:
+probability of $s_1$ given $s_2$ is interpreted as the {\em degree to which $s_2$ entails $s_1$\/} and defined by:
 $$ P(s_1|s_2) = \frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
-We interpret this as the {\em degree to which $s_2$ entails $s_1$\/}. Note $s_2$ {\em logically entails\/} $s_1$ implies $P(s_1|s_2) = 1$.
+Note that $s_2$ {\em logically entails\/} $s_1$ implies that $P(s_1|s_2) = 1$.
 
 %%the degree to which  $s_2$ entails $s_1$ is $1$.
 
@@ -634,15 +634,15 @@ does not adequately account for ambiguity:
 %Although we have a probability distribution over
 %interpretations, 
 in any given interpretation, each occurrence of a
-word must have the same denotation. This is unsatisfactory, as a
+word must have the same denotation. This is clearly unsatisfactory, as a
 word may exhibit different senses across a
 theory. For example, consider two sentences, each
 containing the word \emph{bank}, but with different senses. In our current
-formulation  both occurrences are forced to have the same denotation.
-Clearly, a word's meaning should be allowed
+formulation both occurrences of \emph{bank} are forced to have the same denotation, but
+a word's meaning should be allowed
 to vary across a theory. One possibility
 is to represent
-different occurrences by different
+different occurrences of a word by different
 predicates. For example, we might perform word sense disambiguation on
 each sentence and decide that the two occurrences of \emph{bank} are
 unrelated. In this case, the first occurrence might be
@@ -656,9 +656,9 @@ represented by the predicate {\em bank}$_1$ and the second by {\em
 %% model parameters.
 
 
-We consider an alternative which incorporate \emph{degrees} of ambiguity into the representation of a word's meaning. This is consistent with distributional  frameworks in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
+We consider an alternative which incorporates \emph{degrees of ambiguity} into the representation of a word's meaning. This is consistent with many distributional  frameworks, in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
 We drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. Generalising this idea to denotations for all types results in an entirely different semantic model. It turns out that this model can easily be formulated within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
-associate a set of models with a sentence. Instead, we assume that pairs of sentences and
+associate a set of models with a sentence and instead assume that pairs of sentences and
 truth values are randomly generated in sequence. The probability of
 each pair being generated is conditionally independent of previous
 pairs given the hidden variable.
@@ -738,7 +738,7 @@ theory(T) :-
 %\subsection{Implementation}
 
 
-An illustrative implementation  is shown in Figure \ref{figure:program}, where the code is written in PRISM, a probabilistic extension of the Prolog logic-progamming language \cite{Sato:97}. PRISM incorporates probabilistic predicates and declarations and in particular, {\em random switches}. In the figure, the predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes, while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes at execution. To simplify the code, complex types of the grammar are referred to by their corresponding natural language
+An illustrative implementation  is shown in Figure \ref{figure:program}. The code is written in PRISM, a probabilistic extension of the Prolog logic-progamming language \cite{Sato:97} that incorporates probabilistic predicates and declarations. In particular, PRISM allows {\em random switches}. In the figure, the predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes, while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes at execution. To simplify the code, complex types of the grammar are referred to by their corresponding natural language
 categories: type $t$ is represented by \texttt{s}, type $(e/t)$ by \texttt{vp} and type $(e/t)/t$ by \texttt{np}. 
 
 The program defines how sentences are randomly assigned truth values. For example, the switch
@@ -792,11 +792,11 @@ as this is needed for both learning and inference.
 We first show NP-hardness by reduction from SAT. Construct a special
 language for propositional logic with symbols $x_i$ of type $t$,
 symbols $\land$ and $\lor$ of type $(t/t)/t$ and $\lnot$ of type
-$t/t$. Hidden value are not needed, so assume $H$ has a single
+$t/t$. Hidden values are not needed, so assume $H$ has a single
 element. We allow the $x_i$ to take values in $\{\top, \bot\}$
 with equal probability. We allow two denotations $d_{(t/t)/t, \land}$
 and $d_{(t/t)/t, \lor}$ for type $(t/t)/t$, and $\land$ and $\lor$
-take these denotations respectively with probability 1. We allow five
+take these denotations, respectively, with probability 1. We allow five
 denotations for type $t/t$, one for $\lnot$, and two each for the
 intermediate values taken by $\land$ and $\lor$ after operating on
 either $\top$ or $\bot$. It is then straightforward to define
@@ -1010,7 +1010,7 @@ The task of recognising textual entailment \cite{Dagan:05}
 is to determine whether one natural language
 sentence (the ``text'') entails another (the ``hypothesis''). The task thus generalizes some important natural language tasks
 including question answering, summarisation and information
-extraction. A learning system such as those we have described can easily be
+extraction. A learning system such as those we have described can be
 adapted to this task. For example, a pair for which entailment holds
 could be translated to the following set of theories:
 \[
@@ -1024,8 +1024,8 @@ We verified that our two systems were able to learn some simple
 logical features of natural language semantics on toy textual
 entailment examples. In particular, determiners such as ``no''
 reverse the direction of entailment, so that while ``some cats''
-entails ``some animals'', ``no animals'' entails ``no cats'' (Table
-\ref{table:mono}). As an aside, we note that while our formalism makes no use of explicit representations of lexical semantics, such representations can be recovered from the learnt models. The representation is a tensor rather than a vector, because there is a distinct probability distribution over possible values for each hidden value. Table \ref{table:lexical-sato} shows the learnt values for the nouns obtained using the Stochastic Semantics implementation. 
+entails ``some animals'', ``no animals'' entails ``no cats'' (see Table
+\ref{table:mono}). As an aside, we note that while our formalism does not employ explicit representations of lexical semantics, such representations can be recovered from the learnt models. The representation of a word is a tensor rather than a vector, because there is a distinct probability distribution over possible values for each hidden value. Table \ref{table:lexical-sato} shows the learnt values for the nouns obtained using the Stochastic Semantics implementation. 
 %Allowing the distribution to vary with the hidden variable is precisely what enables learning of the behaviour of quantifiers. Without this flexibility learning would not be possible. 
 If we want to compare words 
 %in a manner similar to vector based
@@ -1054,14 +1054,14 @@ The flexibility granted by Stochastic Semantics results in the loss of certain n
 %
 %Indeed 
 %
-The failure of logical entailment is a necessary consequence of incorporating stochastic ambiguity into the formalism.
+A necessary consequence of incorporating stochastic ambiguity into the formalism is the failure of logical entailment.
 %In standard model-theoretic semantics, it may be assumed that sentences are disambiguated before any reasoning is performed. 
 If we do not disambiguate, then a sentence may not entail itself to degree 1 since it may mean different things in different contexts. We argue that it makes sense to sacrifice some properties which are expected when handling logical expressions in order to account for ambiguity as as an inherent property of language.
 
 It is notable that the approach that accounts for ambiguity has lower
 complexity.
 Intuitively, this is because we
-do not have to ``remember'' the interpretation previously assigned to
+do not have to keep track of the interpretation previously assigned to
 an expression: we are free to assign a new one. This also means that the expressive power of Probabilistic Montague
 Semantics is greater than that of Stochastic Semantics. In the latter, the
 meaning of a sentence can be viewed as simply a distribution over
@@ -1127,13 +1127,13 @@ restriction comes at the expense of expressive power.
 
 %\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-Cooper et al.~\cite{Cooper:14} (see also
+\newcite{Cooper:14} (see also
 \cite{Eijck:12}) describe a probabilistic semantics in which probability is distributed over situation types~\cite{Barwise:83}. They propose a rich type system in which the judgment about whether a given situation is of a given type is probabilistic. Rather than assigning truth-conditions to sentences, they present a compositional interpretation function that assigns probability-conditions. The work aims to account for the gradience of semantic judgements (for example, gradations of entailment) and stresses the importance of providing an account of semantic learning within language acquisition. 
 
 Their approach differs from ours in several respects. They define probability over situation types and provide a probabilistic interpretation function. In contrast, we define a generative process over interpreting structures so that probabilities of meaning are defined in terms of probability distribution over models. They describe an approach to semantic learning that makes use of observations of situations. Our approach is to learn from pairs of sentences and truth values directly. The result of their learning is an assignment of probabilities to situations; the result of our learning is the ability to determine degrees of entailment between pairs of sentences. 
 %Third, our approach can be related to vector-space semantics: as output of our learning procedure we can extract lexical representations as matrices.
 
-Goodman and Lassiter~\cite{Goodman:14} argue strongly for the role of uncertainty in cognition and language understanding, whilst preserving a compositional, truth conditional semantics. They show how probability may be used to formalise uncertainty and the gradience of judgements about belief and inference and introduce a stochastic $\lambda$-calculus to provide compositional tools for probabilistic modelling of language and belief. 
+The present work shares motivation with \cite{Goodman:14}, who argue for the role of uncertainty in cognition and language understanding whilst preserving a compositional, truth conditional semantics. They show how probability may be used to formalise uncertainty and the gradience of judgements about belief and inference and introduce a stochastic $\lambda$-calculus to provide compositional tools for probabilistic modelling of language and belief. 
 
 Coecke et al.~\cite{Coecke:10} propose a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
@@ -1165,12 +1165,12 @@ tensors \cite{Grefenstette:13}.
 Garrette et al.~\cite{Garrette:11} describe an approach to combining logical
 semantics with distributional semantics using Markov Logic Networks
 \cite{Richardson:06}. Sentences are parsed into logical form using
-Boxer \cite{Bos:04}, and probabilistic rules are added using the
-distributional model of \cite{Erk:10}. Lewis and Steedman \cite{Lewis:13} take a standard logical approach to
+Boxer \cite{Bos:04} and probabilistic rules are added using the
+distributional model of \cite{Erk:10}. \newcite{Lewis:13} take a standard logical approach to
 semantics except that the relational constants used are derived from
-distributional clustering. They use latent dirichlet allocation to
+distributional clustering. They use latent Dirichlet allocation to
 describe a probability distribution over semantic categories for
-nouns, which are then combined with induced relation clusters to
+nouns. These are then combined with induced relation clusters to
 generate a probability distribution over logical forms for a given
 sentence.
 
@@ -1189,7 +1189,7 @@ will benefit from the theoretical ideas presented here. In particular:
   (probabilistic semantics). We are thus in an area that seems natural
   to explore.
 \item We are able to demonstrate deficiencies of this approach, both
-  in expressiveness and computational complexity, that may provide
+  in representational adequacy and computational complexity, that may provide
   useful guidance for others considering venturing into this
   landscape.
 \item We identify an alternative area for exploration that alleviates
@@ -1206,7 +1206,7 @@ We have shown that:
 \item The problem of computing the probability that a
   sentence is true in this framework is NP-hard.
 \item Taking account of lexical ambiguity suggests a new
-  model -- Stochastic Semantics -- in which pairs of sentences and truth values are generated
+  approach in which pairs of sentences and truth values are generated
   randomly. The probability that a sentence is true can then be
   computed in polynomial time.
 \item Both models are able to learn from a few examples
