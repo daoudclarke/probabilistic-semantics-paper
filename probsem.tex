@@ -141,9 +141,9 @@ complexity. Both approaches provide a compositional semantics and account for th
 
 \section{Introduction}
 
-This paper explores theoretical  issues in developing an expressive and computationally tractable, probabilistic semantics for natural language.  Our general approach is situated within the formal, compositional semantics developed by Richard Montague, but augmented to allow for probabilistic judgements about truth and inference. The present work takes  as a point of departure a number of key assumptions.
+This paper explores theoretical  issues in developing an expressive and computationally tractable, probabilistic semantics for natural language.  Our general approach is situated within the formal, compositional semantics developed by Richard Montague, which is augmented to allow for probabilistic judgements about truth and inference. The present work takes  as a point of departure a number of key assumptions.
 % %about the adequacy of a computational model of semantics for natural language. 
-First, an adequate semantics should provide an account of both lexical and compositional meaning. Second, it should provide for judgements about degrees of belief. That is, a semantics should account for beliefs that statements are more or less likely to be true, or that one statement may entail another to a certain degree. Third, an adequate computational semantics should support effective procedures for learning semantic representations and for inference.
+First, an adequate semantics should provide an account of both lexical and phrasal (i.e. compositional) meaning. Second, it should provide for judgements about degrees of belief. That is, a semantics should account for beliefs that statements are more or less likely to be true, or that one statement may entail another to a certain degree. Third, an adequate computational semantics should support effective procedures for learning semantic representations and for inference.
 
 Vector space models of meaning have become a popular approach to computational semantics.
 Distributional models represent word meanings as vectors of corpus-based distributional contexts and have been successfully applied to a wide variety of tasks, including, word sense disambiguation~\cite{miller-EtAl:2012:PAPERS,khapra-EtAl:2010:ACL}, prepositional phrase attachment~\cite{Calvo05distributionalthesaurus}, textual entailment~\cite{berant-dagan-goldberger:2010:ACL}, co-reference resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy induction~\cite{fountain-lapata:2012:NAACL-HLT}. 
@@ -152,7 +152,7 @@ The success of vector-space models is due to several factors. They support fine-
 
 Vector-based approaches differ in many regards from compositional, model-theoretic treatments of meaning such as Montague semantics or Discourse Representation Theory \cite{Kamp:93}. It has proved challenging to extend vector space models to account for the way in which meanings may be composed and to support inference. The problem of developing a fully compositional, distributional semantics has recently become a very active area of research  \cite{Widdows:08,Mitchell:08,Baroni2010,Garrette:11,Grefenstette:11,Socher:12,Lewis:13} and efforts made to find a theoretical foundation \cite{Clarke:12,Kartsaklis:14}.  Researchers have also begun to address the problem of combining the strengths of both the distributional and model-theoretic approaches \cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-This paper considers an alternative  strategy for developing a computational semantics. Starting with a compositional, model-theoretic semantics, this is augmented by work in probabilistic semantics \cite{Gaifman:64,Nilsson:86,Sato:95}. Probabilistic semantics provides a rich seam of ideas that can be applied to the construction of a compositional semantics with desirable properties such as gradience and learnability. Below, we explore two different ways in which this might be achieved. Our objective is to map out some of the territory,  to consider issues of expressiveness and computational complexity and to provide useful guidance for others considering venturing into this landscape. 
+This paper considers an alternative  strategy for developing a computational semantics. Starting with a compositional, model-theoretic semantics, this is augmented by ideas from probabilistic semantics \cite{Gaifman:64,Nilsson:86,Sato:95}. Probabilistic semantics provides a rich seam of ideas that can be applied to the construction of a compositional semantics with desirable properties such as gradience and learnability. Below, we explore two different ways in which this might be achieved. Our objective is to map out some of the territory,  to consider issues of representational adequacy and computational complexity and to provide useful guidance for others considering venturing into this landscape. 
 
 %In the first approach we define a probability distribution over Montague-style models in terms of a random generation process over interpretations. This provides the basis for a natural extension of Montague semantics to the probabilistic domain.  However, the approach embodies the assumption that whilst the meanings of words may vary between different interpretations, for any given interpretation they are fixed. This is clearly unrealistic: an adequate semantics should be capable of modelling cases where the interpretation of a given word varies across a text. Our second approach, which we call \emph{Stochastic Semantics}, addresses this restriction and allows for polysemy. Stochastic semantics assumes a random generative process for pairs of sentences and truth values, rather than models. As we show, this means that we have to sacrifice some nice theoretical properties satisfied by the first approach. However, the payoff is that in accounting for ambiguity,
 %inference becomes more tractable since we can benefit from dynamic programming.
@@ -289,7 +289,7 @@ $\langle E, F\rangle \models T$.
 
 \subsection{Probabilistic Semantics}
  
-The idea of attaching probability to the propositional truth is an old one and related to the foundation of probability itself
+The idea of attaching probabilities to propositional truth is an old one and related to the foundation of probability itself
 \cite{Keynes:21,Los:55}. \newcite{Gaifman:64} discusses probability measures for first order calculus; the work of \newcite{Sato:95}
 concerns probability measures for logic programs. The idea we adopt is to associate probability measures with the space of models.
 %% for the associated logic. 
@@ -330,14 +330,14 @@ $\sigma$.
 We can then estimate the probability of a sentence $s$ as
 the sum of the probabilities of all models $\mathcal{M}_s$, for $s$.
 
-In general, the set of models will be infinite, but for 
+In general, the set of models will be infinite, but for purposes of 
 exposition, consider a simple example with a small 
 number of models, as in Table
 \ref{table:models}. Each column defines a
 different model of the relationship between John and Mary.  We
 assume a probability distribution over models, with $P(m_1)
 = 0.1$, $P(m_2) = 0.2$, $P(m_3) = 0.3$, $P(m_4) = 0.4$ (all other
-possibilities have zero probability). We can then
+possible models have probability zero). We can then
 deduce the probability of statements about John and Mary, as shown in Table \ref{table:statements}.
 
 
@@ -513,16 +513,16 @@ deduce the probability of statements about John and Mary, as shown in Table \ref
 Let $\Omega$ be the set of all Montague-style interpretations,  $M(T)$ the set of all models for the theory $T$ and
 $\sigma_0$ the set of all sets of models that satisfy some theory: $\sigma_0 = \{M(T) : T\text{ is a theory}\}$.
 In general, $\sigma_0$ is not a sigma algebra, as it is not
-guaranteed for theories $T_1$, $T_2$ that
+guaranteed for any two theories $T_1$, $T_2$ that
 $M(T_1)\cup M(T_2) \in \sigma_0$ . For any Montague grammar containing a propositional
 fragment  this would hold, but even if this is not the case we
 can still define a probability space by considering the sigma algebra
 $\sigma$ generated by $\sigma_0$: the smallest
 sigma algebra containing $\sigma_0$. For $\mu$ a probability measure on $\sigma$, 
 $\langle\Omega,\sigma,\mu\rangle$ is a probability space
-describing the probability of theories. The probability of $T$ is
+describing the probability of theories. The probability of $T$ is defined as
 $\mu(M(T))$. The conditional
-probability of $s_1$ given $s_2$ is interpreted as the {\em degree to which $s_2$ entails $s_1$\/} and defined by:
+probability $P(s_1 | s_2 )$  is interpreted as the {\em degree to which $s_2$ entails $s_1$\/} and defined by:
 $$ P(s_1|s_2) = \frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
 Note that $s_2$ {\em logically entails\/} $s_1$ implies that $P(s_1|s_2) = 1$.
 
@@ -630,17 +630,17 @@ algorithm in SciPy \cite{Zhu:97}.
 \section{Stochastic Semantics}
 
 Our formulation of Probabilistic Montague Semantics
-does not adequately account for ambiguity:
-%Although we have a probability distribution over
-%interpretations, 
-in any given interpretation, each occurrence of a
+does not adequately account for ambiguity in natural language.
+Although we have a probability distribution over
+interpretations, 
+in any given interpretation each occurrence of a
 word must have the same denotation. This is clearly unsatisfactory, as a
 word may exhibit different senses across a
 theory. For example, consider two sentences, each
-containing the word \emph{bank}, but with different senses. In our current
-formulation both occurrences of \emph{bank} are forced to have the same denotation, but
-a word's meaning should be allowed
-to vary across a theory. One possibility
+containing  an occurrence of the word \emph{bank}, but with different senses. In our current
+formulation both occurrences of \emph{bank} are forced to have the same denotation. To allow
+a word's meaning 
+to vary across a theory, one possibility
 is to represent
 different occurrences of a word by different
 predicates. For example, we might perform word sense disambiguation on
@@ -657,8 +657,8 @@ represented by the predicate {\em bank}$_1$ and the second by {\em
 
 
 We consider an alternative which incorporates \emph{degrees of ambiguity} into the representation of a word's meaning. This is consistent with many distributional  frameworks, in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
-We drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. Generalising this idea to denotations for all types results in an entirely different semantic model. It turns out that this model can easily be formulated within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
-associate a set of models with a sentence and instead assume that pairs of sentences and
+We drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. Generalising this idea to denotations for all types results in an entirely different semantic model. It turns out that this model can be formulated in a straightforward way within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
+associate a set of models with a sentence, but instead assume that pairs of sentences and
 truth values are randomly generated in sequence. The probability of
 each pair being generated is conditionally independent of previous
 pairs given the hidden variable.
@@ -737,8 +737,7 @@ theory(T) :-
 
 %\subsection{Implementation}
 
-
-An illustrative implementation  is shown in Figure \ref{figure:program}. The code is written in PRISM, a probabilistic extension of the Prolog logic-progamming language \cite{Sato:97} that incorporates probabilistic predicates and declarations. In particular, PRISM allows {\em random switches}. In the figure, the predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes, while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes at execution. To simplify the code, complex types of the grammar are referred to by their corresponding natural language
+An illustrative implementation of Stochastic Semantics is shown in Figure \ref{figure:program}. The code is written in PRISM  \cite{Sato:97}, a probabilistic extension of the Prolog logic-progamming language that incorporates probabilistic predicates and declarations. In particular, PRISM allows {\em random switches}. In the code, the predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes, while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes at execution time. To simplify the code, complex types of the grammar are referred to by their corresponding natural language
 categories: type $t$ is represented by \texttt{s}, type $(e/t)$ by \texttt{vp} and type $(e/t)/t$ by \texttt{np}. 
 
 The program defines how sentences are randomly assigned truth values. For example, the switch
@@ -771,9 +770,10 @@ as this is needed for both learning and inference.
 
 \subsection{Complexity of Probabilistic Montague Semantics}
 
+We first define the problem of {\em Probabilistic Montague Semantics satisfiability\/} (PM-SAT) and then consider the problem of computing the probability of a sentence.
+
 \begin{definition}[PM-SAT]
-%  We define the problem of Probabilistic Montague Semantics
-%  satisfiability (PM-SAT) as follows: 
+
   Given 
 %  a restricted probabilistic
 %  Montague semantics for a language, that is, 
@@ -810,13 +810,13 @@ choosing a value from $H$, assigning every possible value to all basic
 expressions and then recursively to complex expressions. Any
 assignment that gives a non-zero probability for the
 sentence taking the value $\top$ will return true. So
-PM-SAT is in NP, and is thus NP-complete.
+PM-SAT is in NP and is thus NP-complete.
 \end{proof}
 
 Let us call the problem of computing the probability of a sentence in
 Probabilistic Montague Semantics PM-PROB. Clearly PM-PROB is at least
 as hard as PM-SAT, since if we knew the probability of a sentence we
-would know whether it was nonzero; thus PM-PROB is NP-hard.
+would know whether it was non-zero. It follows that PM-PROB is NP-hard.
 
 \subsection{Complexity of Stochastic Semantics}
 
@@ -842,9 +842,9 @@ probability of a sentence is as follows:
   expression and the type it acts on.
 \end{itemize}
 \end{itemize}
-For a given hidden value in $H$, computing the probability of the sentence requires $L$
+For a given hidden value in $H$, computing the probability of a sentence requires $L$
 computations each of complexity at most $n^2$. The total worst-case
-time complexity is thus $O(|H|Ln^2)$, which is linear in the number of expressions $L$ and so linear in length of the sentence. 
+time complexity  is thus $O(|H|Ln^2)$, which is linear in the number of expressions $L$ and so linear in length of the sentence. 
 
 
 
