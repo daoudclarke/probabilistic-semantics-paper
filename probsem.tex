@@ -1006,13 +1006,14 @@ time complexity  is thus $O(|H|Ln^2)$, which is linear in the number of expressi
   }
 \end{table*}
 
-The task of recognising textual entailment \cite{Dagan:05} 
-is to determine whether one natural language
-sentence (the ``text'') entails another (the ``hypothesis''). The task thus generalizes some important natural language tasks
-including question answering, summarisation and information
-extraction. A learning system such as those we have described can be
-adapted to this task. For example, a pair for which entailment holds
-could be translated to the following set of theories:
+A learning system such as those we have described can be adapted to
+the task of recognising textual entailment \cite{Dagan:05}, which is
+to determine whether one natural language sentence (the ``text'')
+entails another (the ``hypothesis''). The task thus generalizes some
+important natural language tasks including question answering,
+summarisation and information extraction.  For example, a pair for
+which entailment holds could be translated to the following set of
+theories:
 \[
 \{(s_T,\top),(s_H,\top)\},  \{(s_T,\bot),(s_H,\top)\},\{(s_T,\bot),(s_H,\bot)\}
 \]
