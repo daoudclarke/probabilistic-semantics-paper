@@ -795,29 +795,66 @@ We first consider the problem of {\em Probabilistic Montague Semantics satisfiab
   sentence.
 \end{theorem}
 
+\begin{table}
+\hfill
+\begin{tabular}{c|c|c}
+ & $\top$ & $\bot$ \\
+\hline
+$\interp{x_i}$ & 0.5 & 0.5 \\
+$d_{t/t,I}(\top)$ & 1 & 0\\
+$d_{t/t,I}(\bot)$ & 0 & 1\\
+$d_{t/t,\top}(\top)$ & 1 & 0\\
+$d_{t/t,\top}(\bot)$ & 1 & 0\\
+$d_{t/t,\bot}(\top)$ & 0 & 1\\
+$d_{t/t,\bot}(\bot)$ & 0 & 1\\
+$d_{t/t,\lnot}(\top)$ & 1 & 0\\
+$d_{t/t,\lnot}(\bot)$ & 0 & 1
+\end{tabular}\hfill
+\begin{minipage}[c][4.6cm]{0.5\linewidth}
+\centering
+\begin{tabular}{c|c|c|c|c}
+ & $d_{t/t,I}$ & $d_{t/t,\top}$ & $d_{t/t,\bot}$ & $d_{t/t,\lnot}$ \\
+\hline
+$\interp{\lnot}$ & 0 & 0 & 0 & 1 \\
+$d_{t/(t/t),\lor}(\top)$ & 0 & 1 & 0 & 0\\
+$d_{t/(t/t),\lor}(\bot)$ & 1 & 0 & 0 & 0\\
+$d_{t/(t/t),\land}(\top)$ & 1 & 0 & 0 & 0\\
+$d_{t/(t/t),\land}(\bot)$ & 0 & 0 & 1 & 0\\
+\end{tabular}%
+\vfill
+\begin{tabular}{c|c|c}
+ & $d_{t/(t/t),\land}$ & $d_{t/(t/t),\lor}$ \\
+\hline
+$\interp{\land}$ & 1 & 0 \\
+$\interp{\lor}$ & 0 & 1 \\
+\end{tabular}%
+\end{minipage}%
+\hspace*{\fill}
+\caption{Probabilities of a restricted probabilistic Montague
+  semantics to demonstrate NP-hardness of PM-SAT. Each column shows
+  the probability of generating a particular denotation.}
+\label{table:pmsat}
+\end{table}
+
 \begin{proof}
 We first show NP-hardness by reduction from SAT. Construct a special
 language for propositional logic with symbols $x_i$ of type $t$,
 symbols $\land$ and $\lor$ of type $(t/t)/t$ and $\lnot$ of type
 $t/t$. Hidden values are not needed, so assume $H$ has a single
-element. We allow the $x_i$ to take values in $\{\top, \bot\}$
-with equal probability. We allow two denotations $d_{(t/t)/t, \land}$
-and $d_{(t/t)/t, \lor}$ for type $(t/t)/t$, and $\land$ and $\lor$
-take these denotations, respectively, with probability 1. We allow five
-denotations for type $t/t$, one for $\lnot$, and two each for the
-intermediate values taken by $\land$ and $\lor$ after operating on
-either $\top$ or $\bot$. It is then straightforward to define
-probabilities matching the rules of propositional logic: probability
-values are just 0 or 1 depending on the appropriate truth table for
-the operator under question. Then a sentence has truth value $\top$
-with non-zero probability if and only if it is satisfiable.
+element. Denotations and the probabilities of generating them are
+shown in Table \ref{table:pmsat}.  We allow the $x_i$ to take values
+in $\{\top, \bot\}$ with equal probability; the remainder of the
+probabilities are either 0 or 1 and simply reproduce the familiar
+logical truth tables. A sentence thus has truth value $\top$ with
+non-zero probability if and only if it is satisfiable, so we can solve
+SAT if we can solve PM-SAT, and PM-SAT is thus NP-hard.
 
-We further show PM-SAT can be solved by a non-deterministic machine in time linear in sentence length. This is achieved by
-choosing a value from $H$, assigning every possible value to all basic
-expressions and then recursively to complex expressions. Any
-assignment that gives a non-zero probability for the
-sentence taking the value $\top$ will return true. So
-PM-SAT is in NP and is thus NP-complete.
+We further show PM-SAT can be solved by a non-deterministic machine in
+time linear in sentence length. This is achieved by choosing a value
+from $H$, assigning every possible value to all basic expressions and
+then recursively to complex expressions. Any assignment that gives a
+non-zero probability for the sentence taking the value $\top$ will
+return true. So PM-SAT is in NP and is thus NP-complete.
 \end{proof}
 
 Let us call the problem of computing the probability of a sentence in
