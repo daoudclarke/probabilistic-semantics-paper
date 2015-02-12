@@ -525,7 +525,9 @@ describing the probability of theories. The probability of $T$ is defined as
 $\mu(M(T))$. The conditional
 probability $P(s_1 | s_2 )$  is interpreted as the {\em degree to which $s_2$ entails $s_1$\/} and defined by:
 $$ P(s_1|s_2) = \frac{\mu(M(\{(s_1, \top), (s_2, \top)\}))}{\mu(M(\{(s_2,\top)\}))}$$
-Note that $s_2$ {\em logically entails\/} $s_1$ implies that $P(s_1|s_2) = 1$.
+Note that $s_2$ {\em logically entails\/} $s_1$ implies that
+$P(s_1|s_2) = 1$, and the conditional probability is defined only if
+$\mu(M(\{(s_2,\top)\}))$ is non-zero.
 
 %%the degree to which  $s_2$ entails $s_1$ is $1$.
 
@@ -1292,6 +1294,12 @@ We have shown that:
 In future work, we plan to apply our ideas to the general task of recognising textual entailment. 
 This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach.
 We also plan to further investigate the relationship between our models and vector space representations of meaning. This, together with a development of the theory, may lead to interesting new ways to describe probabilistic semantics that combine logical aspects of meaning with those which are better represented distributionally. 
+
+We have so far restricted ourselves to Montague semantics, and we are
+thus constrained by the well-known limitations of this formalism with
+respect to expressing aspects of discourse. It would be interesting to
+investigate how well our ideas could be incorporated into a formalism
+such as Discourse Representation Theory.
 
 Finally, the examples presented here deal with a very small fragment
 of natural language. There are many complex natural language phenomena
