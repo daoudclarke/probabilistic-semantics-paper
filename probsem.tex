@@ -612,10 +612,9 @@ $d_{\alpha,j}$ and hidden value $h$.
 
 \subsection{Learning and Inference}
 
-Given a theory $T$ and parameters $\theta$, we can compute the
-probability $P(T|\theta)$ as follows:
-\begin{itemize}
-\item For each hidden variable $h$:
+For a theory $T$ and parameters $\theta$, we compute $P(T|\theta)$ as follows. For each hidden variable $h$:
+%\begin{itemize}
+%\item For each hidden variable $h$:
 \begin{itemize}
 \item Iterate over models for $T$. This can be done bottom-up
   by first choosing the denotation for each basic expression,
@@ -626,7 +625,7 @@ probability $P(T|\theta)$ as follows:
   multiplying the parameters associated with each choice made in the
   previous step.
 \end{itemize}
-\end{itemize}
+%\end{itemize}
 
 We can use Maximum Likelihood to estimate the parameters given a set
 of observed theories $\mathcal{D} = \{T_1, T_2, \ldots T_N\}$. We look
@@ -665,7 +664,7 @@ represented by the predicate {\em bank}$_1$ and the second by {\em
 %% model parameters.
 
 
-We consider an alternative which incorporates \emph{degrees of ambiguity} into the representation of a word's meaning. This is consistent with many distributional  frameworks, in which a word is represented as a vector of all of its contexts of occurrence, regardless of sense. 
+We consider an alternative which incorporates \emph{degrees of ambiguity} into the representation of a word's meaning. This is consistent with many distributional  frameworks, where a word is often represented as a vector of all of its contexts of occurrence, regardless of sense. 
 We drop the requirement that in any given interpretation, each occurrence of a word must have the same denotation. Generalising this idea to denotations for all types results in an entirely different semantic model. It turns out that this model can be formulated in a straightforward way within the framework due to \newcite{Sato:97}. We call our new framework \emph{Stochastic Semantics}.  We no longer
 associate a set of models with a sentence, but instead assume that pairs of sentences and
 truth values are randomly generated in sequence. The probability of
@@ -746,7 +745,7 @@ theory(T) :-
 
 %\subsection{Implementation}
 
-An illustrative implementation of Stochastic Semantics is shown in Figure \ref{figure:program}. The code is written in PRISM  \cite{Sato:97}, a probabilistic extension of the Prolog logic-progamming language that incorporates probabilistic predicates and declarations. In particular, PRISM allows {\em random switches}. In the code, the predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes, while the probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes at execution time. To simplify the code, complex types of the grammar are referred to by their corresponding natural language
+An illustrative implementation of Stochastic Semantics is shown in Figure \ref{figure:program}. The code is written in PRISM  \cite{Sato:97}, a probabilistic extension of the Prolog logic-progamming language that incorporates probabilistic predicates and declarations. In particular, PRISM allows {\em random switches}. In the code, the predicate \texttt{values} is used to declare a named switch and associate with it a number of possible outcomes. The probabilistic predicate \texttt{msw} allows a random choice to made amongst these outcomes at execution time. To simplify the code, complex types of the grammar are referred to by their corresponding natural language
 categories: type $t$ is represented by \texttt{s}, type $(e/t)$ by \texttt{vp} and type $(e/t)/t$ by \texttt{np}. 
 
 The program defines how sentences are randomly assigned truth values. For example, the switch
@@ -755,7 +754,7 @@ The program defines how sentences are randomly assigned truth values. For exampl
 \texttt{values(word(noun,Word,Hidden),[n0,n1])} 
 %\end{center}
 introduces a switch for nouns having two possible outcomes, \texttt{n0} and \texttt{n1}.
-The outcomes are conditioned on the particular choice of noun (\texttt{Word}) and on the choice of hidden variable (\texttt{Hidden}). The \texttt{values} predicate is likewise used to declare switches associated with complex types. For example the values associated with a sentence (\texttt{s}) switch are conditioned on the choices of its component parts and a hidden variable, and so on.
+The outcomes are conditioned on the particular choice of noun (\texttt{Word}) and on the choice of hidden variable (\texttt{Hidden}). Similarly, switches are associated with complex types. For example the values associated with a sentence (\texttt{s}) switch are conditioned on the choices of its component parts and a hidden variable, and so on.
 
 The probability of a theory is derived by evaluating the truth
 conditions of its component sentences.
@@ -764,7 +763,7 @@ conditions of its component sentences.
 %evaluate the probability of a theory it is necessary to sum over the
 %probabilities of all of its satisfying models. To achieve this, the
 %predicate \texttt{prob} is used.} 
-An example query returning the
+For example, a query returning the
 probability of the sentence {\em the cat likes the dog\/} would be
 %:
 %\begin{Verbatim}[fontsize=\small]
@@ -885,9 +884,9 @@ denotations associated with each expression, so that they are computed once for
 each hidden value. Let $L$ be the number of expressions in a sentence and
 $n$ the maximum number of denotations for all types, i.e.~the greatest
 value of $n_\tau$ for all types $\tau$. The algorithm to compute the
-probability of a sentence is as follows:
-\begin{itemize}
-\item For each $h\in H$:
+probability of a sentence is as follows. For each $h\in H$:
+%\begin{itemize}
+%\item For each $h\in H$:
 \begin{itemize}
 \item For each basic expression of type $\tau$, compute the
   probability distribution over $\phi_\tau$; this can be computed in
@@ -897,7 +896,7 @@ probability of a sentence is as follows:
   $O(n^2)$ time since we need to iterate over possible values of the
   expression and the type it acts on.
 \end{itemize}
-\end{itemize}
+%\end{itemize}
 For a given hidden value in $H$, computing the probability of a sentence requires $L$
 computations each of complexity at most $n^2$. The total worst-case
 time complexity for SS-PROB is thus $O(|H|Ln^2)$. This is linear in the number of expressions $L$ and so linear in the length of the sentence. 
