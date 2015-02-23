@@ -147,7 +147,10 @@ This paper explores theoretical  issues in developing an expressive and computat
 First, an adequate semantics should provide an account of both lexical and phrasal (i.e. compositional) meaning. Second, it should provide for judgements about degrees of belief. That is, a semantics should account for beliefs that statements are more or less likely to be true, or that one statement may entail another to a certain degree. Third, an adequate computational semantics should support effective procedures for learning semantic representations and for inference.
 
 Vector space models of meaning have become a popular approach to computational semantics.
-Distributional models represent word meanings as vectors of corpus-based distributional contexts and have been successfully applied to a wide variety of tasks, including word sense induction and disambiguation~\cite{khapra-EtAl:2010:ACL,Baskaya:13}, prepositional phrase attachment~\cite{Calvo05distributionalthesaurus}, textual entailment~\cite{Marelli:14}, co-reference resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic compositionality~\cite{bergsma-EtAl:2010:EMNLP} and taxonomy induction~\cite{fountain-lapata:2012:NAACL-HLT}. 
+Distributional models represent word meanings as vectors of corpus-based distributional contexts and have been successfully applied to a wide variety of tasks, including word sense induction and disambiguation~\cite{khapra-EtAl:2010:ACL,Baskaya:13}, 
+prepositional phrase attachment~\cite{Calvo05distributionalthesaurus}, 
+textual entailment~\cite{Marelli:14}, co-reference resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic compositionality~\cite{bergsma-EtAl:2010:EMNLP} 
+and taxonomy induction~\cite{fountain-lapata:2012:NAACL-HLT}. 
 % % {\bf UPDATE THIS LIST??}
 The success of vector-space models is due to several factors. They support fine-grained judgements of similarity, allowing us to account for semantic gradience, for example, that the lexeme {\em pear} is more similar to {\em banana}  than to, say, {\em cat}. Moreover, distributional vectors can be learnt in an unsupervised fashion from corpus data, either by counting occurrences of distributional contexts for a word or phrase, or by performing more sophisticated analysis on the corpus data \cite{Mikolov:13,Pennington:14}. 
 
@@ -759,14 +762,16 @@ conditions of its component sentences.
 %probabilities of all of its satisfying models. To achieve this, the
 %predicate \texttt{prob} is used.} 
 An example query returning the
-probability of the sentence {\em the cat likes the dog\/} would be:
-\begin{Verbatim}[fontsize=\small]
-:- prob(theory([truth(f(s,
-    f(np, w(the, det), w(cat, noun)),
-    f(vp, w(likes, verb), f(np, w(the, det), w(dog, noun)))),
-  t1)]), X).
-\end{Verbatim}
-This is expressed as a theory
+probability of the sentence {\em the cat likes the dog\/} would be
+%:
+%\begin{Verbatim}[fontsize=\small]
+%:- prob(theory([truth(f(s,
+%    f(np, w(the, det), w(cat, noun)),
+%    f(vp, w(likes, verb), f(np, w(the, det), w(dog, noun)))),
+%  t1)]), X).
+%\end{Verbatim}
+%This is 
+expressed as a theory
 $\{(\mathit{likes}(\mathit{the}(\mathit{dog}))(\mathit{the}(\mathit{cat})),\top)\}$,
 which can be translated into a Prolog expression in a straightforward
 manner.
@@ -1176,11 +1181,11 @@ restriction comes at the expense of expressive power.
 
 %\cite{Clarke:07,Coecke:10,Garrette:11,Lewis:13}. 
 
-\newcite{Cooper:14} (see also
-\cite{Eijck:12}) describe a probabilistic semantics in which probability is distributed over situation types~\cite{Barwise:83}. They propose a rich type system in which the judgment about whether a given situation is of a given type is probabilistic. Rather than assigning truth-conditions to sentences, they present a compositional interpretation function that assigns probability-conditions. The work aims to account for the gradience of semantic judgements (for example, gradations of entailment) and stresses the importance of providing an account of semantic learning within language acquisition. 
+\newcite{Eijck:12} presents a framework for probabilistic semantics that is motivated by the need to account for gradience effects as an intrinsic part of a model of linguistic competence. They outline a compositional semantics for a propositional language in which the probability of the truth of a sentence is defined in terms of a probability distribution over possible states of affairs (worlds). Whilst the importance of providing a computationally adequate explanation of semantic learning is emphasised, issues of the tractability of inference are not addressed. 
 
-Their approach differs from ours in several respects. They define probability over situation types and provide a probabilistic interpretation function. In contrast, we define a generative process over interpreting structures so that probabilities of meaning are defined in terms of probability distribution over models. They describe an approach to semantic learning that makes use of observations of situations. Our approach is to learn from pairs of sentences and truth values directly. The result of their learning is an assignment of probabilities to situations; the result of our learning is the ability to determine degrees of entailment between pairs of sentences. 
-%Third, our approach can be related to vector-space semantics: as output of our learning procedure we can extract lexical representations as matrices.
+In a computational setting, an objection to possible worlds (maximal consistent sets of propositions) is that they are not tractably representable. \newcite{Cooper:14}  proposes a rich type system with records in which the judgment about whether a given situation is of a given type is probabilistic. Unlike worlds, situation types~\cite{Barwise:83} are not maximal and may be as small or as large as necessary. A schematic theory of semantic learning is outlined, based on an individual's observations of situations and their types, modelled probabilistically. This account of meaning provides the basis for a compositional semantics employing a probabilistic interpretation function. 
+
+In contrast to \cite{Cooper:14}, the present work assumes a generative process over interpreting structures. In particular, this means that interpretation with respect to a given model is categorical, while meaning is defined in terms of the probability distribution over all models. By restricting the space of possible models we show that semantic learning is possible, where the primary data for learning are pairs of sentences and truth values (rather than probabilistic judgments). A result of our learning is the ability to determine degrees of entailment between pairs of sentences.
 
 The present work shares motivation with \newcite{Goodman:14}, who argue for the role of uncertainty in cognition and language understanding whilst preserving a compositional, truth conditional semantics. They show how probability may be used to formalise uncertainty and the gradience of judgements about belief and inference. The approach introduces a stochastic $\lambda$-calculus to provide compositional tools for probabilistic modelling,
 but has not yet addressed the problem of learning.
@@ -1189,9 +1194,12 @@ Coecke et al.~\cite{Coecke:10} propose a framework based on category-theoretic
 similarities between vector spaces and pregroup grammars. Their
 approach is closely related to ours since it is also
 founded in Montague semantics: words are treated as linear functions
-between vector spaces. Each word is represented as an element of a
-tensor product space, and a pregroup grammar is used to determine how
-these are composed using the inner product. It was recently
+between vector spaces. 
+%Each word is represented as an element of a
+%tensor product space, and a pregroup grammar is used to determine how
+%these are composed using the inner product. 
+%
+It was recently
 demonstrated that this approach can be extended to allow the
 simulation of predicate calculus using
 tensors \cite{Grefenstette:13}.
@@ -1218,11 +1226,12 @@ semantics with distributional semantics using Markov Logic Networks
 Boxer \cite{Bos:04} and probabilistic rules are added using the
 distributional model of \newcite{Erk:10}. \newcite{Lewis:13} take a standard logical approach to
 semantics except that the relational constants used are derived from
-distributional clustering. They use latent Dirichlet allocation to
-describe a probability distribution over semantic categories for
-nouns. These are then combined with induced relation clusters to
-generate a probability distribution over logical forms for a given
-sentence.
+distributional clustering. 
+%They use latent Dirichlet allocation to
+%describe a probability distribution over semantic categories for
+%nouns. These are then combined with induced relation clusters to
+%generate a probability distribution over logical forms for a given
+%sentence.
 
 \section{Conclusion}
 
