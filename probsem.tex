@@ -157,7 +157,8 @@ Vector space models of meaning have become a popular approach to computational s
 Distributional models represent word meanings as vectors of corpus-based distributional contexts and have been successfully applied to a wide variety of tasks, including, {\em inter alia\/}, word sense induction and disambiguation~\cite{khapra-EtAl:2010:ACL,Baskaya:13}, 
 %prepositional phrase attachment~\cite{Calvo05distributionalthesaurus}, 
 textual entailment~\cite{Marelli:14}, 
-%co-reference resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}, predicting semantic compositionality~\cite{bergsma-EtAl:2010:EMNLP} 
+co-reference resolution~\cite{lee-EtAl:2012:EMNLP-CoNLL}
+%, predicting semantic compositionality~\cite{bergsma-EtAl:2010:EMNLP} 
 and taxonomy induction~\cite{fountain-lapata:2012:NAACL-HLT}. 
 % % {\bf UPDATE THIS LIST??}
 The success of vector-space models is due to several factors. They support fine-grained judgements of similarity, allowing us to account for semantic gradience, for example, that the lexeme {\em pear} is more similar to {\em banana}  than to, say, {\em cat}. Moreover, distributional vectors can be learnt in an unsupervised fashion from corpus data, either by counting occurrences of distributional contexts for a word or phrase, or by performing more sophisticated analysis on the corpus data \cite{Mikolov:13,Pennington:14}. 
@@ -649,7 +650,7 @@ does not adequately account for ambiguity in natural language.
 Although we have a probability distribution over
 interpretations, 
 in any given interpretation each occurrence of a
-word must have the same denotation. This is clearly unsatisfactory, as a
+word must have the same denotation. This is unsatisfactory, as a
 word may exhibit different senses across a
 theory. For example, consider two sentences, each
 containing  an occurrence of the word \emph{bank}, but with different senses. In our current
@@ -864,7 +865,7 @@ element.
 Further assume distributions defined by $\theta$  such that  the $P_i$ take values
 in $\{\top, \bot\}$ with equal probability, while the symbols $\land$ and $\lnot$
 simply reproduce the familiar
-logical truth functions for conjunction and negation with probability 1. Note that there must be an interpretation for which $\land (P_1)(\lnot (P_2))$ has value $\top$. In contrast, a sentence such as $\land (P_1)(\lnot (P_1))$ must have value $\bot$ for all interpretations.
+logical truth functions for conjunction and negation with probability 1. Note that as a consequence there must be an interpretation for which $\land (P_1)(\lnot (P_2))$ has value $\top$. In contrast, a sentence such as $\land (P_1)(\lnot (P_1))$ must have value $\bot$ for all interpretations.
 
 It follows from the construction above that a sentence has truth value $\top$ with non-zero probability if and only if it is satisfiable. Hence we can solve
 SAT if we can solve PM-SAT, and so PM-SAT is NP-hard. Finally, to show NP-completeness we note that PM-SAT can be solved by a non-deterministic machine in
