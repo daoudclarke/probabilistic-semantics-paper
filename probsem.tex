@@ -591,6 +591,54 @@ and $\theta_{\beta,i,j,k,h}$ over
 values $d_{\beta,k}$ for each function $d_{\alpha/\beta,i}$, argument
 $d_{\alpha,j}$ and hidden value $h$.
 
+\subsection{Example}
+
+An example is shown in Table ref{table:pmsat}.
+
+\begin{table}
+\hfill
+\begin{tabular}{c|c|c}
+ & $\top$ & $\bot$ \\
+\hline
+$\interp{x_i}$ & 0.5 & 0.5 \\
+$d_{t/t,I}(\top)$ & 1 & 0\\
+$d_{t/t,I}(\bot)$ & 0 & 1\\
+$d_{t/t,\top}(\top)$ & 1 & 0\\
+$d_{t/t,\top}(\bot)$ & 1 & 0\\
+$d_{t/t,\bot}(\top)$ & 0 & 1\\
+$d_{t/t,\bot}(\bot)$ & 0 & 1\\
+$d_{t/t,\lnot}(\top)$ & 0 & 1\\
+$d_{t/t,\lnot}(\bot)$ & 1 & 0
+\end{tabular}\hfill
+\begin{minipage}[c][4.3cm]{0.5\linewidth}
+\centering
+\begin{tabular}{c|c|c|c|c}
+ & $d_{t/t,I}$ & $d_{t/t,\top}$ & $d_{t/t,\bot}$ & $d_{t/t,\lnot}$ \\
+\hline
+$\interp{\lnot}$ & 0 & 0 & 0 & 1 \\
+$d_{t/(t/t),\lor}(\top)$ & 0 & 1 & 0 & 0\\
+$d_{t/(t/t),\lor}(\bot)$ & 1 & 0 & 0 & 0\\
+$d_{t/(t/t),\land}(\top)$ & 1 & 0 & 0 & 0\\
+$d_{t/(t/t),\land}(\bot)$ & 0 & 0 & 1 & 0\\
+\end{tabular}%
+\vfill
+\begin{tabular}{c|c|c}
+ & $d_{t/(t/t),\land}$ & $d_{t/(t/t),\lor}$ \\
+\hline
+$\interp{\land}$ & 1 & 0 \\
+$\interp{\lor}$ & 0 & 1 \\
+\end{tabular}%
+\end{minipage}%
+\hspace*{\fill}
+\vspace{0.2cm}
+\caption{Probabilities of a restricted probabilistic Montague
+  semantics to demonstrate NP-hardness of PM-SAT. Each column shows
+  the probability of generating a particular denotation.}
+\label{table:pmsat}
+\end{table}
+
+
+
 \subsection{Learning and Inference}
 
 For a theory $T$ and parameters $\theta$, we compute $P(T|\theta)$ as follows. For each hidden variable $h$:
