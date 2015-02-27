@@ -354,7 +354,12 @@ different model of the relationship between John and Mary.  We
 assume a probability distribution over models, with $P(m_1)
 = 0.1$, $P(m_2) = 0.2$, $P(m_3) = 0.3$, $P(m_4) = 0.4$ (all other
 possible models have probability zero). We can then
-deduce the probability of statements about John and Mary, as shown in Table \ref{table:statements}.
+deduce the probability of statements about John and Mary:
+\begin{itemize}
+\item \emph{John likes Mary}: $\mu(\{m_2, m_3, m_4\}) = 0.9$
+\item \emph{Mary likes John or Mary}: $\mu(\{m_1, m_3, m_4\}) = 0.8$
+\item \emph{John likes Mary given that he loves her}: $$\mu(\{m_3, m_4\})/\mu(\{m_1, m_3, m_4\}) = 0.7/0.8$$
+\end{itemize}
 
 
 %\subsection{Example: Fine-grained Meanings}
@@ -376,61 +381,26 @@ deduce the probability of statements about John and Mary, as shown in Table \ref
 % verbs are functions from pairs of sets of sets of entities to truth
 % values.
 
-\begin{table*}
-  \parbox{.45\linewidth}{
-    \centering
-    \begin{tabular}{|l|l|l||c|c|c|c|}
-      \hline
-      \emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
-      \hline
-      john & likes & john & 1 & 1 & 1 & 1\\
-      john & likes & mary & 0 & 1 & 1 & 1\\
-      mary & likes & john & 1 & 0 & 0 & 1\\
-      mary & likes & mary & 0 & 0 & 1 & 1\\
-      john & loves & john & 1 & 1 & 1 & 1\\
-      john & loves & mary & 1 & 0 & 1 & 1\\
-      mary & loves & john & 1 & 1 & 1 & 1\\
-      mary & loves & mary & 1 & 0 & 1 & 1\\
-      \hline
-    \end{tabular}
-    % \begin{tabular}{ccc}
-    %   \hline
-    %   a&b&c\\
-    %   \hline
-    % \end{tabular}
-    \caption{Four possible models describing relationships between John
-      and Mary.}
-    \label{table:models}
-  }
-  \hfill
-\parbox{.45\linewidth}{
-  \centering
-  %\def\arraystretch{1.5}%
-  \begin{tabular}{c}      
-    John likes Mary \\ $\mu(\{m_2, m_3, m_4\}) =
-    %P(m_2) + P(m_3) + P(m_4) 
-    = 0.9$\\
-    \mbox{} \\
-    %\hline
-    Mary likes John or Mary \\ $\mu(\{m_1, m_3, m_4\}) =
-    %P(m_1) + P(m_3) + P(m_4) 
-    = 0.8$\\
-    \mbox{} \\
-    %\hline
-    John likes Mary given that he loves her\\
-    $\mu(\{m_3, m_4\})/\mu(\{m_1, m_3, m_4\}) = 0.7/0.8$\\
-    \mbox{}
+\begin{table}
+  \begin{center}
+  \begin{tabular}{l|l|l||c|c|c|c}
+    \emph{subject} & \emph{verb} & \emph{object} & $m_1$ & $m_2$ & $m_3$ & $m_4$\\
+    \hline
+    john & likes & john & 1 & 1 & 1 & 1\\
+    john & likes & mary & 0 & 1 & 1 & 1\\
+    mary & likes & john & 1 & 0 & 0 & 1\\
+    mary & likes & mary & 0 & 0 & 1 & 1\\
+    john & loves & john & 1 & 1 & 1 & 1\\
+    john & loves & mary & 1 & 0 & 1 & 1\\
+    mary & loves & john & 1 & 1 & 1 & 1\\
+    mary & loves & mary & 1 & 0 & 1 & 1\\
   \end{tabular}
-  % \begin{tabular}{ccc}
-  %   \hline
-  %   d&e&f\\
-  %   \hline
-  % \end{tabular}
-  \caption{Statements and their probabilities given the models in
-    Table \ref{table:models}.}
-  \label{table:statements}
-}
-\end{table*}
+  \end{center}
+  \vspace{0.2cm}
+  \caption{Four possible models describing relationships between John
+    and Mary.}
+  \label{table:models}
+\end{table}
 
 % \begin{table}
 %   \begin{minipage}[b]{.5\linewidth}
@@ -1040,39 +1010,45 @@ time complexity for SS-PROB is thus $O(|H|Ln^2)$. This is linear in the number o
 
 \section{Discussion}
 
-\begin{table*}
-  \parbox{.62\linewidth}{
-    \begin{center}
-      \begin{tabular}{|l|l|l|}
-        \hline
-        Text & Hypothesis & Ent.\\
-        \hline
-        some cats like all dogs & some animals like all dogs & Yes\\
-        no animals like all dogs & no cats like all dogs & Yes\\
-        some dogs like all dogs & some animals like all dogs & Yes\\
-        no animals like all dogs & no dogs like all dogs & Yes\\
-        some men like all dogs & some people like all dogs & Yes\\
-        \hline
-        no people like all dogs & no men like all dogs & Yes\\
-        no men like all dogs & no people like all dogs & No\\
-        \hline
-      \end{tabular}
-      \caption{Example Text and Hypothesis sentences, and whether
-        entailment holds. Both our systems are able to learn from the
-        data above the line that the determiner ``no'' reverses the
-        direction of entailment.}
-      \label{table:mono}
-    \end{center}
-  }
-  \hfill
-  \parbox{.32\linewidth}{
-    \centering
-    \csvautotabular{lexical.csv}
-    \caption{Learnt probabilities obtained using the
-      Stochastic Semantics implementation.}
-    \label{table:lexical-sato}
-  }
-\end{table*}
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|l|l}
+      Text & Hypothesis & Ent.\\
+      \hline
+      some cats like all dogs & some animals like all dogs & Yes\\
+      no animals like all dogs & no cats like all dogs & Yes\\
+      some dogs like all dogs & some animals like all dogs & Yes\\
+      no animals like all dogs & no dogs like all dogs & Yes\\
+      some men like all dogs & some people like all dogs & Yes\\
+      \hline
+      no people like all dogs & no men like all dogs & Yes\\
+      no men like all dogs & no people like all dogs & No\\
+    \end{tabular}
+    \vspace{0.2cm}
+    \caption{Example Text and Hypothesis sentences, and whether
+      entailment holds. Both our systems are able to learn from the
+      data above the line that the determiner ``no'' reverses the
+      direction of entailment.}
+    \label{table:mono}
+  \end{center}
+\end{table}
+
+\begin{table}
+  \centering
+
+\csvreader[tabular=l|l|l|l,
+  table head=Noun & Hidden & n0 & n1\\\hline,
+  head to column names]%
+{lexical.csv}{}{\Noun & \Hidden & \nzero & \ntwo}
+
+%% {}%
+%% {\thecsvrow & \surname~\name & \age}%
+  %% \csvautotabular{lexical.csv}
+  \vspace{0.2cm}
+  \caption{Learnt probabilities obtained using the
+    Stochastic Semantics implementation.}
+  \label{table:lexical-sato}
+\end{table}
 
 A learning system such as those we have described can be adapted to
 the task of recognising textual entailment \cite{Dagan:05}. This task is
