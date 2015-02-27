@@ -1,11 +1,10 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[manuscript]{clv2}
+
+%% \documentstyle[fullname]{article}
 
 \usepackage{graphicx}  %%% for including graphics
 \usepackage{url}       %%% for including URLs
-\usepackage{times}
-\usepackage{natbib}
-\usepackage[margin=25mm]{geometry}
-
+%% \usepackage{fullname}
 
 %% \documentclass[11pt]{article}
 %% \usepackage{acl2012}
@@ -33,7 +32,7 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{amsthm}
+%% \usepackage{amsthm}
 \usepackage{color}
 \usepackage{listings}
 \usepackage{csvsimple}
@@ -44,15 +43,15 @@
 
 %\renewcommand{\theTitleReference}[2]{\emph{#2}}
 
-\renewcommand{\cite}{\citep}
-\newcommand{\newcite}[1]{\citet{#1}}
+%% \renewcommand{\cite}{\citep}
+%% \newcommand{\newcite}[1]{\citet{#1}}
 
 %\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
 %\newcommand{\citet}[1]{\cite{#1}}
 
-\newtheorem*{theorem}{Theorem}
-\theoremstyle{definition}
-\newtheorem*{definition}{Definition}
+%% \newtheorem*{theorem}{Theorem}
+%% \theoremstyle{definition}
+%% \newtheorem*{definition}{Definition}
 
 \lstset{
   %basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -89,15 +88,19 @@
 \newcommand{\wfe}{\mbox{{\em wfe} }}
 \newcommand{\wfes}{\mbox{{\em wfe}s }}
 
+\newcommand{\newcite}[1]{\namecite{#1}}
+
 \title{Efficiency in Ambiguity:\\ Two Models of Probabilistic Semantics for Natural Language}
-\author{Daoud Clarke  \\
-       University of Sussex, Brighton\\
-       \texttt{daoud.clarke@gmail.com}
-       \and
-       Bill Keller  \\
-       University of Sussex, Brighton\\
-       \texttt{billk@sussex.ac.uk}
+\author{
+       %% Daoud Clarke  \\
+       %% University of Sussex, Brighton\\
+       %% \texttt{daoud.clarke@gmail.com}
+       %% \and
+       %% Bill Keller  \\
+       %% University of Sussex, Brighton\\
+       %% \texttt{billk@sussex.ac.uk}
        }
+\affil{}
 \date{}
 
  \begin{document}
@@ -1333,7 +1336,7 @@ and indexicals, amongst others.
 % There are a number of directions in which the work may be developed. We are currently  exploring the application of probabilistic semantics to the general task of recognising textual entailment. This would involve learning from much larger datasets and provide a more stringent test of the practical application of the approach. More work is also needed to explore the properties of the distributional representations for words that are learnt by the model. 
 
 
-\bibliographystyle{chicago}
+\bibliographystyle{fullname}
 %% \bibliographystyle{acl}
 \bibliography{JW2012}
 \end{document}
