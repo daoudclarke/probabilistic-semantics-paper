@@ -593,14 +593,37 @@ $d_{\alpha,j}$ and hidden value $h$.
 
 \subsection{Example}
 
-An example is shown in Table ref{table:pmsat}.
+As an example, we show a restricted probabilistic Montague semantics
+which mimics the semantics of standard propositional logic. Although
+our intended application is natural language semantics, and
+probabilities are supposed to be inferred from data rather than
+specified in a table as we do here, this example will be used later to
+demonstrate that inference for this formalism is NP-hard.
+
+We use the following basic expressions: variables $P_i$ of type $t$,
+and logical symbols $\land$ and $\lor$ of type $(t/t)/t$ and $\lnot$
+of type $t/t$. For example $\land (P_1)(\lnot (P_2))$ is a sentence
+which, using a more familiar notation, might be written as $P_1 \land
+\lnot P_2$.
+
+The possible denotations for each type and their associated
+probabilities are shown in Table \ref{table:pmsat}. In this example,
+each variable $P_i$ can take the value $\top$ or $\bot$ with equal
+probability. This means that any sentence has a non-zero probability
+if and only if it is satisfiable. Every other denotation in this
+example is deterministic (since all other values in the table are 0 or
+1); these simply serve to reproduce the familiar truth tables of
+logic. We use symbols instead of numeric subscripts for the
+denotations to give a better intuition as to their purpose. For
+example, $d_{t/t,I}$ acts as the identity on truth values, and
+$d_{t/t,\lnot}$ acts as negation.
 
 \begin{table}
 \hfill
 \begin{tabular}{c|c|c}
  & $\top$ & $\bot$ \\
 \hline
-$\interp{x_i}$ & 0.5 & 0.5 \\
+$\interp{P_i}$ & 0.5 & 0.5 \\
 $d_{t/t,I}(\top)$ & 1 & 0\\
 $d_{t/t,I}(\bot)$ & 0 & 1\\
 $d_{t/t,\top}(\top)$ & 1 & 0\\
@@ -616,14 +639,14 @@ $d_{t/t,\lnot}(\bot)$ & 1 & 0
  & $d_{t/t,I}$ & $d_{t/t,\top}$ & $d_{t/t,\bot}$ & $d_{t/t,\lnot}$ \\
 \hline
 $\interp{\lnot}$ & 0 & 0 & 0 & 1 \\
-$d_{t/(t/t),\lor}(\top)$ & 0 & 1 & 0 & 0\\
-$d_{t/(t/t),\lor}(\bot)$ & 1 & 0 & 0 & 0\\
-$d_{t/(t/t),\land}(\top)$ & 1 & 0 & 0 & 0\\
-$d_{t/(t/t),\land}(\bot)$ & 0 & 0 & 1 & 0\\
+$d_{(t/t)/t,\lor}(\top)$ & 0 & 1 & 0 & 0\\
+$d_{(t/t)/t,\lor}(\bot)$ & 1 & 0 & 0 & 0\\
+$d_{(t/t)/t,\land}(\top)$ & 1 & 0 & 0 & 0\\
+$d_{(t/t)/t,\land}(\bot)$ & 0 & 0 & 1 & 0\\
 \end{tabular}%
 \vfill
 \begin{tabular}{c|c|c}
- & $d_{t/(t/t),\land}$ & $d_{t/(t/t),\lor}$ \\
+ & $d_{(t/t)/t,\land}$ & $d_{(t/t)/t,\lor}$ \\
 \hline
 $\interp{\land}$ & 1 & 0 \\
 $\interp{\lor}$ & 0 & 1 \\
