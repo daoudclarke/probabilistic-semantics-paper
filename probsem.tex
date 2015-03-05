@@ -877,16 +877,16 @@ We first consider the problem of {\em Probabilistic Montague Semantics satisfiab
 \begin{proof}
 We first show NP-hardness by reduction from SAT. Construct a special
 language for propositional logic with symbols $P_i$ of type $t$,
-$\land$ of type $(t/t)/t$ and $\lnot$ of type
-$t/t$. For example $\land (P_1)(\lnot (P_2))$ is a sentence of this language. Using a more familiar and suggestive notation it might be written as $P_1 \land \lnot P_2$. We fix a generative model for interpretations of the language as follows. 
+$\land$ and $\lor$ of type $(t/t)/t$ and $\lnot$ of type
+$t/t$. For example $\lor (P_1)(\lnot (P_2))$ is a sentence of this language. Using a more familiar and suggestive notation it might be written as $P_1 \lor \lnot P_2$. We fix a generative model for interpretations of the language as follows. 
 Hidden values are not needed, so assume $H$ has a single
 element. 
 %Denotations and the probabilities of generating them are
 %shown in Table \ref{table:pmsat}.  
 Further assume distributions defined by $\theta$  such that  the $P_i$ take values
-in $\{\top, \bot\}$ with equal probability, while the symbols $\land$ and $\lnot$
+in $\{\top, \bot\}$ with equal probability, while the symbols $\land$, $\lor$ and $\lnot$
 simply reproduce the familiar
-logical truth functions for conjunction and negation with probability 1. Note for example that there is an interpretation for which $\land (P_1)(\lnot (P_2))$ has value $\top$. On the other hand, the sentence $\land (P_1)(\lnot (P_1))$ will have value $\bot$ for all interpretations.
+logical truth functions for conjunction, disjunction and negation respectively, with probability 1. Note for example that there is an interpretation for which $\lor (P_1)(\lnot (P_2))$ has value $\top$. On the other hand, the sentence $\land (P_1)(\lnot (P_1))$ will have value $\bot$ for all interpretations.
 
 It follows from the construction above that a sentence has truth value $\top$ with non-zero probability if and only if it is satisfiable. Hence we can solve
 SAT if we can solve PM-SAT, and so PM-SAT is NP-hard. Finally, to show NP-completeness we note that PM-SAT can be solved by a non-deterministic machine in
