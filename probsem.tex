@@ -811,25 +811,24 @@ The outcomes are conditioned on the particular choice of noun (\texttt{Word}) an
 
 The probability of a theory is derived by evaluating the truth
 conditions of its component sentences.
-%that make it up.\hide{Note that probability
-%distributions are defined over models, not theories, so that to
-%evaluate the probability of a theory it is necessary to sum over the
-%probabilities of all of its satisfying models. To achieve this, the
-%predicate \texttt{prob} is used.} 
+%that make it up.\hide{
+Note that probability
+distributions are defined over models, not theories, so that to
+evaluate the probability of a theory it is necessary to sum over the
+probabilities of all of its satisfying models. To achieve this, the
+predicate \texttt{prob} is used.
 For example, a query returning the
-probability of the sentence {\em the cat likes the dog\/} would be
-%:
-%\begin{Verbatim}[fontsize=\small]
-%:- prob(theory([truth(f(s,
-%    f(np, w(the, det), w(cat, noun)),
-%    f(vp, w(likes, verb), f(np, w(the, det), w(dog, noun)))),
-%  t1)]), X).
-%\end{Verbatim}
-%This is 
-expressed as a theory
+probability of the sentence {\em the cat likes the dog\/} would be expressed as a theory
 $\{(\mathit{likes}(\mathit{the}(\mathit{dog}))(\mathit{the}(\mathit{cat})),\top)\}$,
 which can be translated into a Prolog expression in a straightforward
-manner.
+manner:
+\begin{Verbatim}[fontsize=\small]
+:- prob(theory([truth(f(s,
+    f(np, w(the, det), w(cat, noun)),
+    f(vp, w(likes, verb), f(np, w(the, det), w(dog, noun)))),
+  t1)]), X).
+\end{Verbatim}
+
 
 
 \section{Complexity}
@@ -1256,31 +1255,29 @@ similarities between vector spaces and pregroup grammars. Their
 approach is closely related to ours since it is also
 founded in Montague semantics: words are treated as linear functions
 between vector spaces. 
-%Each word is represented as an element of a
-%tensor product space, and a pregroup grammar is used to determine how
-%these are composed using the inner product. 
-%
-It was recently
+Each word is represented as an element of a
+tensor product space, and a pregroup grammar is used to determine how
+these are composed using the inner product. It was recently
 demonstrated that this approach can be extended to allow the
 simulation of predicate calculus using
 tensors \cite{Grefenstette:13}.
-%There are two main differences between their approach and ours. First,
-%in the language of Montague semantics, they assume a single
-%model. This means that composition necessarily loses information about
-%the composed words, and this is evident in the use of the inner
-%product for composition. Sentences are all described in a space of
-%fixed dimensionality, no matter how long or complex they are. In our
-%approach, a sentence describes a probability distribution over models,
-%which is an infinite set, allowing for the representation of arbitrary
-%complexity.
-%
-%The second difference is that their approach is vector-based whereas
-%ours is probabilistic in nature. Thus their approach is more
-%closely related to approaches to lexical distributional semantics
-%which are vector based, such as latent semantic analysis
-%\cite{Deerwester:90} and random indexing \cite{Sahlgren:02}, whereas
-%ours is closer to probabilistic approaches such as latent Dirichlet
-%allocation \cite{Blei:03}.
+
+There are two main differences between their approach and ours. First,
+in the language of Montague semantics, they assume a single
+model. This means that composition necessarily loses information about
+the composed words, and this is evident in the use of the inner
+product for composition. Sentences are all described in a space of
+fixed dimensionality, no matter how long or complex they are. In our
+approach, a sentence describes a probability distribution over models,
+which is an infinite set, allowing for the representation of arbitrary
+complexity. The second difference is that their approach is vector-based whereas
+ours is probabilistic in nature. Thus their approach is more
+closely related to approaches to lexical distributional semantics
+which are vector based, such as latent semantic analysis
+\cite{Deerwester:90} and random indexing \cite{Sahlgren:02}, whereas
+ours is closer to probabilistic approaches such as latent Dirichlet
+allocation \cite{Blei:03}.
+
 \newcite{Garrette:11} describe an approach to combining logical
 semantics with distributional semantics using Markov Logic Networks
 \cite{Richardson:06}. Sentences are parsed into logical form using
@@ -1288,11 +1285,11 @@ Boxer \cite{Bos:04} and probabilistic rules are added using the
 distributional model of \newcite{Erk:10}. \newcite{Lewis:13} take a standard logical approach to
 semantics except that the relational constants used are derived from
 distributional clustering. 
-%They use latent Dirichlet allocation to
-%describe a probability distribution over semantic categories for
-%nouns. These are then combined with induced relation clusters to
-%generate a probability distribution over logical forms for a given
-%sentence.
+They use latent Dirichlet allocation to
+describe a probability distribution over semantic categories for
+nouns. These are then combined with induced relation clusters to
+generate a probability distribution over logical forms for a given
+sentence.
 
 \section{Conclusion}
 
