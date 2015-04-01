@@ -573,23 +573,22 @@ We assume that denotations are generated with probabilities
 conditionally independent given a random variable taking values from
 some set $H$. This gives us the following process to generate $F$:
 \begin{itemize}
-\item Generate a hidden value $h\in H$
+\item Generate a hidden value $h\in H$ where $P(h) = \theta_h$
 \item Generate $F(b) \in \phi_{\tau_b}$ for each $b\in B$ where
   $P(d_{\tau_b,i}|b, h) = \theta_{b,i,h}$
-\item Generate $d_{\alpha/\beta,i}(d_{\alpha,j}) \in \phi_\beta$ for each $d_{\alpha/\beta,i}$, $d_{\alpha,j}$,
-where $P(d_{\beta,k}|d_{\alpha/\beta,i}, d_{\alpha,j},h) = \theta_{\beta,i,j,k,h}$
+\item Generate $d_{\alpha/\beta,i}(d_{\beta,j}) \in \phi_\beta$ for each $d_{\alpha/\beta,i}$, $d_{\alpha,j}$,
+where $P(d_{\beta,k}|d_{\alpha/\beta,i}, d_{\alpha,j},h) = \theta_{\alpha,\beta,i,j,k,h}$
 %\begin{itemize}
 %\item Generate a value $\interp{d_{\alpha/\beta,i}(d_{\alpha,j})}$
 %  according to $P(d_{\beta,k}|d_{\alpha/\beta,i}, d_{\alpha,j},h) = \theta_{\beta,i,j,k,h}$
 %\end{itemize}
 \end{itemize}
 The parameters to be learnt are the probability distributions
-$\theta_{b,i,h}$ 
-over possible values $d_{\tau_b,i}$,
-for each basic expression $b$ and hidden value $h$,
-and $\theta_{\beta,i,j,k,h}$ over
-values $d_{\beta,k}$ for each function $d_{\alpha/\beta,i}$, argument
-$d_{\alpha,j}$ and hidden value $h$.
+$\theta_h$ over hidden values, $\theta_{b,i,h}$ over possible values
+$d_{\tau_b,i}$, for each basic expression $b$ and hidden value $h$,
+and $\theta_{\alpha,\beta,i,j,k,h}$ over values $d_{\beta,k}$ for each
+function $d_{\alpha/\beta,i}$, argument $d_{\beta,j}$ and hidden
+value $h$.
 
 \subsection{Example}
 
@@ -1076,6 +1075,40 @@ time complexity for SS-PROB is thus $O(|H|Ln^2)$. This is linear in the number o
 %If we consider words as sentences and documents as theories, then,
 %this ``truth value LDA'' can be viewed as an instance of our
 %Stochastic Semantics.
+
+\section{Intermediate Models}
+
+In this section, we show how the expressivity and complexity of
+probabilistic Montague semantics can be reproduced within stochastic
+semantics by increasing the number of hidden variable values $H$. This
+allows us to trade expressivity for reduced complexity by varying the
+size of $H$. We will show that probabilistic Montague semantics can be
+expressed as a special case of stochastic semantics.
+
+Given a probabilistic Montague semantics with parameters $\theta$, we
+construct an equivalent stochastic semantics. First we define a new
+set of hidden variables,
+$$H' = H \times \prod_{b\in B} H_b \times \prod_{\alpha,\beta}
+H_{\alpha,\beta}$$ where $H$ is the set of hidden values in the
+original probabilistic Montague semantics, $\prod$ denotes the
+Cartesian product and $\alpha$ and $\beta$ range over values such that
+$\alpha/\beta$ is the type of a well formed expression. Each $H_b$ has
+an element for each value that the denotation of the basic expression
+$b$ can take,
+$$H_b = \{h_{b,0}, h_{b,1},\ldots h_{b, n_{\tau_b}}\}$$
+Each $H_{\alpha,\beta,i,j}$ has $n_\alpha$ elements, one for each
+value that $d_{\alpha/\beta,i}(d_{\beta,j})$ can take:
+$$H_{\alpha,\beta,i,j} = \{h_{\alpha,\beta,i,j,0}, h_{\alpha,\beta,i,j,1},\ldots h_{\alpha,\beta,i,j,n_{\alpha}}\}$$
+
+We now define probability distributions $\theta'$ for stochastic
+semantics to reproduce the equivalent of $\theta$ in probabilistic
+Montague semantics. Here $\theta_h'$ contains most of the complexity,
+and reproduces the probability distribution of probabilistic Montague
+semantics, while the remainder of $\theta'$ is used to enforce the
+constraint that each basic expression and denotation must take the
+same value within an interpretation.
+%% Each $h'\in H'$ can be written
+%% $h' = (h, 
 
 \section{Discussion}
 
