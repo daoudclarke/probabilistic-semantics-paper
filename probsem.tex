@@ -1126,13 +1126,28 @@ deterministic (i.e. probability values are either 0 or
 1). Specifically, we define:
 $$P'(d_{\tau_{b,i}}|b, h') = 1$$
 if $r_{h'}(b) = h_{b,i}$ or 0 otherwise, and we define
-$$P'(d_{\beta,k}|d_{\alpha/\beta,i}, d_{\alpha,j},h) = 1$$
+$$P'(d_{\beta,k}|d_{\alpha/\beta,i}, d_{\alpha,j},h') = 1$$
 if $r_{h'}(\alpha,\beta,i,j) = h_{\alpha,\beta,i,j,k}$ or 0
 otherwise. This distribution simply ensures that each basic expression
 and function gets the correct denotation given a particular hidden
 value.
 
+Complexity of this semantics is no longer linear in the length of the
+sentence, since the number of hidden variables depends on the number
+of basic expressions under consideration. Marginalising $P'(h')$
+over $P(r_{h'}(b)|h)$ for expressions $b$ that are not used shows that
+these contributions can be ignored. Thus the number of values of $H$
+that need to be considered is at most $n^L$, thus the complexity of
+this formulation is $O(Ln^L)$ i.e., exponential in the length of the
+sentence.
 
+This result is useful since it shows that we can increase the
+expressivity of stochastic semantics by increasing the number of
+possible hidden values, for a corresponding increase in complexity. It
+also gives us a way of measuring how close a stochastic semantics is
+to Montague semantics: if all $\theta_{b,i,h}$ and
+$\theta_{\alpha,\beta,i,j,k,h}$ are close to 0 or 1, then the
+semantics is ``pseudo-Montague''.
 
 \section{Discussion}
 
