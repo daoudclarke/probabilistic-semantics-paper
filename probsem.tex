@@ -1,4 +1,4 @@
-\documentclass[manuscript]{clv2}
+\documentclass[]{clv2}
 
 %% \documentstyle[fullname]{article}
 
@@ -90,7 +90,7 @@
 
 \newcommand{\newcite}[1]{\namecite{#1}}
 
-\title{Efficiency in Ambiguity:\\ Two Models of Probabilistic Semantics for Natural Language}
+\title{Efficiency in Ambiguity:\\ Models of Probabilistic Semantics for Natural Language}
 \author{
        %% Daoud Clarke  \\
        %% University of Sussex, Brighton\\
@@ -110,15 +110,29 @@
 % UK.\\ \email{\{d.clarke,~billk\}@sussex.ac.uk} }
 \maketitle
 \begin{abstract}
-This paper explores theoretical issues in constructing an adequate probabilistic semantics for natural language. Two approaches are contrasted. The first extends Montague
-Semantics with a probability distribution over 
-models. It has nice theoretical properties, but does
-not account for the ubiquitous nature of ambiguity; moreover inference is
-NP-hard. An alternative approach is described in which a sequence of pairs of sentences and truth values is generated
-randomly. By sacrificing some of the nice theoretical properties of
-the first approach it is possible to model ambiguity naturally;
-moreover inference now has polynomial time
-complexity. Both approaches provide a compositional semantics and account for the gradience of semantic judgements of belief and inference.\footnote{The authors are grateful for the comments of a number of anonymous reviewers on earlier drafts. The work was funded as part of EPSRC EP/I037458/1, {\em A Unified Model of Compositional and Distributional Semantics: Theory and Applications\/.}}
+This paper explores theoretical issues in constructing an adequate
+probabilistic semantics for natural language. Two approaches are
+contrasted. The first extends Montague Semantics with a probability
+distribution over models. It has nice theoretical properties, but does
+not account for the ubiquitous nature of ambiguity; moreover inference
+is NP-hard. An alternative approach is described in which a sequence
+of pairs of sentences and truth values is generated randomly. By
+sacrificing some of the nice theoretical properties of the first
+approach it is possible to model ambiguity naturally; moreover
+inference now has polynomial time complexity. Both approaches provide
+a compositional semantics and account for the gradience of semantic
+judgements of belief and inference. We also show how the second
+approach can be adapted to encompass the first approach at the expense
+of computational efficiency.
+
+Both models utilise a hidden variable to describe probability
+distributions. We show that by greatly increasing the number of values
+that the hidden variable can take, such that the polynomial time
+property is lost, the first model can be described as a special case
+of the second. This shows that we can trade the expressivity of the
+first approach for the efficiency of the second by varying the number
+of values of the hidden variable.
+%% \footnote{The authors are grateful for the comments of a number of anonymous reviewers on earlier drafts. The work was funded as part of EPSRC EP/I037458/1, {\em A Unified Model of Compositional and Distributional Semantics: Theory and Applications\/.}}
 %  are capable of modelling important features of
 %  natural language semantics such as the reversal of entailment that
 %  occurs with determiners such as ``all'' and ``no''.
